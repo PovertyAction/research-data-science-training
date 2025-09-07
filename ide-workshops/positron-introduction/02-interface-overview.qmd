@@ -198,6 +198,7 @@ Let's practice using the interface:
    - Save it as `practice.py` (`Ctrl+S`)
 
 2. **Write Some Code**:
+
    ```python
    # This is a practice file
    x = [1, 2, 3, 4, 5]

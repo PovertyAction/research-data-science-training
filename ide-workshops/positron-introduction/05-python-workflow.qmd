@@ -33,6 +33,7 @@ By the end of this tutorial, you will be able to:
 ## Prerequisites
 
 Before starting, ensure you have:
+
 - ✅ Positron installed and configured
 - ✅ Python interpreter set up with essential packages
 - ✅ Familiarity with Positron's interface and data exploration tools
@@ -58,6 +59,7 @@ We'll work on a complete data science project analyzing a real dataset. Our goal
    - Select your `housing_analysis_project` folder
 
 3. **Create project structure**:
+
    ```
    housing_analysis_project/
    ├── data/           # Raw and processed data
@@ -68,6 +70,7 @@ We'll work on a complete data science project analyzing a real dataset. Our goal
    ```
 
 4. **Create folders using terminal**:
+
    ```bash
    mkdir data notebooks scripts plots
    ```
@@ -75,6 +78,7 @@ We'll work on a complete data science project analyzing a real dataset. Our goal
 ### Step 2: Set Up Virtual Environment
 
 1. **Create virtual environment**:
+
    ```bash
    python -m venv housing_env
    ```
@@ -88,6 +92,7 @@ We'll work on a complete data science project analyzing a real dataset. Our goal
    - Choose the environment you just created
 
 4. **Install required packages**:
+
    ```bash
    pip install pandas numpy matplotlib seaborn scikit-learn jupyter
    ```
@@ -401,6 +406,7 @@ plt.show()
 Create a well-structured notebook with these sections:
 
 **Cell 1: Markdown**
+
 ```markdown
 # California Housing Price Analysis
 
@@ -414,6 +420,7 @@ This notebook analyzes factors influencing housing prices in California using ma
 ```
 
 **Cell 2: Code - Setup**
+
 ```python
 # Import libraries and load data
 import pandas as pd
@@ -432,6 +439,7 @@ housing_df.head()
 ```
 
 **Cell 3: Markdown**
+
 ```markdown
 ## Data Summary
 

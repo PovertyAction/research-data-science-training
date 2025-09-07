@@ -32,7 +32,7 @@ By the end of this tutorial, you will be able to:
 **Large Language Models (LLMs)** are AI systems that can understand and generate human-like text. Examples include:
 
 - OpenAI's GPT models (GPT-4, GPT-3.5)
-- Anthropic's Claude models 
+- Anthropic's Claude models
 - Google's Gemini models
 - Meta's Llama models
 
@@ -68,6 +68,7 @@ chatlas is developed by Posit and released under the MIT License, making it free
    - **Linux**: `curl -LsSf https://astral-sh.github.io/uv/install.sh | sh`
 
 2. **Install Python using uv**:
+
    ```bash
    uv python install 3.11
    ```
@@ -83,6 +84,7 @@ chatlas is developed by Posit and released under the MIT License, making it free
 Virtual environments keep your LLM projects isolated:
 
 **Using uv** (Recommended):
+
 ```bash
 # Create project directory
 mkdir llm_tutorial_project
@@ -99,6 +101,7 @@ source llm_env/bin/activate
 ```
 
 **Using standard venv**:
+
 ```bash
 # Create environment
 python -m venv llm_env
@@ -127,6 +130,7 @@ pip install python-dotenv jupyter ipython
 ```
 
 Verify the installation:
+
 ```python
 python -c "import chatlas; print('chatlas installed successfully!')"
 ```
@@ -139,7 +143,7 @@ To use LLMs, you need API keys from the providers. We'll cover the most popular 
 
 1. **Create Account**: Go to [platform.openai.com](https://platform.openai.com)
 2. **Add Payment Method**: Go to Billing → Add payment method
-3. **Generate API Key**: 
+3. **Generate API Key**:
    - Go to API Keys section
    - Click "Create new secret key"
    - Copy the key (starts with `sk-`)
@@ -157,6 +161,7 @@ To use LLMs, you need API keys from the providers. We'll cover the most popular 
 ### Other Providers
 
 chatlas also supports:
+
 - **Google Gemini**: [ai.google.dev](https://ai.google.dev)
 - **Mistral AI**: [console.mistral.ai](https://console.mistral.ai)
 - **Local models**: Using Ollama or similar
@@ -202,12 +207,14 @@ else:
 ```
 
 Run the test:
+
 ```bash
 python test_setup.py
 ```
 
 ::: {.callout-warning}
 **Important Security Notes:**
+
 - Never commit `.env` files to version control
 - Add `.env` to your `.gitignore` file
 - Use separate API keys for different projects/environments
@@ -254,6 +261,7 @@ python first_test.py
 ```
 
 Expected output:
+
 ```
 ✅ Test successful!
 Response: Hello! 2+2 equals 4. Is there anything else I can help you with?
@@ -264,11 +272,13 @@ Response: Hello! 2+2 equals 4. Is there anything else I can help you with?
 ### Set Up Your IDE
 
 **Option A: VS Code/Positron**
+
 1. Install Python extension
 2. Select your virtual environment as the interpreter
 3. Install Python Docstring Generator extension (optional)
 
 **Option B: Jupyter Notebooks**
+
 ```bash
 # With environment activated
 pip install jupyter
@@ -278,6 +288,7 @@ jupyter notebook
 ### Create Project Structure
 
 Organize your LLM project:
+
 ```
 llm_tutorial_project/
 ├── .env                 # API keys (never commit!)
@@ -289,6 +300,7 @@ llm_tutorial_project/
 ```
 
 Create `.gitignore`:
+
 ```gitignore
 # Environment variables
 .env
@@ -309,6 +321,7 @@ __pycache__/
 ```
 
 Create `requirements.txt`:
+
 ```txt
 chatlas>=0.1.0
 python-dotenv>=1.0.0
@@ -320,11 +333,13 @@ jupyter>=1.0.0
 ### Understanding API Costs
 
 LLM APIs charge based on usage:
+
 - **Tokens**: Both input (prompt) and output (response) count
 - **Model**: More powerful models cost more
 - **Usage**: Costs add up quickly with frequent use
 
 **Cost-saving tips**:
+
 - Start with cheaper models (gpt-3.5-turbo vs gpt-4)
 - Use shorter prompts when possible
 - Set up billing alerts
@@ -343,20 +358,24 @@ LLM APIs charge based on usage:
 ### Common Issues
 
 **"Import Error: No module named 'chatlas'"**
+
 - Ensure your virtual environment is activated
 - Run `pip install chatlas` again
 
 **"Authentication Error" / "Invalid API Key"**
+
 - Check your `.env` file format
 - Verify API key is correct (no extra spaces)
 - Ensure you've added billing info to your account
 
 **"Rate Limit Exceeded"**
+
 - You're making requests too quickly
 - Wait a few minutes and try again
 - Consider upgrading your API plan
 
 **High API Costs**
+
 - Check your usage dashboard
 - Switch to a cheaper model for testing
 - Make prompts more concise
@@ -370,6 +389,7 @@ LLM APIs charge based on usage:
 ## What's Next?
 
 In the next tutorial, you will learn to:
+
 - Use chatlas for basic conversations
 - Understand different models and their capabilities  
 - Manage conversation context and history

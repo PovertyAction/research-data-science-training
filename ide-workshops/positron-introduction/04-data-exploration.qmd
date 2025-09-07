@@ -32,6 +32,7 @@ By the end of this tutorial, you will be able to:
 ## Prerequisites
 
 Before starting this tutorial, ensure you have:
+
 - ✅ Positron installed and running
 - ✅ Python and/or R interpreters configured
 - ✅ Basic packages installed (pandas, ggplot2, etc.)
@@ -45,6 +46,7 @@ Let's start by loading some sample data to explore. We'll use both Python and R 
 1. **Create a new Python file**: `File > New File`, save as `data_exploration.py`
 
 2. **Import libraries and load data**:
+
    ```python
    import pandas as pd
    import numpy as np
@@ -73,6 +75,7 @@ Let's start by loading some sample data to explore. We'll use both Python and R 
 1. **Create a new R file**: `File > New File`, save as `data_exploration.R`
 
 2. **Load libraries and data**:
+
    ```r
    library(ggplot2)
    library(dplyr)
@@ -119,11 +122,13 @@ The Data Viewer provides an interactive spreadsheet-like view of your data.
 ### Open the Data Viewer
 
 **Method 1: From Variables Panel**
+
 - In the Variables panel, find your `iris_df`
 - Click the small grid icon next to it
 - This opens the Data Viewer
 
 **Method 2: From Console**
+
 - **Python**: Run `iris_df` (just the variable name)
 - **R**: Run `View(iris_df)`
 
@@ -292,6 +297,7 @@ Let's explore more advanced features with a larger dataset.
 ### Create a Larger Dataset
 
 **Python**:
+
 ```python
 # Create a larger synthetic dataset
 np.random.seed(42)
@@ -305,6 +311,7 @@ large_data = pd.DataFrame({
 ```
 
 **R**:
+
 ```r
 # Create a larger synthetic dataset
 set.seed(42)
@@ -337,6 +344,7 @@ Let's try with a real-world dataset.
 ### Download Sample Data
 
 **Python**:
+
 ```python
 # Load a real dataset
 import seaborn as sns
@@ -346,6 +354,7 @@ print(tips_data.head())
 ```
 
 **R**:
+
 ```r
 # Load a built-in dataset
 data(mtcars)
@@ -362,6 +371,7 @@ print(head(mtcars_df))
 3. **Create a summary visualization**:
 
 **Python**:
+
 ```python
 plt.figure(figsize=(10, 6))
 sns.scatterplot(data=tips_data, x='total_bill', y='tip', hue='day')
@@ -370,6 +380,7 @@ plt.show()
 ```
 
 **R**:
+
 ```r
 ggplot(mtcars_df, aes(x = wt, y = mpg, color = factor(cyl))) +
   geom_point() +
@@ -391,16 +402,19 @@ ggplot(mtcars_df, aes(x = wt, y = mpg, color = factor(cyl))) +
 ## Troubleshooting
 
 **Data Viewer not opening**:
+
 - Check that your data object is a DataFrame/data.frame
 - Large datasets (>10,000 rows) might take time to load
 - Try viewing a subset first: `df.head(100)` or `head(df, 100)`
 
 **Plots not appearing**:
+
 - Ensure Plots panel is visible (`View > Plots`)
 - For Python: Make sure to call `plt.show()`
 - For R: Make sure to `print()` ggplot objects in scripts
 
 **Variables panel empty**:
+
 - Make sure you've run code that creates variables
 - Try refreshing by running a simple assignment: `x = 1`
 

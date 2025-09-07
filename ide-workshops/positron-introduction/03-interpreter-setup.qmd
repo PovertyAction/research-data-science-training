@@ -63,6 +63,7 @@ If you don't have Python installed:
 
 1. Open a terminal
 2. Install `uv`:
+
    ```bash
    # On Windows (using winget)
    winget install --id astral-sh.uv
@@ -70,6 +71,7 @@ If you don't have Python installed:
    # On macOS/Linux (using Homebrew)
    brew install uv
    ```
+
 3. Follow the prompts to complete the installation
 
 **Option B: Using Python.org**
@@ -78,7 +80,6 @@ If you don't have Python installed:
 2. Download the latest Python 3.x version
 3. Run the installer
 4. **Important**: Check "Add Python to PATH" during installation
-
 
 ### Step 3: Configure Python in Positron
 
@@ -103,6 +104,7 @@ If you don't see "Python: Select Interpreter" in the Command Palette, try typing
 Let's verify Python is working correctly:
 
 1. **In the Console**, type:
+
    ```python
    print("Hello from Python!")
    import sys
@@ -110,6 +112,7 @@ Let's verify Python is working correctly:
    ```
 
 2. **Expected Output**:
+
    ```
    Hello from Python!
    Python version: 3.11.x (main, ...)
@@ -143,12 +146,14 @@ If you don't have R installed:
 Let's verify R is working:
 
 1. **In the R Console**, type:
+
    ```r
    print("Hello from R!")
    R.version.string
    ```
 
 2. **Expected Output**:
+
    ```
    [1] "Hello from R!"
    [1] "R version 4.3.x (2024-xx-xx)"
@@ -163,6 +168,7 @@ Virtual environments help keep your projects isolated and organized.
 1. **Open Terminal** in Positron: `View > Terminal`
 
 2. **Create Environment**:
+
    ```bash
    # Using venv (built into Python)
    python -m venv myproject_env
@@ -174,16 +180,19 @@ Virtual environments help keep your projects isolated and organized.
 3. **Activate Environment**:
 
    **Windows**:
+
    ```bash
    myproject_env\Scripts\activate
    ```
 
    **macOS/Linux**:
+
    ```bash
    source myproject_env/bin/activate
    ```
 
    **Conda** (all platforms):
+
    ```bash
    conda activate myproject_env
    ```
@@ -232,15 +241,18 @@ Package installation may take several minutes, especially for data science packa
 Positron makes it easy to switch between Python and R:
 
 ### Method 1: Console Selector
+
 - Look for a dropdown near the Console
 - Click it to switch between "Python" and "R"
 
 ### Method 2: Command Palette
+
 - Press `Ctrl+Shift+P`
 - Type "Console" and look for language-specific options
 - Select "Python Console" or "R Console"
 
 ### Method 3: File Association
+
 - `.py` files automatically use Python
 - `.R` files automatically use R
 - Create files with appropriate extensions
@@ -295,11 +307,13 @@ Select the code and press `F9` to run.
 ### Python Issues
 
 **"Python not found"**:
+
 - Ensure Python is installed and added to PATH
 - Restart Positron after installation
 - Use Command Palette to select interpreter
 
 **Package installation fails**:
+
 - Check internet connection
 - Try upgrading pip: `pip install --upgrade pip`
 - Use virtual environments to avoid conflicts
@@ -307,11 +321,13 @@ Select the code and press `F9` to run.
 ### R Issues
 
 **"R not found"**:
+
 - Ensure R is properly installed
 - Check that R is in your system PATH
 - Restart Positron after R installation
 
 **Package installation fails**:
+
 - Check CRAN mirror in R: `chooseCRANmirror()`
 - Try installing one package at a time
 - Check for permission issues

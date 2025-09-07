@@ -32,6 +32,7 @@ By the end of this tutorial, you will be able to:
 ## Prerequisites
 
 Before starting this tutorial, ensure you have:
+
 - ✅ Completed the setup and basic usage tutorials
 - ✅ Understanding of Python functions and classes
 - ✅ API keys for at least one LLM provider that supports function calling
@@ -872,6 +873,7 @@ print("\nPerformance Stats:", stats)
 ## What's Next?
 
 In the next tutorial, you will learn to build complete applications:
+
 - Create conversational chatbots
 - Build document analysis tools
 - Develop automated writing assistants

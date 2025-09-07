@@ -32,6 +32,7 @@ By the end of this tutorial, you will be able to:
 ## Prerequisites
 
 Before starting, ensure you have:
+
 - ✅ Positron installed and configured
 - ✅ R interpreter set up with tidyverse packages
 - ✅ Familiarity with Positron's interface and data exploration tools
@@ -49,6 +50,7 @@ We'll analyze a dataset about passenger characteristics from the Titanic disaste
 ### Step 1: Create Project Structure
 
 1. **Create project folder**:
+
    ```bash
    mkdir titanic_analysis_r
    ```
@@ -56,6 +58,7 @@ We'll analyze a dataset about passenger characteristics from the Titanic disaste
 2. **Open in Positron**: `File > Open Folder` → select `titanic_analysis_r`
 
 3. **Create R project structure**:
+
    ```
    titanic_analysis_r/
    ├── data/           # Raw and processed data
@@ -66,6 +69,7 @@ We'll analyze a dataset about passenger characteristics from the Titanic disaste
    ```
 
 4. **Create directories**:
+
    ```bash
    mkdir data scripts plots reports
    ```

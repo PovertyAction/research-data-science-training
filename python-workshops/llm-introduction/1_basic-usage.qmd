@@ -31,6 +31,7 @@ By the end of this tutorial, you will be able to:
 ## Prerequisites
 
 Before starting this tutorial, ensure you have:
+
 - ✅ Python environment set up with chatlas installed
 - ✅ API keys configured for at least one LLM provider
 - ✅ Completed the setup tutorial and verified your installation
@@ -74,11 +75,13 @@ print(f"Response: {response}")
 ```
 
 **Run it**:
+
 ```bash
 python basic_chat.py
 ```
 
 Expected output:
+
 ```
 Response: The capital of France is Paris.
 ```
@@ -570,6 +573,7 @@ How can I make it faster?
 
 print("Coding Help:")
 print(coder.chat(code_question))
+
 ```
 
 ## Embedded Video Tutorial
