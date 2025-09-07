@@ -1,0 +1,390 @@
+---
+title: "Setting Up Your LLM Development Environment"
+abstract: |
+  This tutorial guides you through setting up a complete Python environment for working with Large Language Models using the chatlas library. You will learn to install Python, create virtual environments, obtain API keys, and verify your setup is working correctly.
+date: last-modified
+
+format:
+  html: default
+
+authors-ipa:
+  - "[Your Name](https://poverty-action.org/people/your_name)"
+
+contributors:
+  - "Content uses examples from [chatlas documentation](https://posit-dev.github.io/chatlas/) (MIT License)"
+
+keywords: ["LLM", "chatlas", "Python", "API Keys", "Environment Setup", "Tutorial", "Diátaxis Framework"]
+license: "CC BY"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Set up a Python development environment for LLM work
+- Install and configure the chatlas library
+- Obtain and securely manage API keys for LLM providers
+- Verify your setup with a simple test
+- Understand best practices for LLM development environments
+
+## What Are LLMs and Why Use chatlas?
+
+**Large Language Models (LLMs)** are AI systems that can understand and generate human-like text. Examples include:
+
+- OpenAI's GPT models (GPT-4, GPT-3.5)
+- Anthropic's Claude models 
+- Google's Gemini models
+- Meta's Llama models
+
+**chatlas** is a Python library that simplifies working with these models by providing:
+
+- A unified interface across different LLM providers
+- Easy conversation management and context handling
+- Built-in support for tools and function calling
+- Streaming responses and async operations
+- Structured data extraction capabilities
+
+::: {.callout-note}
+chatlas is developed by Posit and released under the MIT License, making it free to use for any purpose.
+:::
+
+## Prerequisites
+
+- Basic familiarity with Python programming
+- A computer with internet connection
+- Credit card or account setup for at least one LLM provider (for API access)
+
+## Part 1: Python Environment Setup
+
+### Step 1: Install Python
+
+**Option A: Using uv (Recommended)**
+
+`uv` is a fast Python package manager that makes environment management easier:
+
+1. **Install uv**:
+   - **Windows**: Download from [astral-sh.github.io/uv](https://astral-sh.github.io/uv/)
+   - **macOS**: `brew install uv`
+   - **Linux**: `curl -LsSf https://astral-sh.github.io/uv/install.sh | sh`
+
+2. **Install Python using uv**:
+   ```bash
+   uv python install 3.11
+   ```
+
+**Option B: Traditional Installation**
+
+1. Go to [python.org](https://python.org)
+2. Download Python 3.10 or newer
+3. Run the installer (check "Add Python to PATH" on Windows)
+
+### Step 2: Create a Virtual Environment
+
+Virtual environments keep your LLM projects isolated:
+
+**Using uv** (Recommended):
+```bash
+# Create project directory
+mkdir llm_tutorial_project
+cd llm_tutorial_project
+
+# Create virtual environment with uv
+uv venv llm_env
+
+# Activate environment
+# Windows:
+llm_env\Scripts\activate
+# macOS/Linux:
+source llm_env/bin/activate
+```
+
+**Using standard venv**:
+```bash
+# Create environment
+python -m venv llm_env
+
+# Activate environment
+# Windows:
+llm_env\Scripts\activate  
+# macOS/Linux:
+source llm_env/bin/activate
+```
+
+::: {.callout-tip}
+You'll know your virtual environment is active when you see `(llm_env)` at the beginning of your terminal prompt.
+:::
+
+### Step 3: Install chatlas and Dependencies
+
+With your virtual environment activated:
+
+```bash
+# Install chatlas
+pip install -U chatlas
+
+# Install additional useful packages
+pip install python-dotenv jupyter ipython
+```
+
+Verify the installation:
+```python
+python -c "import chatlas; print('chatlas installed successfully!')"
+```
+
+## Part 2: API Key Setup
+
+To use LLMs, you need API keys from the providers. We'll cover the most popular options:
+
+### OpenAI API Key
+
+1. **Create Account**: Go to [platform.openai.com](https://platform.openai.com)
+2. **Add Payment Method**: Go to Billing → Add payment method
+3. **Generate API Key**: 
+   - Go to API Keys section
+   - Click "Create new secret key"
+   - Copy the key (starts with `sk-`)
+   - Store it safely - you can't view it again!
+
+### Anthropic API Key  
+
+1. **Create Account**: Go to [console.anthropic.com](https://console.anthropic.com)
+2. **Add Credits**: Add credits to your account
+3. **Generate API Key**:
+   - Go to Account → API Keys
+   - Click "Create Key"
+   - Copy the key (starts with `sk-ant-`)
+
+### Other Providers
+
+chatlas also supports:
+- **Google Gemini**: [ai.google.dev](https://ai.google.dev)
+- **Mistral AI**: [console.mistral.ai](https://console.mistral.ai)
+- **Local models**: Using Ollama or similar
+
+## Part 3: Secure API Key Management
+
+**Never put API keys directly in your code!** Use environment variables instead.
+
+### Step 1: Create Environment File
+
+In your project directory, create a file called `.env`:
+
+```bash
+# .env file
+OPENAI_API_KEY=sk-your-openai-key-here
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-key-here
+```
+
+### Step 2: Load Environment Variables
+
+Create a test file `test_setup.py`:
+
+```python
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Check if keys are loaded
+openai_key = os.getenv('OPENAI_API_KEY')
+anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+
+if openai_key:
+    print(f"✅ OpenAI API key loaded: {openai_key[:10]}...")
+else:
+    print("❌ OpenAI API key not found")
+    
+if anthropic_key:
+    print(f"✅ Anthropic API key loaded: {anthropic_key[:15]}...")
+else:
+    print("❌ Anthropic API key not found")
+```
+
+Run the test:
+```bash
+python test_setup.py
+```
+
+::: {.callout-warning}
+**Important Security Notes:**
+- Never commit `.env` files to version control
+- Add `.env` to your `.gitignore` file
+- Use separate API keys for different projects/environments
+- Regularly rotate your API keys
+:::
+
+## Part 4: First chatlas Test
+
+Let's verify everything is working with a simple test:
+
+### Step 1: Create Test Script
+
+Create `first_test.py`:
+
+```python
+import os
+from dotenv import load_dotenv
+from chatlas import ChatOpenAI
+
+# Load environment variables
+load_dotenv()
+
+# Initialize the chat client
+chat = ChatOpenAI(
+    model="gpt-3.5-turbo",  # Use the cheaper model for testing
+    system_prompt="You are a helpful assistant that gives brief, friendly responses."
+)
+
+# Test basic chat
+try:
+    response = chat.chat("Hello! Can you tell me what 2+2 equals?")
+    print("✅ Test successful!")
+    print(f"Response: {response}")
+    
+except Exception as e:
+    print(f"❌ Test failed: {e}")
+    print("Check your API key and internet connection")
+```
+
+### Step 2: Run the Test
+
+```bash
+python first_test.py
+```
+
+Expected output:
+```
+✅ Test successful!
+Response: Hello! 2+2 equals 4. Is there anything else I can help you with?
+```
+
+## Part 5: Development Environment Setup
+
+### Set Up Your IDE
+
+**Option A: VS Code/Positron**
+1. Install Python extension
+2. Select your virtual environment as the interpreter
+3. Install Python Docstring Generator extension (optional)
+
+**Option B: Jupyter Notebooks**
+```bash
+# With environment activated
+pip install jupyter
+jupyter notebook
+```
+
+### Create Project Structure
+
+Organize your LLM project:
+```
+llm_tutorial_project/
+├── .env                 # API keys (never commit!)
+├── .gitignore          # Ignore .env and other files
+├── requirements.txt    # Package dependencies
+├── notebooks/          # Jupyter notebooks
+├── scripts/           # Python scripts
+└── data/              # Data files (if any)
+```
+
+Create `.gitignore`:
+```gitignore
+# Environment variables
+.env
+
+# Virtual environment
+llm_env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE files
+.vscode/
+.idea/
+```
+
+Create `requirements.txt`:
+```txt
+chatlas>=0.1.0
+python-dotenv>=1.0.0
+jupyter>=1.0.0
+```
+
+## Part 6: Cost Management and Best Practices
+
+### Understanding API Costs
+
+LLM APIs charge based on usage:
+- **Tokens**: Both input (prompt) and output (response) count
+- **Model**: More powerful models cost more
+- **Usage**: Costs add up quickly with frequent use
+
+**Cost-saving tips**:
+- Start with cheaper models (gpt-3.5-turbo vs gpt-4)
+- Use shorter prompts when possible
+- Set up billing alerts
+- Monitor your usage regularly
+
+### Development Best Practices
+
+1. **Start Small**: Test with simple prompts first
+2. **Use Version Control**: Track your experiments
+3. **Log Interactions**: Save important conversations
+4. **Handle Errors**: Network and API issues happen
+5. **Respect Rate Limits**: Don't overwhelm the APIs
+
+## Troubleshooting
+
+### Common Issues
+
+**"Import Error: No module named 'chatlas'"**
+- Ensure your virtual environment is activated
+- Run `pip install chatlas` again
+
+**"Authentication Error" / "Invalid API Key"**
+- Check your `.env` file format
+- Verify API key is correct (no extra spaces)
+- Ensure you've added billing info to your account
+
+**"Rate Limit Exceeded"**
+- You're making requests too quickly
+- Wait a few minutes and try again
+- Consider upgrading your API plan
+
+**High API Costs**
+- Check your usage dashboard
+- Switch to a cheaper model for testing
+- Make prompts more concise
+
+### Getting Help
+
+- **chatlas Documentation**: [posit-dev.github.io/chatlas](https://posit-dev.github.io/chatlas/)
+- **OpenAI Help**: [help.openai.com](https://help.openai.com)
+- **Anthropic Support**: [support.anthropic.com](https://support.anthropic.com)
+
+## What's Next?
+
+In the next tutorial, you will learn to:
+- Use chatlas for basic conversations
+- Understand different models and their capabilities  
+- Manage conversation context and history
+- Handle responses and errors gracefully
+
+## Summary
+
+You have learned to:
+
+✅ Set up a Python environment for LLM development  
+✅ Install and configure the chatlas library  
+✅ Obtain and securely manage API keys  
+✅ Create a virtual environment for project isolation  
+✅ Test your setup with a working example  
+✅ Understand API costs and best practices  
+✅ Set up a proper project structure  
+
+You're now ready to start building applications with Large Language Models!

@@ -1,0 +1,616 @@
+---
+title: "Basic chatlas Usage and Conversations"
+abstract: |
+  This tutorial teaches you the fundamentals of using chatlas for LLM interactions. You will learn to create chat instances, manage conversations, understand different models, and handle various types of responses through hands-on practice.
+date: last-modified
+
+format:
+  html: default
+
+authors-ipa:
+  - "[Your Name](https://poverty-action.org/people/your_name)"
+
+contributors:
+  - "Content uses examples from [chatlas documentation](https://posit-dev.github.io/chatlas/) (MIT License)"
+
+keywords: ["LLM", "chatlas", "Conversation", "Python", "API", "Tutorial", "Diátaxis Framework"]
+license: "CC BY"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Create and configure different chat instances with various LLM providers
+- Conduct single-turn and multi-turn conversations
+- Understand the differences between various LLM models
+- Handle conversation context and memory
+- Work with system prompts to guide model behavior
+- Process different types of responses and handle errors
+
+## Prerequisites
+
+Before starting this tutorial, ensure you have:
+- ✅ Python environment set up with chatlas installed
+- ✅ API keys configured for at least one LLM provider
+- ✅ Completed the setup tutorial and verified your installation
+
+## Introduction to chatlas Architecture
+
+chatlas provides a unified interface for different LLM providers through **Chat classes**:
+
+- `ChatOpenAI()` - OpenAI models (GPT-3.5, GPT-4, etc.)
+- `ChatAnthropic()` - Anthropic models (Claude)
+- `ChatGoogle()` - Google models (Gemini)
+- `ChatOllama()` - Local models via Ollama
+
+All share the same core methods, making it easy to switch between providers.
+
+## Part 1: Your First Conversation
+
+Let's start with a simple conversation:
+
+### Step 1: Basic Chat Setup
+
+Create a file called `basic_chat.py`:
+
+```python
+import os
+from dotenv import load_dotenv
+from chatlas import ChatOpenAI
+
+# Load environment variables
+load_dotenv()
+
+# Create a chat instance
+chat = ChatOpenAI(
+    model="gpt-3.5-turbo",
+    system_prompt="You are a helpful assistant."
+)
+
+# Single conversation
+response = chat.chat("What is the capital of France?")
+print(f"Response: {response}")
+```
+
+**Run it**:
+```bash
+python basic_chat.py
+```
+
+Expected output:
+```
+Response: The capital of France is Paris.
+```
+
+### Step 2: Understanding the Chat Object
+
+Let's explore what we just created:
+
+```python
+# Inspect the chat object
+print(f"Model: {chat.model}")
+print(f"System prompt: {chat.system_prompt}")
+
+# Check conversation history
+print(f"Number of messages: {len(chat.messages)}")
+print("Conversation history:")
+for message in chat.messages:
+    print(f"  {message.role}: {message.content}")
+```
+
+::: {.callout-note}
+chatlas automatically maintains conversation history, allowing for multi-turn conversations where the model remembers previous exchanges.
+:::
+
+## Part 2: Working with Different Models
+
+### OpenAI Models
+
+```python
+from chatlas import ChatOpenAI
+
+# Different OpenAI models
+gpt_35 = ChatOpenAI(model="gpt-3.5-turbo")  # Faster, cheaper
+gpt_4 = ChatOpenAI(model="gpt-4")           # More capable, expensive
+gpt_4_mini = ChatOpenAI(model="gpt-4-mini") # Balanced option
+
+# Compare responses
+question = "Explain quantum computing in simple terms"
+
+print("GPT-3.5 Response:")
+print(gpt_35.chat(question))
+print("\n" + "="*50 + "\n")
+
+print("GPT-4 Response:")  
+print(gpt_4.chat(question))
+```
+
+### Anthropic (Claude) Models
+
+```python
+from chatlas import ChatAnthropic
+
+# Different Claude models
+claude_sonnet = ChatAnthropic(model="claude-3-sonnet-20240229")
+claude_haiku = ChatAnthropic(model="claude-3-haiku-20240307")
+
+# Test with both
+question = "What are the main differences between Python and JavaScript?"
+
+print("Claude Sonnet:")
+print(claude_sonnet.chat(question))
+print("\n" + "="*50 + "\n")
+
+print("Claude Haiku:")
+print(claude_haiku.chat(question))
+```
+
+### Model Comparison Exercise
+
+Create `model_comparison.py`:
+
+```python
+import os
+from dotenv import load_dotenv
+from chatlas import ChatOpenAI, ChatAnthropic
+
+load_dotenv()
+
+# Create instances
+models = {
+    "GPT-3.5": ChatOpenAI(model="gpt-3.5-turbo"),
+    "GPT-4": ChatOpenAI(model="gpt-4"), 
+    "Claude": ChatAnthropic(model="claude-3-sonnet-20240229")
+}
+
+# Test question
+question = "Write a haiku about programming"
+
+# Compare responses
+for name, model in models.items():
+    print(f"\n{name}:")
+    print("-" * len(name))
+    try:
+        response = model.chat(question)
+        print(response)
+    except Exception as e:
+        print(f"Error: {e}")
+    print()
+```
+
+## Part 3: System Prompts and Behavior Control
+
+System prompts guide how the model behaves. Let's explore their power:
+
+### Basic System Prompts
+
+```python
+# Different personalities
+professional_chat = ChatOpenAI(
+    model="gpt-3.5-turbo",
+    system_prompt="You are a professional business consultant. Provide formal, detailed responses."
+)
+
+casual_chat = ChatOpenAI(
+    model="gpt-3.5-turbo", 
+    system_prompt="You are a friendly, casual assistant. Use simple language and be conversational."
+)
+
+# Same question, different responses
+question = "How should I approach a difficult conversation with my boss?"
+
+print("Professional Response:")
+print(professional_chat.chat(question))
+print("\n" + "="*50 + "\n")
+
+print("Casual Response:")
+print(casual_chat.chat(question))
+```
+
+### Specialized System Prompts
+
+```python
+# Code reviewer
+code_reviewer = ChatOpenAI(
+    model="gpt-4",
+    system_prompt="""You are an experienced software engineer doing code review. 
+    Focus on:
+    - Code quality and best practices
+    - Potential bugs or security issues  
+    - Performance improvements
+    - Readability and maintainability
+    
+    Provide constructive feedback with specific suggestions."""
+)
+
+# Test with some code
+code_to_review = '''
+def calculate_average(numbers):
+    total = 0
+    for i in range(len(numbers)):
+        total = total + numbers[i]
+    return total / len(numbers)
+'''
+
+print("Code Review:")
+print(code_reviewer.chat(f"Please review this Python code:\n\n```python\n{code_to_review}\n```"))
+```
+
+### Creative Writing Assistant
+
+```python
+# Creative writing helper
+writer = ChatOpenAI(
+    model="gpt-4",
+    system_prompt="""You are a creative writing assistant. Help users with:
+    - Story ideas and plot development
+    - Character development
+    - Writing style and voice
+    - Editing and revision suggestions
+    
+    Be encouraging and provide specific, actionable advice."""
+)
+
+print("Writing Help:")
+print(writer.chat("I'm writing a mystery novel but I'm stuck on creating a compelling villain. Any advice?"))
+```
+
+## Part 4: Multi-turn Conversations
+
+chatlas automatically maintains context across multiple exchanges:
+
+### Conversation Flow
+
+```python
+# Create a chat for ongoing conversation
+tutor = ChatOpenAI(
+    model="gpt-3.5-turbo",
+    system_prompt="You are a patient math tutor. Explain concepts clearly and ask follow-up questions."
+)
+
+# Multi-turn conversation
+print("Turn 1:")
+response1 = tutor.chat("I'm having trouble understanding derivatives. Can you help?")
+print(response1)
+
+print("\nTurn 2:")
+response2 = tutor.chat("Can you give me a simple example?")
+print(response2)
+
+print("\nTurn 3:")
+response3 = tutor.chat("What about the derivative of x^2?")
+print(response3)
+
+# Check conversation history
+print(f"\nTotal messages in conversation: {len(tutor.messages)}")
+```
+
+### Managing Conversation Context
+
+```python
+# View full conversation
+def print_conversation(chat):
+    print("Full Conversation:")
+    print("="*50)
+    for i, message in enumerate(chat.messages):
+        print(f"{i+1}. {message.role.upper()}: {message.content}")
+        print("-" * 30)
+
+print_conversation(tutor)
+```
+
+### Starting Fresh Conversations
+
+```python
+# Clear conversation history when needed
+def start_fresh_conversation(chat, new_question):
+    # Clear history (if needed)
+    original_messages = len(chat.messages)
+    
+    # Option 1: Create new instance for fresh start
+    fresh_chat = ChatOpenAI(
+        model=chat.model,
+        system_prompt=chat.system_prompt
+    )
+    
+    response = fresh_chat.chat(new_question)
+    
+    print(f"Original chat has {original_messages} messages")
+    print(f"Fresh chat has {len(fresh_chat.messages)} messages")
+    
+    return response
+
+# Test fresh conversation
+fresh_response = start_fresh_conversation(tutor, "What's the weather like?")
+print(f"Fresh response: {fresh_response}")
+```
+
+## Part 5: Handling Different Response Types
+
+### Text Responses
+
+```python
+# Standard text response
+chat = ChatOpenAI(model="gpt-3.5-turbo")
+
+# Simple text
+simple_response = chat.chat("What is 2+2?")
+print(f"Simple: {simple_response}")
+
+# Complex text
+complex_response = chat.chat("Explain the theory of relativity")
+print(f"Complex: {complex_response}")
+```
+
+### Structured Responses
+
+```python
+# Request structured output
+data_analyst = ChatOpenAI(
+    model="gpt-3.5-turbo",
+    system_prompt="""You are a data analyst. When asked for data analysis, 
+    provide responses in a clear, structured format with:
+    1. Summary
+    2. Key findings
+    3. Recommendations"""
+)
+
+analysis = data_analyst.chat("""
+I have sales data showing:
+- Q1: $100k
+- Q2: $120k  
+- Q3: $110k
+- Q4: $140k
+
+Please analyze this data.
+""")
+
+print("Structured Analysis:")
+print(analysis)
+```
+
+### Getting Specific Formats
+
+```python
+# Request specific formats
+format_helper = ChatOpenAI(model="gpt-3.5-turbo")
+
+# Request JSON format
+json_response = format_helper.chat("""
+Create a JSON object with information about the planet Mars including: 
+name, distance from sun, number of moons, and atmosphere composition.
+Only return the JSON, no extra text.
+""")
+
+print("JSON Response:")
+print(json_response)
+
+# Request list format  
+list_response = format_helper.chat("""
+Give me a bulleted list of 5 benefits of exercise.
+Use this format:
+• Benefit 1
+• Benefit 2
+etc.
+""")
+
+print("\nList Response:")
+print(list_response)
+```
+
+## Part 6: Error Handling and Debugging
+
+### Common Error Scenarios
+
+```python
+import time
+from chatlas import ChatOpenAI
+
+def robust_chat(chat, message, max_retries=3):
+    """Chat with error handling and retries"""
+    for attempt in range(max_retries):
+        try:
+            response = chat.chat(message)
+            return response
+            
+        except Exception as e:
+            error_type = type(e).__name__
+            
+            if "rate_limit" in str(e).lower():
+                print(f"Rate limit hit, waiting {2**attempt} seconds...")
+                time.sleep(2**attempt)  # Exponential backoff
+                continue
+                
+            elif "invalid_api_key" in str(e).lower():
+                print("Invalid API key. Check your .env file.")
+                break
+                
+            elif "model_not_found" in str(e).lower():
+                print(f"Model not available: {chat.model}")
+                break
+                
+            else:
+                print(f"Attempt {attempt + 1} failed: {error_type}: {e}")
+                if attempt == max_retries - 1:
+                    print("Max retries reached.")
+                    break
+                    
+    return None
+
+# Test error handling
+chat = ChatOpenAI(model="gpt-3.5-turbo")
+response = robust_chat(chat, "Tell me a joke")
+if response:
+    print(f"Success: {response}")
+else:
+    print("Failed to get response")
+```
+
+### Debugging Chat Interactions
+
+```python
+def debug_chat(chat, message):
+    """Chat with detailed debugging info"""
+    print(f"🔧 Debug Info:")
+    print(f"   Model: {chat.model}")
+    print(f"   System prompt: {chat.system_prompt[:50]}...")
+    print(f"   Messages in history: {len(chat.messages)}")
+    print(f"   Query: {message}")
+    print("-" * 50)
+    
+    try:
+        start_time = time.time()
+        response = chat.chat(message)
+        end_time = time.time()
+        
+        print(f"✅ Success in {end_time - start_time:.2f}s")
+        print(f"📝 Response length: {len(response)} characters")
+        print(f"💬 Response: {response}")
+        
+        return response
+        
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return None
+
+# Test debugging
+chat = ChatOpenAI(model="gpt-3.5-turbo")
+debug_chat(chat, "What's the weather like today?")
+```
+
+## Part 7: Practical Exercises
+
+### Exercise 1: Personal Assistant
+
+Create a personal assistant that helps with different tasks:
+
+```python
+# Personal assistant with task-specific responses
+assistant = ChatOpenAI(
+    model="gpt-3.5-turbo",
+    system_prompt="""You are a helpful personal assistant. 
+    Help with scheduling, reminders, information lookup, and general questions.
+    Always be concise but helpful."""
+)
+
+# Test different types of requests
+tasks = [
+    "Help me plan a 30-minute morning routine",
+    "What should I cook for dinner with chicken and vegetables?", 
+    "Explain blockchain in 2 sentences",
+    "Give me 3 time management tips"
+]
+
+for task in tasks:
+    print(f"\nTask: {task}")
+    print(f"Response: {assistant.chat(task)}")
+    print("-" * 50)
+```
+
+### Exercise 2: Learning Buddy
+
+Create a study partner that adapts to your learning style:
+
+```python
+# Learning assistant
+study_buddy = ChatOpenAI(
+    model="gpt-4",
+    system_prompt="""You are a study buddy helping someone learn new topics.
+    - Break down complex concepts into simple parts
+    - Use examples and analogies
+    - Ask questions to check understanding
+    - Encourage and motivate the learner"""
+)
+
+# Interactive learning session
+print("=== Study Session ===")
+topic = "machine learning"
+
+response1 = study_buddy.chat(f"I want to learn about {topic}. Where should I start?")
+print(f"Study Buddy: {response1}")
+
+# Follow-up questions
+follow_up = input("\nYour response: ")
+response2 = study_buddy.chat(follow_up)
+print(f"Study Buddy: {response2}")
+```
+
+### Exercise 3: Code Helper
+
+Create a coding assistant:
+
+```python
+# Coding assistant
+coder = ChatOpenAI(
+    model="gpt-4",
+    system_prompt="""You are a coding assistant for Python developers.
+    - Help debug code issues
+    - Suggest improvements and best practices  
+    - Explain concepts clearly
+    - Provide working code examples"""
+)
+
+# Coding help example
+code_question = """
+I have this Python code but it's running slowly:
+
+```python
+def find_duplicates(lst):
+    duplicates = []
+    for i in range(len(lst)):
+        for j in range(i+1, len(lst)):
+            if lst[i] == lst[j] and lst[i] not in duplicates:
+                duplicates.append(lst[i])
+    return duplicates
+```
+
+How can I make it faster?
+"""
+
+print("Coding Help:")
+print(coder.chat(code_question))
+```
+
+## Embedded Video Tutorial
+
+{{< video https://youtu.be/owDd1CJ17uQ >}}
+
+*This video provides additional insights into using chatlas effectively with practical examples and advanced techniques.*
+
+::: {.callout-note}
+If the video doesn't load, you can watch it directly on [YouTube](https://youtu.be/owDd1CJ17uQ).
+:::
+
+## Best Practices Summary
+
+1. **Start Simple**: Begin with basic conversations before complex interactions
+2. **Use Appropriate Models**: Balance cost and capability for your use case
+3. **Craft Clear Prompts**: Be specific about what you want
+4. **Handle Errors**: Always include error handling in production code
+5. **Manage Context**: Be aware of conversation history length
+6. **Test Different Models**: Each has strengths for different tasks
+7. **Secure API Keys**: Never hardcode keys in your code
+
+## What's Next?
+
+In the next tutorial, you will learn advanced techniques:
+- Function calling and tool use
+- Working with images and files
+- Streaming responses for real-time interaction
+- Building conversational agents
+- Prompt engineering techniques
+
+## Summary
+
+You have learned to:
+
+✅ Create and configure chat instances for different LLM providers  
+✅ Conduct single-turn and multi-turn conversations  
+✅ Use system prompts to control model behavior  
+✅ Handle conversation context and history  
+✅ Work with different response formats  
+✅ Implement error handling and debugging  
+✅ Build practical applications like assistants and tutors  
+
+You're now ready to build more sophisticated LLM applications!

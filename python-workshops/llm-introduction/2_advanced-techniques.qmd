@@ -1,0 +1,893 @@
+---
+title: "Advanced LLM Techniques with chatlas"
+abstract: |
+  This tutorial explores advanced features of chatlas including function calling, tool integration, multimodal inputs, streaming responses, and prompt engineering techniques. You will build sophisticated LLM applications that can interact with external systems and process various types of content.
+date: last-modified
+
+format:
+  html: default
+
+authors-ipa:
+  - "[Your Name](https://poverty-action.org/people/your_name)"
+
+contributors:
+  - "Content uses examples from [chatlas documentation](https://posit-dev.github.io/chatlas/) (MIT License)"
+
+keywords: ["LLM", "chatlas", "Function Calling", "Tools", "Multimodal", "Streaming", "Tutorial", "Diátaxis Framework"]
+license: "CC BY"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Implement function calling to extend LLM capabilities
+- Create and register custom tools for specific tasks
+- Work with multimodal inputs (images, files)
+- Use streaming responses for real-time interactions
+- Apply advanced prompt engineering techniques
+- Build agents that can interact with external systems
+- Handle complex workflows and error scenarios
+
+## Prerequisites
+
+Before starting this tutorial, ensure you have:
+- ✅ Completed the setup and basic usage tutorials
+- ✅ Understanding of Python functions and classes
+- ✅ API keys for at least one LLM provider that supports function calling
+
+## Part 1: Function Calling and Tools
+
+Function calling allows LLMs to interact with external systems by calling Python functions. This is one of the most powerful features of modern LLMs.
+
+### Step 1: Your First Tool
+
+Let's create a simple tool that the LLM can use:
+
+```python
+import os
+from dotenv import load_dotenv
+from chatlas import ChatOpenAI
+import datetime
+
+load_dotenv()
+
+def get_current_time():
+    """Get the current date and time"""
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# Create chat and register the tool
+chat = ChatOpenAI(
+    model="gpt-3.5-turbo",
+    system_prompt="You are a helpful assistant that can check the current time."
+)
+
+# Register the function as a tool
+chat.register_tool(get_current_time)
+
+# Test it
+response = chat.chat("What time is it right now?")
+print(response)
+```
+
+The LLM will automatically call your function when it needs the current time!
+
+### Step 2: Tools with Parameters
+
+Create more sophisticated tools that accept parameters:
+
+```python
+def calculate_tip(bill_amount: float, tip_percentage: float = 15.0) -> dict:
+    """
+    Calculate tip amount and total bill
+    
+    Args:
+        bill_amount: The original bill amount in dollars
+        tip_percentage: Tip percentage (default 15%)
+    
+    Returns:
+        Dictionary with tip amount, total, and breakdown
+    """
+    tip_amount = bill_amount * (tip_percentage / 100)
+    total = bill_amount + tip_amount
+    
+    return {
+        "original_bill": bill_amount,
+        "tip_percentage": tip_percentage,
+        "tip_amount": round(tip_amount, 2),
+        "total_amount": round(total, 2),
+        "per_person": {
+            "2_people": round(total / 2, 2),
+            "4_people": round(total / 4, 2)
+        }
+    }
+
+def convert_temperature(temperature: float, from_unit: str, to_unit: str) -> dict:
+    """
+    Convert temperature between Celsius, Fahrenheit, and Kelvin
+    
+    Args:
+        temperature: Temperature value to convert
+        from_unit: Source unit ('C', 'F', or 'K')
+        to_unit: Target unit ('C', 'F', or 'K')
+    
+    Returns:
+        Dictionary with original and converted values
+    """
+    # Convert to Celsius first
+    if from_unit.upper() == 'F':
+        celsius = (temperature - 32) * 5/9
+    elif from_unit.upper() == 'K':
+        celsius = temperature - 273.15
+    else:
+        celsius = temperature
+    
+    # Convert from Celsius to target
+    if to_unit.upper() == 'F':
+        result = celsius * 9/5 + 32
+    elif to_unit.upper() == 'K':
+        result = celsius + 273.15
+    else:
+        result = celsius
+    
+    return {
+        "original": f"{temperature}°{from_unit.upper()}",
+        "converted": f"{round(result, 2)}°{to_unit.upper()}",
+        "formula_used": f"{from_unit.upper()} to {to_unit.upper()}"
+    }
+
+# Create a utility assistant
+utility_assistant = ChatOpenAI(
+    model="gpt-4",
+    system_prompt="""You are a helpful utility assistant that can:
+    - Calculate tips and split bills
+    - Convert temperatures between units
+    Always use the available tools when users ask for calculations."""
+)
+
+# Register tools
+utility_assistant.register_tool(calculate_tip)
+utility_assistant.register_tool(convert_temperature)
+
+# Test the tools
+print("=== Tip Calculator Test ===")
+response1 = utility_assistant.chat("I have a $85 bill and want to tip 20%. What's the total and how much per person if we're splitting between 4 people?")
+print(response1)
+
+print("\n=== Temperature Converter Test ===")
+response2 = utility_assistant.chat("Convert 75°F to Celsius")
+print(response2)
+```
+
+### Step 3: Data Analysis Tools
+
+Create tools for data analysis tasks:
+
+```python
+import json
+import statistics
+
+def analyze_numbers(numbers: list) -> dict:
+    """
+    Analyze a list of numbers and return statistical summary
+    
+    Args:
+        numbers: List of numeric values
+    
+    Returns:
+        Dictionary with statistical analysis
+    """
+    if not numbers:
+        return {"error": "No numbers provided"}
+    
+    try:
+        return {
+            "count": len(numbers),
+            "sum": sum(numbers),
+            "mean": round(statistics.mean(numbers), 2),
+            "median": statistics.median(numbers),
+            "mode": statistics.mode(numbers) if len(set(numbers)) < len(numbers) else "No mode",
+            "min": min(numbers),
+            "max": max(numbers),
+            "range": max(numbers) - min(numbers),
+            "std_dev": round(statistics.stdev(numbers), 2) if len(numbers) > 1 else 0
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+def create_chart_data(data: dict, chart_type: str = "bar") -> dict:
+    """
+    Prepare data for visualization
+    
+    Args:
+        data: Dictionary with labels as keys and values as numbers
+        chart_type: Type of chart ('bar', 'pie', 'line')
+    
+    Returns:
+        Formatted data for charting
+    """
+    labels = list(data.keys())
+    values = list(data.values())
+    
+    return {
+        "chart_type": chart_type,
+        "labels": labels,
+        "values": values,
+        "total": sum(values),
+        "chart_config": {
+            "title": f"{chart_type.capitalize()} Chart",
+            "x_axis": "Categories",
+            "y_axis": "Values"
+        }
+    }
+
+# Data analyst assistant
+data_analyst = ChatOpenAI(
+    model="gpt-4",
+    system_prompt="""You are a data analyst assistant. You can:
+    - Analyze lists of numbers for statistical insights
+    - Prepare data for visualization
+    - Provide insights and recommendations based on data
+    
+    Always use the available tools for calculations."""
+)
+
+data_analyst.register_tool(analyze_numbers)
+data_analyst.register_tool(create_chart_data)
+
+# Test data analysis
+print("=== Data Analysis Test ===")
+analysis_response = data_analyst.chat("""
+I have sales data for the past 6 months: [45000, 52000, 48000, 61000, 58000, 67000]
+Can you analyze this data and tell me what it shows about our sales trends?
+""")
+print(analysis_response)
+
+print("\n=== Chart Data Test ===")  
+chart_response = data_analyst.chat("""
+Create chart data for this quarterly revenue:
+Q1: 150000, Q2: 175000, Q3: 160000, Q4: 190000
+""")
+print(chart_response)
+```
+
+## Part 2: Working with Files and Multimodal Input
+
+Modern LLMs can work with various types of input beyond text.
+
+### Step 1: File Processing Tools
+
+```python
+import os
+import json
+from pathlib import Path
+
+def read_file(file_path: str) -> dict:
+    """
+    Read and return the contents of a file
+    
+    Args:
+        file_path: Path to the file to read
+    
+    Returns:
+        Dictionary with file contents and metadata
+    """
+    try:
+        path = Path(file_path)
+        if not path.exists():
+            return {"error": f"File not found: {file_path}"}
+        
+        # Read file based on extension
+        if path.suffix.lower() in ['.txt', '.md', '.py', '.js', '.html', '.css']:
+            with open(path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        elif path.suffix.lower() == '.json':
+            with open(path, 'r', encoding='utf-8') as f:
+                content = json.load(f)
+        else:
+            return {"error": f"Unsupported file type: {path.suffix}"}
+        
+        return {
+            "file_name": path.name,
+            "file_path": str(path),
+            "file_size": path.stat().st_size,
+            "file_type": path.suffix,
+            "content": content,
+            "line_count": len(str(content).split('\n')) if isinstance(content, str) else None
+        }
+        
+    except Exception as e:
+        return {"error": str(e)}
+
+def write_file(file_path: str, content: str, mode: str = 'w') -> dict:
+    """
+    Write content to a file
+    
+    Args:
+        file_path: Path where to save the file
+        content: Content to write
+        mode: Write mode ('w' for overwrite, 'a' for append)
+    
+    Returns:
+        Dictionary with operation result
+    """
+    try:
+        path = Path(file_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(path, mode, encoding='utf-8') as f:
+            f.write(content)
+        
+        return {
+            "success": True,
+            "file_path": str(path),
+            "bytes_written": len(content.encode('utf-8')),
+            "mode": mode
+        }
+        
+    except Exception as e:
+        return {"error": str(e)}
+
+# File assistant
+file_assistant = ChatOpenAI(
+    model="gpt-4",
+    system_prompt="""You are a file management assistant. You can:
+    - Read files and analyze their contents
+    - Write new files with generated content
+    - Help with file organization and processing
+    
+    Always be careful with file operations and confirm before writing."""
+)
+
+file_assistant.register_tool(read_file)
+file_assistant.register_tool(write_file)
+
+# Create a sample file to work with
+sample_content = """# Project TODO List
+
+## High Priority
+- [ ] Fix login bug
+- [ ] Update documentation
+- [ ] Deploy to staging
+
+## Medium Priority  
+- [ ] Refactor user interface
+- [ ] Add unit tests
+- [ ] Optimize database queries
+
+## Low Priority
+- [ ] Update dependencies
+- [ ] Code cleanup
+"""
+
+# Write sample file
+print("=== File Writing Test ===")
+write_response = file_assistant.chat(f"""
+Create a todo list file called 'project_todo.md' with this content:
+{sample_content}
+""")
+print(write_response)
+
+# Read file back
+print("\n=== File Reading Test ===")
+read_response = file_assistant.chat("Read the project_todo.md file and summarize what tasks need to be done")
+print(read_response)
+```
+
+### Step 2: Image Processing (when supported)
+
+```python
+from chatlas import ChatOpenAI
+from chatlas.content import content_image_file, content_image_url
+
+# Note: Image processing requires models that support vision
+def describe_image_from_file(image_path: str) -> str:
+    """
+    Analyze an image file and return a description
+    """
+    try:
+        vision_chat = ChatOpenAI(model="gpt-4-vision-preview")  # Vision-capable model
+        
+        # Create image content
+        image_content = content_image_file(image_path)
+        
+        response = vision_chat.chat([
+            "Please describe this image in detail, including any text you can see.",
+            image_content
+        ])
+        
+        return response
+        
+    except Exception as e:
+        return f"Error processing image: {e}"
+
+def analyze_chart_image(image_url: str) -> dict:
+    """
+    Analyze a chart or graph from an image URL
+    """
+    try:
+        vision_chat = ChatOpenAI(model="gpt-4-vision-preview")
+        
+        image_content = content_image_url(image_url)
+        
+        response = vision_chat.chat([
+            """Analyze this chart/graph and provide:
+            1. Type of chart
+            2. Main data trends
+            3. Key insights
+            4. Any notable patterns
+            
+            Format your response as a structured analysis.""",
+            image_content
+        ])
+        
+        return {"analysis": response}
+        
+    except Exception as e:
+        return {"error": str(e)}
+
+# Example usage (when you have images to test with)
+"""
+# Test with a local image
+image_description = describe_image_from_file("sample_chart.png")
+print("Image Description:", image_description)
+
+# Test with online image URL
+chart_analysis = analyze_chart_image("https://example.com/sales_chart.png")
+print("Chart Analysis:", chart_analysis)
+"""
+```
+
+## Part 3: Streaming Responses
+
+For real-time applications, you might want streaming responses:
+
+```python
+from chatlas import ChatOpenAI
+import time
+
+def demonstrate_streaming():
+    """
+    Show streaming vs non-streaming responses
+    """
+    chat = ChatOpenAI(model="gpt-3.5-turbo")
+    
+    question = "Write a detailed explanation of how neural networks work"
+    
+    print("=== Non-Streaming Response ===")
+    start_time = time.time()
+    response = chat.chat(question)
+    end_time = time.time()
+    
+    print(f"Response received in {end_time - start_time:.2f} seconds:")
+    print(response)
+    
+    print("\n=== Streaming Response ===")
+    start_time = time.time()
+    
+    # Note: chatlas handles streaming automatically in many cases
+    # Check the documentation for specific streaming methods
+    stream_response = chat.chat(f"{question} (different version)")
+    
+    end_time = time.time()
+    print(f"Streaming completed in {end_time - start_time:.2f} seconds")
+    print("Final response:", stream_response)
+
+# Run streaming demo
+demonstrate_streaming()
+```
+
+## Part 4: Advanced Prompt Engineering
+
+Effective prompting is crucial for getting the best results from LLMs.
+
+### Step 1: Structured Prompting Techniques
+
+```python
+def create_research_assistant():
+    """Create a research assistant with advanced prompting"""
+    
+    research_prompt = """You are an expert research assistant. When answering questions:
+
+    1. STRUCTURE: Use clear headings and bullet points
+    2. SOURCES: Always indicate what type of information you're providing
+    3. DEPTH: Provide both overview and detailed explanations  
+    4. CRITICAL THINKING: Present multiple perspectives when relevant
+    5. LIMITATIONS: Note any limitations in your knowledge
+
+    Format your responses as:
+    ## Overview
+    [Brief summary]
+    
+    ## Detailed Analysis
+    [In-depth explanation]
+    
+    ## Key Points
+    - [Important takeaway 1]
+    - [Important takeaway 2]
+    
+    ## Considerations
+    [Limitations, caveats, or additional context]
+    """
+    
+    return ChatOpenAI(
+        model="gpt-4",
+        system_prompt=research_prompt
+    )
+
+# Test structured prompting
+research_assistant = create_research_assistant()
+
+research_response = research_assistant.chat("""
+What are the main environmental impacts of artificial intelligence, 
+particularly regarding energy consumption and carbon footprint?
+""")
+
+print("=== Structured Research Response ===")
+print(research_response)
+```
+
+### Step 2: Chain-of-Thought Prompting
+
+```python
+def create_problem_solver():
+    """Create an assistant that uses chain-of-thought reasoning"""
+    
+    cot_prompt = """You are a problem-solving assistant. For complex problems:
+
+    1. UNDERSTAND: Clearly restate the problem
+    2. BREAK DOWN: Identify the key components and variables
+    3. REASONING: Work through the solution step-by-step
+    4. CHECK: Verify your reasoning and answer
+    5. SUMMARIZE: Provide a clear final answer
+
+    Always show your thinking process clearly.
+    """
+    
+    return ChatOpenAI(
+        model="gpt-4",
+        system_prompt=cot_prompt
+    )
+
+problem_solver = create_problem_solver()
+
+math_response = problem_solver.chat("""
+A company's revenue grew by 15% in the first quarter, then decreased by 8% in the second quarter, 
+and then grew by 12% in the third quarter. If they started with $500,000 in revenue, 
+what was their revenue at the end of the third quarter? Also, what was their overall growth rate?
+""")
+
+print("=== Chain-of-Thought Response ===")
+print(math_response)
+```
+
+### Step 3: Role-Based Prompting
+
+```python
+def create_expert_consultant(expertise_area: str, style: str = "professional"):
+    """Create domain-specific expert consultants"""
+    
+    style_prompts = {
+        "professional": "Provide formal, detailed analysis with industry terminology",
+        "casual": "Explain in simple terms that anyone can understand",
+        "academic": "Use scholarly language with references to theories and research",
+        "practical": "Focus on actionable advice and real-world applications"
+    }
+    
+    expert_prompt = f"""You are a world-class expert in {expertise_area} with 20+ years of experience.
+    
+    Your expertise includes:
+    - Deep theoretical knowledge
+    - Practical implementation experience  
+    - Industry best practices
+    - Current trends and future developments
+    
+    Communication style: {style_prompts.get(style, style)}
+    
+    Always:
+    - Provide evidence-based insights
+    - Consider multiple perspectives
+    - Offer practical recommendations
+    - Acknowledge limitations and assumptions
+    """
+    
+    return ChatOpenAI(
+        model="gpt-4",
+        system_prompt=expert_prompt
+    )
+
+# Create different expert consultants
+marketing_expert = create_expert_consultant("digital marketing", "practical")
+tech_expert = create_expert_consultant("software architecture", "professional")
+
+# Test expert consultants
+print("=== Marketing Expert Response ===")
+marketing_advice = marketing_expert.chat("""
+Our SaaS startup has 1000 users but low engagement. 
+What strategies should we implement to improve user retention and increase feature adoption?
+""")
+print(marketing_advice)
+
+print("\n=== Tech Expert Response ===")
+tech_advice = tech_expert.chat("""
+We're designing a system that needs to handle 1 million API requests per day 
+with sub-100ms response times. What architectural patterns should we consider?
+""")
+print(tech_advice)
+```
+
+## Part 5: Building Intelligent Agents
+
+Combine tools and advanced prompting to create sophisticated agents:
+
+```python
+import json
+from datetime import datetime, timedelta
+
+class TaskManager:
+    """Simple task management system"""
+    
+    def __init__(self):
+        self.tasks = []
+        self.next_id = 1
+    
+    def add_task(self, title: str, description: str = "", priority: str = "medium", due_date: str = None):
+        """Add a new task"""
+        task = {
+            "id": self.next_id,
+            "title": title,
+            "description": description,
+            "priority": priority,
+            "due_date": due_date,
+            "status": "pending",
+            "created_at": datetime.now().isoformat()
+        }
+        self.tasks.append(task)
+        self.next_id += 1
+        return task
+    
+    def complete_task(self, task_id: int):
+        """Mark a task as completed"""
+        for task in self.tasks:
+            if task["id"] == task_id:
+                task["status"] = "completed"
+                task["completed_at"] = datetime.now().isoformat()
+                return task
+        return None
+    
+    def list_tasks(self, status: str = None):
+        """List tasks, optionally filtered by status"""
+        if status:
+            return [task for task in self.tasks if task["status"] == status]
+        return self.tasks
+
+# Global task manager instance
+task_manager = TaskManager()
+
+def add_task_tool(title: str, description: str = "", priority: str = "medium", due_date: str = None) -> dict:
+    """Add a new task to the task manager"""
+    return task_manager.add_task(title, description, priority, due_date)
+
+def complete_task_tool(task_id: int) -> dict:
+    """Mark a task as completed"""
+    result = task_manager.complete_task(task_id)
+    if result:
+        return result
+    return {"error": f"Task {task_id} not found"}
+
+def list_tasks_tool(status: str = None) -> list:
+    """List all tasks or tasks with specific status"""
+    return task_manager.list_tasks(status)
+
+def get_task_summary_tool() -> dict:
+    """Get summary of all tasks"""
+    all_tasks = task_manager.list_tasks()
+    pending = [t for t in all_tasks if t["status"] == "pending"]
+    completed = [t for t in all_tasks if t["status"] == "completed"]
+    
+    return {
+        "total_tasks": len(all_tasks),
+        "pending_tasks": len(pending),
+        "completed_tasks": len(completed),
+        "high_priority": len([t for t in pending if t["priority"] == "high"]),
+        "overdue": len([t for t in pending if t.get("due_date") and t["due_date"] < datetime.now().isoformat()])
+    }
+
+# Create a personal assistant agent
+personal_assistant = ChatOpenAI(
+    model="gpt-4",
+    system_prompt="""You are a personal productivity assistant. You can help manage tasks and provide productivity advice.
+
+    Available capabilities:
+    - Add new tasks with priorities and due dates
+    - Mark tasks as completed
+    - List and review tasks
+    - Provide task summaries and insights
+    - Offer productivity tips
+
+    Always be proactive in helping the user stay organized and productive.
+    """
+)
+
+# Register tools
+personal_assistant.register_tool(add_task_tool)
+personal_assistant.register_tool(complete_task_tool)
+personal_assistant.register_tool(list_tasks_tool)
+personal_assistant.register_tool(get_task_summary_tool)
+
+# Test the personal assistant
+print("=== Personal Assistant Demo ===")
+
+# Add some tasks
+response1 = personal_assistant.chat("Add a high priority task to 'Finish project proposal' due tomorrow")
+print("Add task:", response1)
+
+response2 = personal_assistant.chat("Add a task to 'Review team performance' with medium priority")
+print("Add task:", response2)
+
+response3 = personal_assistant.chat("What's my current task situation?")
+print("Task summary:", response3)
+
+response4 = personal_assistant.chat("Complete task 1")
+print("Complete task:", response4)
+
+response5 = personal_assistant.chat("Give me some productivity tips based on my current tasks")
+print("Productivity tips:", response5)
+```
+
+## Part 6: Error Handling and Best Practices
+
+### Advanced Error Handling
+
+```python
+import logging
+from typing import Optional, Dict, Any
+from functools import wraps
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def handle_llm_errors(func):
+    """Decorator for handling common LLM errors"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            error_type = type(e).__name__
+            error_msg = str(e)
+            
+            logger.error(f"LLM Error in {func.__name__}: {error_type}: {error_msg}")
+            
+            if "rate_limit" in error_msg.lower():
+                return {"error": "Rate limit exceeded. Please wait and try again."}
+            elif "context_length" in error_msg.lower():
+                return {"error": "Input too long. Please try with shorter text."}
+            elif "invalid_api_key" in error_msg.lower():
+                return {"error": "Invalid API key. Please check your configuration."}
+            else:
+                return {"error": f"Unexpected error: {error_msg}"}
+    
+    return wrapper
+
+@handle_llm_errors
+def robust_chat_function(chat, message: str, max_retries: int = 3) -> Dict[str, Any]:
+    """Chat function with robust error handling"""
+    for attempt in range(max_retries):
+        try:
+            response = chat.chat(message)
+            return {"success": True, "response": response, "attempts": attempt + 1}
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise e
+            logger.warning(f"Attempt {attempt + 1} failed, retrying...")
+            time.sleep(2 ** attempt)  # Exponential backoff
+
+# Test robust error handling
+chat = ChatOpenAI(model="gpt-3.5-turbo")
+result = robust_chat_function(chat, "What's the weather like?")
+print("Robust chat result:", result)
+```
+
+### Performance Monitoring
+
+```python
+import time
+from typing import List
+
+class LLMPerformanceMonitor:
+    """Monitor LLM performance and usage"""
+    
+    def __init__(self):
+        self.interactions = []
+    
+    def log_interaction(self, model: str, prompt_length: int, response_length: int, 
+                       duration: float, success: bool):
+        """Log an LLM interaction"""
+        self.interactions.append({
+            "timestamp": datetime.now().isoformat(),
+            "model": model,
+            "prompt_length": prompt_length,
+            "response_length": response_length,
+            "duration": duration,
+            "success": success
+        })
+    
+    def get_stats(self) -> dict:
+        """Get performance statistics"""
+        if not self.interactions:
+            return {"error": "No interactions logged"}
+        
+        successful = [i for i in self.interactions if i["success"]]
+        
+        return {
+            "total_interactions": len(self.interactions),
+            "successful_interactions": len(successful),
+            "success_rate": len(successful) / len(self.interactions) * 100,
+            "avg_duration": sum(i["duration"] for i in successful) / len(successful) if successful else 0,
+            "avg_prompt_length": sum(i["prompt_length"] for i in successful) / len(successful) if successful else 0,
+            "avg_response_length": sum(i["response_length"] for i in successful) / len(successful) if successful else 0
+        }
+
+# Global monitor instance
+monitor = LLMPerformanceMonitor()
+
+def monitored_chat(chat, message: str):
+    """Chat with performance monitoring"""
+    start_time = time.time()
+    success = False
+    response = ""
+    
+    try:
+        response = chat.chat(message)
+        success = True
+    except Exception as e:
+        response = f"Error: {e}"
+    finally:
+        duration = time.time() - start_time
+        monitor.log_interaction(
+            model=chat.model,
+            prompt_length=len(message),
+            response_length=len(response),
+            duration=duration,
+            success=success
+        )
+    
+    return response
+
+# Test monitoring
+chat = ChatOpenAI(model="gpt-3.5-turbo")
+
+# Make some test interactions
+for i in range(3):
+    response = monitored_chat(chat, f"Tell me an interesting fact #{i+1}")
+    print(f"Response {i+1}: {response[:100]}...")
+
+# Check stats
+stats = monitor.get_stats()
+print("\nPerformance Stats:", stats)
+```
+
+## What's Next?
+
+In the next tutorial, you will learn to build complete applications:
+- Create conversational chatbots
+- Build document analysis tools
+- Develop automated writing assistants
+- Create research and analysis agents
+- Deploy LLM applications
+
+## Summary
+
+You have learned advanced chatlas techniques:
+
+✅ Implement function calling and custom tools  
+✅ Work with multimodal inputs (images, files)  
+✅ Use advanced prompt engineering techniques  
+✅ Build intelligent agents with multiple capabilities  
+✅ Handle errors and monitor performance  
+✅ Create sophisticated LLM applications  
+✅ Apply best practices for production systems  
+
+You now have the skills to build production-ready LLM applications!

@@ -1,0 +1,1771 @@
+---
+title: "Building Real-World LLM Applications"
+abstract: |
+  This tutorial demonstrates how to build complete, production-ready applications using chatlas. You will create practical tools including a document analyzer, research assistant, code reviewer, and writing assistant. Each project includes proper error handling, user interfaces, and deployment considerations.
+date: last-modified
+
+format:
+  html: default
+
+authors-ipa:
+  - "[Your Name](https://poverty-action.org/people/your_name)"
+
+contributors:
+  - "Content uses examples from [chatlas documentation](https://posit-dev.github.io/chatlas/) (MIT License)"
+
+keywords: ["LLM", "chatlas", "Applications", "Production", "Tools", "Tutorial", "Diátaxis Framework"]
+license: "CC BY"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Build complete LLM applications from concept to deployment
+- Create document analysis and summarization tools
+- Develop intelligent research and writing assistants
+- Build code review and analysis systems
+- Implement proper user interfaces and error handling
+- Understand deployment and scaling considerations
+- Apply LLMs to solve real business problems
+
+## Prerequisites
+
+Before starting this tutorial, ensure you have:
+- ✅ Completed all previous tutorials in this series
+- ✅ Understanding of basic web development (for UI components)
+- ✅ Familiarity with file handling and data processing
+- ✅ API keys for LLM providers
+
+## Project Overview
+
+We'll build four complete applications:
+
+1. **Document Intelligence System** - Analyze and summarize documents
+2. **Research Assistant** - Gather and synthesize information
+3. **Code Review Bot** - Automated code analysis and feedback
+4. **Writing Assistant** - Content creation and editing help
+
+Each project includes full code, proper structure, and real-world considerations.
+
+## Project 1: Document Intelligence System
+
+Let's build a comprehensive document analysis tool.
+
+### Step 1: Project Setup
+
+Create the project structure:
+
+```
+document_intelligence/
+├── src/
+│   ├── __init__.py
+│   ├── document_processor.py
+│   ├── analyzers.py
+│   └── utils.py
+├── tests/
+├── data/
+│   ├── input/
+│   └── output/
+├── requirements.txt
+├── .env
+└── main.py
+```
+
+### Step 2: Core Document Processor
+
+Create `src/document_processor.py`:
+
+```python
+"""
+Document Intelligence System using chatlas
+Processes and analyzes various document types
+"""
+
+import os
+import json
+from pathlib import Path
+from typing import Dict, List, Optional, Union
+from datetime import datetime
+from chatlas import ChatOpenAI, ChatAnthropic
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class DocumentProcessor:
+    """Main document processing class"""
+    
+    def __init__(self, model_provider: str = "openai", model_name: str = "gpt-4"):
+        """Initialize the document processor"""
+        if model_provider.lower() == "openai":
+            self.chat = ChatOpenAI(
+                model=model_name,
+                system_prompt=self._get_document_analysis_prompt()
+            )
+        elif model_provider.lower() == "anthropic":
+            self.chat = ChatAnthropic(
+                model=model_name,
+                system_prompt=self._get_document_analysis_prompt()
+            )
+        else:
+            raise ValueError(f"Unsupported provider: {model_provider}")
+        
+        self.setup_tools()
+    
+    def _get_document_analysis_prompt(self) -> str:
+        """Get the system prompt for document analysis"""
+        return """You are a professional document analyst with expertise in:
+        - Extracting key information from documents
+        - Summarizing complex content
+        - Identifying main themes and patterns
+        - Providing actionable insights
+        - Detecting document structure and organization
+        
+        Always provide:
+        1. Clear, structured analysis
+        2. Key insights and takeaways
+        3. Actionable recommendations when appropriate
+        4. Confidence levels for your analysis
+        
+        Be thorough but concise in your responses."""
+    
+    def setup_tools(self):
+        """Set up analysis tools"""
+        self.chat.register_tool(self.extract_document_metadata)
+        self.chat.register_tool(self.analyze_document_structure)
+        self.chat.register_tool(self.generate_summary_report)
+    
+    def extract_document_metadata(self, content: str) -> Dict:
+        """Extract metadata from document content"""
+        lines = content.split('\n')
+        word_count = len(content.split())
+        char_count = len(content)
+        paragraph_count = len([line for line in lines if line.strip()])
+        
+        # Estimate reading time (average 200 words per minute)
+        reading_time = max(1, word_count // 200)
+        
+        return {
+            "word_count": word_count,
+            "character_count": char_count,
+            "line_count": len(lines),
+            "paragraph_count": paragraph_count,
+            "estimated_reading_time_minutes": reading_time,
+            "content_preview": content[:200] + "..." if len(content) > 200 else content
+        }
+    
+    def analyze_document_structure(self, content: str) -> Dict:
+        """Analyze the structure of the document"""
+        lines = content.split('\n')
+        
+        # Look for headings (simple heuristic)
+        headings = []
+        for i, line in enumerate(lines):
+            if line.strip() and (
+                line.startswith('#') or  # Markdown headers
+                line.isupper() or       # ALL CAPS
+                len(line.split()) <= 10 and line.endswith(':')  # Short lines ending with :
+            ):
+                headings.append({
+                    "line_number": i + 1,
+                    "text": line.strip(),
+                    "level": len(line) - len(line.lstrip('#')) if line.startswith('#') else 1
+                })
+        
+        return {
+            "total_sections": len(headings),
+            "headings": headings,
+            "has_structured_format": len(headings) > 0,
+            "average_section_length": len(lines) // max(1, len(headings))
+        }
+    
+    def generate_summary_report(self, title: str, summary: str, key_points: List[str], 
+                               insights: List[str], metadata: Dict) -> Dict:
+        """Generate a comprehensive analysis report"""
+        report = {
+            "document_title": title,
+            "analysis_timestamp": datetime.now().isoformat(),
+            "executive_summary": summary,
+            "key_points": key_points,
+            "insights_and_recommendations": insights,
+            "document_metadata": metadata,
+            "analysis_confidence": "high"  # Could be dynamic based on content
+        }
+        
+        return report
+
+    def process_document(self, file_path: str, analysis_type: str = "comprehensive") -> Dict:
+        """Process a single document"""
+        try:
+            # Read document
+            path = Path(file_path)
+            if not path.exists():
+                raise FileNotFoundError(f"Document not found: {file_path}")
+            
+            with open(path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Basic analysis based on type
+            if analysis_type == "summary":
+                return self._generate_summary(content, path.name)
+            elif analysis_type == "key_points":
+                return self._extract_key_points(content, path.name)
+            elif analysis_type == "comprehensive":
+                return self._comprehensive_analysis(content, path.name)
+            else:
+                raise ValueError(f"Unknown analysis type: {analysis_type}")
+                
+        except Exception as e:
+            return {"error": str(e), "file_path": file_path}
+    
+    def _generate_summary(self, content: str, filename: str) -> Dict:
+        """Generate a document summary"""
+        prompt = f"""
+        Please analyze this document titled "{filename}" and provide:
+        
+        1. A concise executive summary (2-3 paragraphs)
+        2. The main purpose/objective of the document
+        3. Target audience
+        4. Key conclusions or outcomes
+        
+        Document content:
+        {content}
+        """
+        
+        response = self.chat.chat(prompt)
+        metadata = self.extract_document_metadata(content)
+        
+        return {
+            "type": "summary",
+            "filename": filename,
+            "summary": response,
+            "metadata": metadata,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    def _extract_key_points(self, content: str, filename: str) -> Dict:
+        """Extract key points from document"""
+        prompt = f"""
+        Please analyze this document and extract:
+        
+        1. Top 5-7 most important points
+        2. Any action items or recommendations  
+        3. Critical data, numbers, or statistics
+        4. Important dates or deadlines
+        5. Key people or organizations mentioned
+        
+        Present the information in a structured, bullet-point format.
+        
+        Document content:
+        {content}
+        """
+        
+        response = self.chat.chat(prompt)
+        structure = self.analyze_document_structure(content)
+        
+        return {
+            "type": "key_points",
+            "filename": filename,
+            "analysis": response,
+            "structure": structure,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    def _comprehensive_analysis(self, content: str, filename: str) -> Dict:
+        """Perform comprehensive document analysis"""
+        prompt = f"""
+        Please perform a comprehensive analysis of this document "{filename}":
+        
+        1. EXECUTIVE SUMMARY (2-3 paragraphs)
+        2. KEY THEMES AND TOPICS
+        3. IMPORTANT FINDINGS OR CONCLUSIONS
+        4. ACTION ITEMS OR RECOMMENDATIONS
+        5. STRENGTHS AND WEAKNESSES (if applicable)
+        6. QUESTIONS OR AREAS NEEDING CLARIFICATION
+        7. RELEVANCE AND IMPORTANCE ASSESSMENT
+        
+        Provide a thorough but well-organized analysis.
+        
+        Document content:
+        {content}
+        """
+        
+        response = self.chat.chat(prompt)
+        
+        # Generate comprehensive report
+        metadata = self.extract_document_metadata(content)
+        structure = self.analyze_document_structure(content)
+        
+        # Create final report
+        report = self.generate_summary_report(
+            title=filename,
+            summary=response,
+            key_points=[],  # Could extract from response
+            insights=[],    # Could extract from response
+            metadata=metadata
+        )
+        
+        report.update({
+            "structure_analysis": structure,
+            "full_analysis": response,
+            "analysis_type": "comprehensive"
+        })
+        
+        return report
+    
+    def batch_process(self, input_dir: str, output_dir: str, 
+                     analysis_type: str = "comprehensive") -> List[Dict]:
+        """Process multiple documents"""
+        input_path = Path(input_dir)
+        output_path = Path(output_dir)
+        output_path.mkdir(parents=True, exist_ok=True)
+        
+        results = []
+        
+        # Process all text files in directory
+        for file_path in input_path.glob("*.txt"):
+            print(f"Processing: {file_path.name}")
+            
+            result = self.process_document(str(file_path), analysis_type)
+            results.append(result)
+            
+            # Save individual result
+            output_file = output_path / f"{file_path.stem}_analysis.json"
+            with open(output_file, 'w') as f:
+                json.dump(result, f, indent=2)
+        
+        # Save batch summary
+        batch_summary = {
+            "processed_files": len(results),
+            "analysis_type": analysis_type,
+            "timestamp": datetime.now().isoformat(),
+            "results": results
+        }
+        
+        summary_file = output_path / "batch_summary.json"
+        with open(summary_file, 'w') as f:
+            json.dump(batch_summary, f, indent=2)
+        
+        return results
+
+# Example usage and testing
+if __name__ == "__main__":
+    # Initialize processor
+    processor = DocumentProcessor(model_provider="openai", model_name="gpt-3.5-turbo")
+    
+    # Create sample document for testing
+    sample_doc = """
+    # Quarterly Business Report - Q3 2024
+    
+    ## Executive Summary
+    Our company has shown significant growth in Q3 2024, with revenue increasing by 25% 
+    compared to Q2. Key factors contributing to this growth include successful product 
+    launches and expanded market presence.
+    
+    ## Financial Performance
+    - Revenue: $2.5M (25% increase)
+    - Profit Margin: 18% (3% improvement)  
+    - Customer Acquisition Cost: $120 (10% reduction)
+    
+    ## Key Achievements
+    1. Launched new product line with 500+ early adopters
+    2. Expanded to two new geographical markets
+    3. Improved customer satisfaction score to 4.6/5
+    
+    ## Challenges and Recommendations
+    - Supply chain delays impacted 15% of orders
+    - Recommendation: Diversify suppliers and increase inventory buffer
+    - Customer support response time increased to 24 hours
+    - Recommendation: Hire 2 additional support representatives
+    
+    ## Q4 Outlook
+    Based on current trends, we project 30% revenue growth in Q4, driven by holiday 
+    season sales and new partnership agreements.
+    """
+    
+    # Save sample document
+    os.makedirs("data/input", exist_ok=True)
+    with open("data/input/sample_report.txt", "w") as f:
+        f.write(sample_doc)
+    
+    # Process the document
+    print("=== Document Analysis Results ===")
+    result = processor.process_document("data/input/sample_report.txt", "comprehensive")
+    
+    # Display results
+    if "error" not in result:
+        print(f"Document: {result['document_title']}")
+        print(f"Analysis Type: {result['analysis_type']}")
+        print(f"Word Count: {result['document_metadata']['word_count']}")
+        print(f"Reading Time: {result['document_metadata']['estimated_reading_time_minutes']} minutes")
+        print("\nFull Analysis:")
+        print(result['full_analysis'])
+    else:
+        print(f"Error: {result['error']}")
+```
+
+### Step 3: Main Application Interface
+
+Create `main.py`:
+
+```python
+"""
+Document Intelligence System - Main Application
+Command-line interface for document processing
+"""
+
+import argparse
+import sys
+from pathlib import Path
+from src.document_processor import DocumentProcessor
+
+def main():
+    parser = argparse.ArgumentParser(description="Document Intelligence System")
+    parser.add_argument("input", help="Input file or directory")
+    parser.add_argument("-o", "--output", default="data/output", help="Output directory")
+    parser.add_argument("-t", "--type", choices=["summary", "key_points", "comprehensive"], 
+                       default="comprehensive", help="Analysis type")
+    parser.add_argument("-m", "--model", default="gpt-3.5-turbo", help="LLM model to use")
+    parser.add_argument("-p", "--provider", choices=["openai", "anthropic"], 
+                       default="openai", help="LLM provider")
+    
+    args = parser.parse_args()
+    
+    try:
+        # Initialize processor
+        print(f"Initializing Document Processor with {args.provider} {args.model}")
+        processor = DocumentProcessor(model_provider=args.provider, model_name=args.model)
+        
+        input_path = Path(args.input)
+        
+        if input_path.is_file():
+            # Process single file
+            print(f"Processing single document: {input_path.name}")
+            result = processor.process_document(str(input_path), args.type)
+            
+            if "error" in result:
+                print(f"Error: {result['error']}")
+                sys.exit(1)
+            
+            # Save result
+            output_dir = Path(args.output)
+            output_dir.mkdir(parents=True, exist_ok=True)
+            output_file = output_dir / f"{input_path.stem}_analysis.json"
+            
+            import json
+            with open(output_file, 'w') as f:
+                json.dump(result, f, indent=2)
+            
+            print(f"Analysis complete. Results saved to: {output_file}")
+            
+        elif input_path.is_dir():
+            # Process directory
+            print(f"Processing directory: {input_path}")
+            results = processor.batch_process(str(input_path), args.output, args.type)
+            print(f"Processed {len(results)} documents. Results saved to: {args.output}")
+            
+        else:
+            print(f"Error: {args.input} is not a valid file or directory")
+            sys.exit(1)
+            
+    except KeyboardInterrupt:
+        print("\nOperation cancelled by user")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
+```
+
+## Project 2: Research Assistant
+
+Create a comprehensive research tool that can gather and synthesize information.
+
+### Research Assistant Implementation
+
+Create `research_assistant.py`:
+
+```python
+"""
+Intelligent Research Assistant using chatlas
+Helps with information gathering, analysis, and synthesis
+"""
+
+import os
+import json
+import requests
+from typing import Dict, List, Optional
+from datetime import datetime
+from chatlas import ChatOpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class ResearchAssistant:
+    """AI-powered research assistant"""
+    
+    def __init__(self, model: str = "gpt-4"):
+        self.chat = ChatOpenAI(
+            model=model,
+            system_prompt=self._get_research_prompt()
+        )
+        self.setup_tools()
+        self.research_sessions = []
+    
+    def _get_research_prompt(self) -> str:
+        return """You are an expert research assistant with capabilities in:
+        - Information gathering and fact-checking
+        - Synthesizing multiple sources
+        - Identifying credible sources and potential biases
+        - Generating comprehensive research reports
+        - Asking clarifying questions to improve research quality
+        
+        Always:
+        1. Provide well-structured, evidence-based responses
+        2. Cite sources when possible
+        3. Note limitations and uncertainties
+        4. Suggest additional research directions
+        5. Maintain objectivity and acknowledge different perspectives
+        """
+    
+    def setup_tools(self):
+        """Set up research tools"""
+        self.chat.register_tool(self.web_search_simulation)
+        self.chat.register_tool(self.analyze_sources)
+        self.chat.register_tool(self.generate_research_outline)
+        self.chat.register_tool(self.create_bibliography)
+        self.chat.register_tool(self.save_research_session)
+    
+    def web_search_simulation(self, query: str, num_results: int = 5) -> Dict:
+        """
+        Simulate web search (in real implementation, integrate with search APIs)
+        """
+        # This is a simulation - in practice, integrate with Google Custom Search, 
+        # Bing API, or other search services
+        simulated_results = [
+            {
+                "title": f"Research result {i+1} for: {query}",
+                "url": f"https://example.com/article-{i+1}",
+                "snippet": f"This article discusses various aspects of {query} including key findings and methodological approaches...",
+                "source": f"Academic Journal {i+1}",
+                "relevance_score": 0.9 - (i * 0.1)
+            }
+            for i in range(min(num_results, 5))
+        ]
+        
+        return {
+            "query": query,
+            "total_results": len(simulated_results),
+            "results": simulated_results,
+            "search_timestamp": datetime.now().isoformat()
+        }
+    
+    def analyze_sources(self, sources: List[Dict]) -> Dict:
+        """Analyze a list of sources for credibility and relevance"""
+        analysis = {
+            "total_sources": len(sources),
+            "source_types": {},
+            "credibility_assessment": [],
+            "relevance_scores": [],
+            "recommendations": []
+        }
+        
+        for source in sources:
+            # Basic source analysis
+            source_type = "academic" if "journal" in source.get("source", "").lower() else "web"
+            analysis["source_types"][source_type] = analysis["source_types"].get(source_type, 0) + 1
+            
+            credibility = "high" if source_type == "academic" else "medium"
+            analysis["credibility_assessment"].append({
+                "title": source.get("title", "Unknown"),
+                "credibility": credibility,
+                "reasoning": f"Classified as {source_type} source"
+            })
+        
+        return analysis
+    
+    def generate_research_outline(self, topic: str, research_goals: List[str]) -> Dict:
+        """Generate a structured research outline"""
+        outline = {
+            "topic": topic,
+            "research_goals": research_goals,
+            "suggested_sections": [
+                {"section": "Introduction and Background", "description": f"Overview of {topic} and context"},
+                {"section": "Literature Review", "description": "Summary of existing research and findings"},
+                {"section": "Key Findings", "description": "Main insights and discoveries"},
+                {"section": "Analysis and Implications", "description": "Interpretation and significance"},
+                {"section": "Conclusions and Future Directions", "description": "Summary and next steps"}
+            ],
+            "research_questions": [
+                f"What are the current trends in {topic}?",
+                f"What are the main challenges or controversies in {topic}?",
+                f"What are the practical applications or implications?"
+            ],
+            "suggested_keywords": topic.split() + ["research", "analysis", "findings"]
+        }
+        
+        return outline
+    
+    def create_bibliography(self, sources: List[Dict]) -> Dict:
+        """Create a formatted bibliography"""
+        bibliography = {
+            "format": "APA",
+            "entries": [],
+            "total_sources": len(sources)
+        }
+        
+        for i, source in enumerate(sources, 1):
+            entry = f"{i}. {source.get('title', 'Unknown Title')}. Retrieved from {source.get('url', 'Unknown URL')}"
+            bibliography["entries"].append(entry)
+        
+        return bibliography
+    
+    def save_research_session(self, session_name: str, research_data: Dict) -> Dict:
+        """Save current research session"""
+        session = {
+            "session_name": session_name,
+            "timestamp": datetime.now().isoformat(),
+            "data": research_data
+        }
+        
+        self.research_sessions.append(session)
+        
+        # Save to file
+        os.makedirs("research_sessions", exist_ok=True)
+        filename = f"research_sessions/{session_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        
+        with open(filename, 'w') as f:
+            json.dump(session, f, indent=2)
+        
+        return {
+            "saved": True,
+            "filename": filename,
+            "session_count": len(self.research_sessions)
+        }
+    
+    def conduct_research(self, topic: str, research_goals: List[str] = None, 
+                        depth: str = "comprehensive") -> Dict:
+        """Conduct comprehensive research on a topic"""
+        if research_goals is None:
+            research_goals = [f"Understand the key aspects of {topic}", f"Identify current trends in {topic}"]
+        
+        print(f"Starting research on: {topic}")
+        print(f"Research goals: {', '.join(research_goals)}")
+        
+        # Generate research outline
+        outline = self.generate_research_outline(topic, research_goals)
+        
+        # Simulate information gathering
+        search_results = self.web_search_simulation(topic)
+        source_analysis = self.analyze_sources(search_results["results"])
+        
+        # Generate research report
+        research_prompt = f"""
+        Based on the following research outline and goals, please provide a comprehensive research report on "{topic}":
+        
+        Research Goals:
+        {chr(10).join(f'- {goal}' for goal in research_goals)}
+        
+        Suggested Outline:
+        {chr(10).join(f"{i+1}. {section['section']}: {section['description']}" 
+                     for i, section in enumerate(outline['suggested_sections']))}
+        
+        Research Questions to Address:
+        {chr(10).join(f'- {q}' for q in outline['research_questions'])}
+        
+        Please provide a well-structured, comprehensive research report that addresses these points.
+        Include sections for key findings, analysis, and recommendations for further research.
+        """
+        
+        research_report = self.chat.chat(research_prompt)
+        
+        # Compile final research result
+        result = {
+            "topic": topic,
+            "research_goals": research_goals,
+            "depth": depth,
+            "outline": outline,
+            "search_results": search_results,
+            "source_analysis": source_analysis,
+            "research_report": research_report,
+            "timestamp": datetime.now().isoformat(),
+            "bibliography": self.create_bibliography(search_results["results"])
+        }
+        
+        return result
+    
+    def ask_research_question(self, question: str, context: str = None) -> str:
+        """Ask a specific research question with optional context"""
+        if context:
+            prompt = f"""
+            Given this context:
+            {context}
+            
+            Please answer this research question thoroughly:
+            {question}
+            
+            Provide evidence-based insights and note any limitations in available information.
+            """
+        else:
+            prompt = f"""
+            Please provide a comprehensive research-based answer to this question:
+            {question}
+            
+            Include relevant background, key points, and evidence where available.
+            Note any limitations or areas where more research might be needed.
+            """
+        
+        return self.chat.chat(prompt)
+    
+    def synthesize_research(self, research_sessions: List[Dict]) -> Dict:
+        """Synthesize findings from multiple research sessions"""
+        if not research_sessions:
+            return {"error": "No research sessions provided"}
+        
+        # Combine topics and findings
+        all_topics = [session.get("topic", "Unknown") for session in research_sessions]
+        
+        synthesis_prompt = f"""
+        Please synthesize findings from multiple research sessions on these related topics:
+        {', '.join(all_topics)}
+        
+        Provide:
+        1. Common themes and patterns across all research
+        2. Key insights and findings
+        3. Areas of agreement and disagreement
+        4. Gaps in research or conflicting evidence
+        5. Integrated conclusions and recommendations
+        
+        Focus on creating a cohesive narrative that connects the different research areas.
+        """
+        
+        synthesis = self.chat.chat(synthesis_prompt)
+        
+        return {
+            "synthesis_type": "multi_session",
+            "topics_included": all_topics,
+            "session_count": len(research_sessions),
+            "synthesis_report": synthesis,
+            "timestamp": datetime.now().isoformat()
+        }
+
+# Example usage
+if __name__ == "__main__":
+    # Initialize research assistant
+    researcher = ResearchAssistant(model="gpt-3.5-turbo")
+    
+    # Conduct research
+    print("=== Research Assistant Demo ===")
+    
+    # Example 1: Basic research
+    topic = "artificial intelligence in healthcare"
+    goals = [
+        "Understand current applications of AI in healthcare",
+        "Identify benefits and challenges",
+        "Explore future potential and ethical considerations"
+    ]
+    
+    research_result = researcher.conduct_research(topic, goals)
+    
+    print(f"Research Topic: {research_result['topic']}")
+    print(f"Research completed at: {research_result['timestamp']}")
+    print(f"Number of sources analyzed: {research_result['source_analysis']['total_sources']}")
+    print("\nResearch Report:")
+    print(research_result['research_report'])
+    
+    # Example 2: Specific research question
+    print("\n" + "="*50)
+    print("=== Research Question Demo ===")
+    
+    question = "What are the main ethical concerns about AI in healthcare?"
+    context = research_result['research_report']
+    
+    answer = researcher.ask_research_question(question, context)
+    print(f"Question: {question}")
+    print(f"Answer: {answer}")
+    
+    # Save research session
+    save_result = researcher.save_research_session("ai_healthcare_research", research_result)
+    print(f"\nResearch session saved to: {save_result['filename']}")
+```
+
+## Project 3: Code Review Bot
+
+Create an intelligent code review system:
+
+Create `code_reviewer.py`:
+
+```python
+"""
+Intelligent Code Review System using chatlas
+Automated code analysis, bug detection, and improvement suggestions
+"""
+
+import os
+import ast
+import re
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+from datetime import datetime
+from chatlas import ChatOpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class CodeReviewer:
+    """AI-powered code review system"""
+    
+    def __init__(self, model: str = "gpt-4"):
+        self.chat = ChatOpenAI(
+            model=model,
+            system_prompt=self._get_code_review_prompt()
+        )
+        self.setup_tools()
+        self.review_history = []
+    
+    def _get_code_review_prompt(self) -> str:
+        return """You are an expert software engineer and code reviewer with extensive experience in:
+        - Code quality assessment and best practices
+        - Security vulnerability detection
+        - Performance optimization
+        - Bug identification and prevention
+        - Code maintainability and readability
+        - Design patterns and architecture
+        
+        For each code review, provide:
+        1. Overall assessment (score 1-10)
+        2. Specific issues found (bugs, security, performance, style)
+        3. Improvement suggestions with examples
+        4. Positive aspects worth highlighting
+        5. Priority level for each issue (Critical, High, Medium, Low)
+        
+        Be constructive, specific, and educational in your feedback."""
+    
+    def setup_tools(self):
+        """Set up code analysis tools"""
+        self.chat.register_tool(self.analyze_code_metrics)
+        self.chat.register_tool(self.check_security_issues)
+        self.chat.register_tool(self.detect_code_smells)
+        self.chat.register_tool(self.suggest_improvements)
+        self.chat.register_tool(self.generate_review_report)
+    
+    def analyze_code_metrics(self, code: str, language: str) -> Dict:
+        """Analyze basic code metrics"""
+        lines = code.split('\n')
+        non_empty_lines = [line for line in lines if line.strip()]
+        
+        metrics = {
+            "total_lines": len(lines),
+            "code_lines": len(non_empty_lines),
+            "blank_lines": len(lines) - len(non_empty_lines),
+            "language": language,
+            "complexity_estimate": "medium"  # Simple heuristic
+        }
+        
+        if language.lower() == "python":
+            # Python-specific metrics
+            try:
+                tree = ast.parse(code)
+                functions = [node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
+                classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
+                
+                metrics.update({
+                    "functions": len(functions),
+                    "classes": len(classes),
+                    "imports": len([node for node in ast.walk(tree) if isinstance(node, ast.Import)])
+                })
+            except SyntaxError:
+                metrics["syntax_error"] = True
+        
+        return metrics
+    
+    def check_security_issues(self, code: str, language: str) -> Dict:
+        """Basic security issue detection"""
+        security_patterns = {
+            "hardcoded_secrets": [
+                r'password\s*=\s*["\'][^"\']+["\']',
+                r'api_key\s*=\s*["\'][^"\']+["\']',
+                r'secret\s*=\s*["\'][^"\']+["\']'
+            ],
+            "sql_injection": [
+                r'execute\s*\([^)]*["\'][^"\']*\+[^"\']*["\']',
+                r'cursor\.execute\s*\([^)]*%s'
+            ],
+            "unsafe_functions": [
+                r'\beval\s*\(',
+                r'\bexec\s*\(',
+                r'os\.system\s*\('
+            ]
+        }
+        
+        issues = []
+        for issue_type, patterns in security_patterns.items():
+            for pattern in patterns:
+                matches = re.finditer(pattern, code, re.IGNORECASE)
+                for match in matches:
+                    line_num = code[:match.start()].count('\n') + 1
+                    issues.append({
+                        "type": issue_type,
+                        "line": line_num,
+                        "code": match.group(),
+                        "severity": "high"
+                    })
+        
+        return {
+            "issues_found": len(issues),
+            "security_issues": issues,
+            "overall_security_score": max(0, 10 - len(issues) * 2)
+        }
+    
+    def detect_code_smells(self, code: str, language: str) -> Dict:
+        """Detect common code smells"""
+        lines = code.split('\n')
+        smells = []
+        
+        # Long lines
+        for i, line in enumerate(lines, 1):
+            if len(line) > 120:
+                smells.append({
+                    "smell": "long_line",
+                    "line": i,
+                    "description": f"Line {i} is {len(line)} characters long",
+                    "severity": "low"
+                })
+        
+        # Large functions (simple heuristic)
+        if language.lower() == "python":
+            function_lines = 0
+            in_function = False
+            current_function = None
+            
+            for i, line in enumerate(lines, 1):
+                if re.match(r'\s*def\s+\w+', line):
+                    if in_function and function_lines > 50:
+                        smells.append({
+                            "smell": "long_function",
+                            "function": current_function,
+                            "description": f"Function {current_function} is {function_lines} lines long",
+                            "severity": "medium"
+                        })
+                    
+                    in_function = True
+                    function_lines = 0
+                    current_function = re.search(r'def\s+(\w+)', line).group(1)
+                elif in_function:
+                    function_lines += 1
+        
+        return {
+            "smells_found": len(smells),
+            "code_smells": smells,
+            "maintainability_score": max(0, 10 - len(smells))
+        }
+    
+    def suggest_improvements(self, code: str, issues: List[Dict]) -> List[Dict]:
+        """Generate improvement suggestions based on issues found"""
+        improvements = []
+        
+        for issue in issues:
+            if issue.get("type") == "hardcoded_secrets":
+                improvements.append({
+                    "issue": issue,
+                    "suggestion": "Move secrets to environment variables or configuration files",
+                    "example": "password = os.getenv('DATABASE_PASSWORD')",
+                    "priority": "critical"
+                })
+            elif issue.get("smell") == "long_line":
+                improvements.append({
+                    "issue": issue,
+                    "suggestion": "Break long lines into multiple lines or shorter expressions",
+                    "priority": "low"
+                })
+        
+        return improvements
+    
+    def generate_review_report(self, code_file: str, metrics: Dict, security: Dict, 
+                             smells: Dict, improvements: List[Dict]) -> Dict:
+        """Generate comprehensive review report"""
+        total_issues = security.get("issues_found", 0) + smells.get("smells_found", 0)
+        overall_score = (
+            security.get("overall_security_score", 5) + 
+            smells.get("maintainability_score", 5)
+        ) / 2
+        
+        report = {
+            "file": code_file,
+            "review_timestamp": datetime.now().isoformat(),
+            "overall_score": round(overall_score, 1),
+            "metrics": metrics,
+            "security_analysis": security,
+            "code_quality": smells,
+            "total_issues": total_issues,
+            "improvements": improvements,
+            "summary": f"Found {total_issues} issues. Overall code quality score: {overall_score}/10"
+        }
+        
+        return report
+    
+    def review_code(self, code: str, filename: str = "unknown", 
+                   language: str = "python", context: str = None) -> Dict:
+        """Perform comprehensive code review"""
+        print(f"Reviewing code: {filename}")
+        
+        # Analyze code metrics
+        metrics = self.analyze_code_metrics(code, language)
+        security = self.check_security_issues(code, language)
+        smells = self.detect_code_smells(code, language)
+        
+        # Combine all issues
+        all_issues = security.get("security_issues", []) + smells.get("code_smells", [])
+        improvements = self.suggest_improvements(code, all_issues)
+        
+        # Generate LLM-based review
+        review_prompt = f"""
+        Please review this {language} code from file "{filename}":
+        
+        ```{language}
+        {code}
+        ```
+        
+        Code Analysis Results:
+        - Lines of code: {metrics.get('code_lines', 'unknown')}
+        - Security issues found: {security.get('issues_found', 0)}
+        - Code smells detected: {smells.get('smells_found', 0)}
+        
+        {f"Additional context: {context}" if context else ""}
+        
+        Please provide:
+        1. Overall code quality assessment
+        2. Detailed analysis of any issues you identify
+        3. Specific improvement recommendations
+        4. Best practices suggestions
+        5. Positive aspects of the code
+        
+        Focus on actionable feedback that will help improve code quality.
+        """
+        
+        llm_review = self.chat.chat(review_prompt)
+        
+        # Generate final report
+        report = self.generate_review_report(filename, metrics, security, smells, improvements)
+        report["llm_analysis"] = llm_review
+        
+        # Save to history
+        self.review_history.append(report)
+        
+        return report
+    
+    def review_file(self, file_path: str, context: str = None) -> Dict:
+        """Review a code file"""
+        path = Path(file_path)
+        if not path.exists():
+            return {"error": f"File not found: {file_path}"}
+        
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                code = f.read()
+            
+            # Detect language from extension
+            language_map = {
+                '.py': 'python',
+                '.js': 'javascript',
+                '.ts': 'typescript',
+                '.java': 'java',
+                '.cpp': 'cpp',
+                '.c': 'c',
+                '.cs': 'csharp'
+            }
+            
+            language = language_map.get(path.suffix.lower(), 'unknown')
+            
+            return self.review_code(code, path.name, language, context)
+            
+        except Exception as e:
+            return {"error": str(e)}
+    
+    def batch_review(self, directory: str, file_pattern: str = "*.py") -> Dict:
+        """Review multiple files in a directory"""
+        dir_path = Path(directory)
+        if not dir_path.exists():
+            return {"error": f"Directory not found: {directory}"}
+        
+        files_to_review = list(dir_path.glob(file_pattern))
+        if not files_to_review:
+            return {"error": f"No files found matching pattern: {file_pattern}"}
+        
+        results = []
+        for file_path in files_to_review:
+            print(f"Reviewing: {file_path.name}")
+            result = self.review_file(str(file_path))
+            results.append(result)
+        
+        # Generate batch summary
+        total_files = len(results)
+        total_issues = sum(r.get("total_issues", 0) for r in results if "error" not in r)
+        avg_score = sum(r.get("overall_score", 0) for r in results if "error" not in r) / max(1, total_files)
+        
+        batch_report = {
+            "batch_review_timestamp": datetime.now().isoformat(),
+            "directory": directory,
+            "files_reviewed": total_files,
+            "total_issues": total_issues,
+            "average_score": round(avg_score, 1),
+            "individual_reviews": results
+        }
+        
+        return batch_report
+
+# Example usage
+if __name__ == "__main__":
+    # Initialize code reviewer
+    reviewer = CodeReviewer(model="gpt-3.5-turbo")
+    
+    # Sample code to review
+    sample_code = '''
+def calculate_user_score(user_data):
+    # This function has several issues
+    password = "hardcoded_password_123"  # Security issue
+    
+    if user_data == None:  # Should use 'is None'
+        return 0
+    
+    score = 0
+    for item in user_data:
+        if item['type'] == 'bonus':
+            score += item['value'] * 1.5
+        elif item['type'] == 'penalty':
+            score -= item['value']
+        else:
+            score += item['value']
+    
+    # Very long line that exceeds reasonable length limits and should be broken down into multiple lines for better readability
+    final_score = score * 1.1 if len(user_data) > 10 else score * 1.05 if len(user_data) > 5 else score
+    
+    return final_score
+
+def process_data():
+    # Function without proper error handling
+    data = eval(input("Enter data: "))  # Security vulnerability
+    return data * 2
+'''
+    
+    print("=== Code Review Demo ===")
+    
+    # Review the sample code
+    review_result = reviewer.review_code(
+        sample_code, 
+        "sample_script.py", 
+        "python",
+        "This is a sample script for demonstration purposes"
+    )
+    
+    # Display results
+    print(f"File: {review_result['file']}")
+    print(f"Overall Score: {review_result['overall_score']}/10")
+    print(f"Total Issues: {review_result['total_issues']}")
+    print(f"Security Issues: {review_result['security_analysis']['issues_found']}")
+    print(f"Code Smells: {review_result['code_quality']['smells_found']}")
+    
+    print("\n=== LLM Analysis ===")
+    print(review_result['llm_analysis'])
+    
+    print("\n=== Improvement Suggestions ===")
+    for improvement in review_result['improvements']:
+        print(f"- {improvement['suggestion']} (Priority: {improvement.get('priority', 'medium')})")
+```
+
+## Project 4: Writing Assistant
+
+Create `writing_assistant.py`:
+
+```python
+"""
+AI Writing Assistant using chatlas
+Comprehensive writing help including content creation, editing, and style improvement
+"""
+
+import os
+import re
+from typing import Dict, List, Optional
+from datetime import datetime
+from chatlas import ChatOpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class WritingAssistant:
+    """AI-powered writing assistant"""
+    
+    def __init__(self, model: str = "gpt-4"):
+        self.chat = ChatOpenAI(
+            model=model,
+            system_prompt=self._get_writing_prompt()
+        )
+        self.setup_tools()
+        self.writing_sessions = []
+    
+    def _get_writing_prompt(self) -> str:
+        return """You are an expert writing assistant with expertise in:
+        - Content creation and ideation
+        - Grammar and style improvement
+        - Tone and voice adjustment
+        - Structure and organization
+        - Research and fact-checking
+        - Editing and proofreading
+        
+        Always provide:
+        1. Clear, actionable feedback
+        2. Specific examples and suggestions
+        3. Explanations for your recommendations
+        4. Multiple options when appropriate
+        5. Encouragement and constructive criticism
+        
+        Adapt your writing style to match the user's needs and intended audience."""
+    
+    def setup_tools(self):
+        """Set up writing tools"""
+        self.chat.register_tool(self.analyze_text_stats)
+        self.chat.register_tool(self.check_readability)
+        self.chat.register_tool(self.detect_grammar_issues)
+        self.chat.register_tool(self.suggest_improvements)
+        self.chat.register_tool(self.generate_content_outline)
+        self.chat.register_tool(self.save_writing_session)
+    
+    def analyze_text_stats(self, text: str) -> Dict:
+        """Analyze basic text statistics"""
+        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        
+        words = text.split()
+        paragraphs = text.split('\n\n')
+        paragraphs = [p.strip() for p in paragraphs if p.strip()]
+        
+        # Average metrics
+        avg_words_per_sentence = len(words) / max(1, len(sentences))
+        avg_sentences_per_paragraph = len(sentences) / max(1, len(paragraphs))
+        
+        return {
+            "word_count": len(words),
+            "sentence_count": len(sentences),
+            "paragraph_count": len(paragraphs),
+            "character_count": len(text),
+            "avg_words_per_sentence": round(avg_words_per_sentence, 1),
+            "avg_sentences_per_paragraph": round(avg_sentences_per_paragraph, 1),
+            "estimated_reading_time_minutes": max(1, len(words) // 200)
+        }
+    
+    def check_readability(self, text: str) -> Dict:
+        """Basic readability analysis"""
+        words = text.split()
+        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        
+        # Simple readability heuristics
+        avg_word_length = sum(len(word.strip('.,!?;:"()')) for word in words) / max(1, len(words))
+        avg_sentence_length = len(words) / max(1, len(sentences))
+        
+        # Basic complexity assessment
+        complexity = "simple"
+        if avg_word_length > 6 or avg_sentence_length > 20:
+            complexity = "moderate"
+        if avg_word_length > 8 or avg_sentence_length > 25:
+            complexity = "complex"
+        
+        return {
+            "avg_word_length": round(avg_word_length, 1),
+            "avg_sentence_length": round(avg_sentence_length, 1),
+            "complexity_level": complexity,
+            "readability_score": max(0, 100 - (avg_sentence_length * 2) - (avg_word_length * 3))
+        }
+    
+    def detect_grammar_issues(self, text: str) -> Dict:
+        """Basic grammar and style issue detection"""
+        issues = []
+        
+        # Common patterns to check
+        patterns = {
+            "passive_voice": r'\b(?:was|were|is|are|been)\s+\w*ed\b',
+            "redundancy": r'\b(very very|really really|quite quite)\b',
+            "weak_words": r'\b(really|very|quite|rather|pretty)\s+\w+',
+            "long_sentences": None  # Will check sentence length separately
+        }
+        
+        for issue_type, pattern in patterns.items():
+            if pattern:
+                matches = re.finditer(pattern, text, re.IGNORECASE)
+                for match in matches:
+                    line_num = text[:match.start()].count('\n') + 1
+                    issues.append({
+                        "type": issue_type,
+                        "text": match.group(),
+                        "position": match.start(),
+                        "line": line_num,
+                        "severity": "low"
+                    })
+        
+        # Check sentence length
+        sentences = re.split(r'[.!?]+', text)
+        for i, sentence in enumerate(sentences, 1):
+            words = sentence.split()
+            if len(words) > 30:
+                issues.append({
+                    "type": "long_sentence",
+                    "text": sentence.strip()[:50] + "...",
+                    "word_count": len(words),
+                    "sentence_number": i,
+                    "severity": "medium"
+                })
+        
+        return {
+            "issues_found": len(issues),
+            "grammar_issues": issues,
+            "writing_score": max(0, 100 - len(issues) * 5)
+        }
+    
+    def suggest_improvements(self, text: str, issues: List[Dict]) -> List[Dict]:
+        """Generate specific improvement suggestions"""
+        improvements = []
+        
+        for issue in issues:
+            suggestion = {}
+            if issue.get("type") == "passive_voice":
+                suggestion = {
+                    "issue": issue,
+                    "recommendation": "Consider using active voice for more engaging writing",
+                    "example": f"Instead of '{issue['text']}', try a more direct active construction",
+                    "priority": "medium"
+                }
+            elif issue.get("type") == "weak_words":
+                suggestion = {
+                    "issue": issue,
+                    "recommendation": "Replace weak modifiers with stronger, more specific words",
+                    "example": f"'{issue['text']}' could be replaced with a more precise description",
+                    "priority": "low"
+                }
+            elif issue.get("type") == "long_sentence":
+                suggestion = {
+                    "issue": issue,
+                    "recommendation": "Break this sentence into shorter, clearer sentences",
+                    "priority": "medium"
+                }
+            
+            if suggestion:
+                improvements.append(suggestion)
+        
+        return improvements
+    
+    def generate_content_outline(self, topic: str, content_type: str, 
+                               target_audience: str) -> Dict:
+        """Generate a content outline"""
+        outlines = {
+            "blog_post": [
+                "Introduction - Hook and thesis",
+                "Background/Context",
+                "Main Point 1 with examples",
+                "Main Point 2 with examples",
+                "Main Point 3 with examples",
+                "Conclusion and call to action"
+            ],
+            "article": [
+                "Title and subtitle",
+                "Abstract/Executive summary",
+                "Introduction",
+                "Literature review/Background",
+                "Main findings/Arguments",
+                "Discussion",
+                "Conclusion",
+                "References"
+            ],
+            "essay": [
+                "Introduction with thesis statement",
+                "Body paragraph 1 - Main argument",
+                "Body paragraph 2 - Supporting evidence",
+                "Body paragraph 3 - Counter-arguments",
+                "Conclusion - Restate thesis and implications"
+            ]
+        }
+        
+        structure = outlines.get(content_type.lower(), outlines["blog_post"])
+        
+        return {
+            "topic": topic,
+            "content_type": content_type,
+            "target_audience": target_audience,
+            "suggested_structure": structure,
+            "estimated_word_count": len(structure) * 200,
+            "key_questions": [
+                f"What does {target_audience} need to know about {topic}?",
+                f"What are the main challenges or questions regarding {topic}?",
+                f"What action should readers take after reading about {topic}?"
+            ]
+        }
+    
+    def save_writing_session(self, session_name: str, content: Dict) -> Dict:
+        """Save writing session"""
+        session = {
+            "session_name": session_name,
+            "timestamp": datetime.now().isoformat(),
+            "content": content
+        }
+        
+        self.writing_sessions.append(session)
+        
+        # Save to file
+        os.makedirs("writing_sessions", exist_ok=True)
+        filename = f"writing_sessions/{session_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        
+        import json
+        with open(filename, 'w') as f:
+            json.dump(session, f, indent=2)
+        
+        return {
+            "saved": True,
+            "filename": filename,
+            "session_count": len(self.writing_sessions)
+        }
+    
+    def improve_text(self, text: str, improvement_type: str = "general", 
+                    target_audience: str = "general") -> Dict:
+        """Improve existing text"""
+        # Analyze current text
+        stats = self.analyze_text_stats(text)
+        readability = self.check_readability(text)
+        grammar = self.detect_grammar_issues(text)
+        improvements = self.suggest_improvements(text, grammar.get("grammar_issues", []))
+        
+        # Generate improvement suggestions based on type
+        improvement_prompts = {
+            "general": f"""
+            Please improve this text for better clarity, flow, and engagement:
+            
+            {text}
+            
+            Target audience: {target_audience}
+            
+            Focus on:
+            1. Clarity and readability
+            2. Engaging language
+            3. Better structure and flow
+            4. Grammar and style improvements
+            
+            Provide the improved version followed by explanations of key changes.
+            """,
+            "formal": f"""
+            Please rewrite this text in a more formal, professional tone:
+            
+            {text}
+            
+            Make it suitable for {target_audience} with:
+            1. Professional vocabulary
+            2. Formal sentence structure
+            3. Objective tone
+            4. Clear, authoritative voice
+            """,
+            "casual": f"""
+            Please rewrite this text in a more casual, conversational tone:
+            
+            {text}
+            
+            Make it suitable for {target_audience} with:
+            1. Conversational language
+            2. Shorter sentences
+            3. Friendly, approachable tone
+            4. Engaging, personal voice
+            """,
+            "concise": f"""
+            Please make this text more concise while maintaining all important information:
+            
+            {text}
+            
+            Focus on:
+            1. Eliminating redundancy
+            2. Shorter, clearer sentences
+            3. More precise word choices
+            4. Better organization
+            """
+        }
+        
+        prompt = improvement_prompts.get(improvement_type, improvement_prompts["general"])
+        improved_text = self.chat.chat(prompt)
+        
+        return {
+            "original_text": text,
+            "improved_text": improved_text,
+            "improvement_type": improvement_type,
+            "target_audience": target_audience,
+            "original_stats": stats,
+            "original_readability": readability,
+            "original_issues": grammar,
+            "specific_improvements": improvements,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    def create_content(self, topic: str, content_type: str = "blog_post",
+                      target_audience: str = "general", length: str = "medium") -> Dict:
+        """Create new content from scratch"""
+        # Generate outline
+        outline = self.generate_content_outline(topic, content_type, target_audience)
+        
+        # Word count targets
+        length_targets = {
+            "short": 300,
+            "medium": 800,
+            "long": 1500
+        }
+        
+        target_words = length_targets.get(length, 800)
+        
+        # Generate content
+        creation_prompt = f"""
+        Create a {content_type} about "{topic}" for {target_audience}.
+        
+        Requirements:
+        - Target length: approximately {target_words} words
+        - Follow this structure: {outline['suggested_structure']}
+        - Address these key questions: {outline['key_questions']}
+        - Use appropriate tone for {target_audience}
+        - Include engaging examples and practical insights
+        
+        Create comprehensive, well-structured content that provides real value to readers.
+        """
+        
+        created_content = self.chat.chat(creation_prompt)
+        
+        # Analyze the created content
+        content_stats = self.analyze_text_stats(created_content)
+        
+        return {
+            "topic": topic,
+            "content_type": content_type,
+            "target_audience": target_audience,
+            "target_length": length,
+            "outline_used": outline,
+            "created_content": created_content,
+            "content_stats": content_stats,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    def brainstorm_ideas(self, general_topic: str, content_type: str = "blog_post",
+                        num_ideas: int = 10) -> Dict:
+        """Brainstorm content ideas"""
+        brainstorm_prompt = f"""
+        Generate {num_ideas} creative and engaging {content_type} ideas related to "{general_topic}".
+        
+        For each idea, provide:
+        1. A catchy title
+        2. Brief description (1-2 sentences)
+        3. Target audience
+        4. Key angle or unique perspective
+        
+        Make the ideas diverse, practical, and appealing to different audiences.
+        """
+        
+        ideas_response = self.chat.chat(brainstorm_prompt)
+        
+        return {
+            "general_topic": general_topic,
+            "content_type": content_type,
+            "requested_ideas": num_ideas,
+            "brainstormed_ideas": ideas_response,
+            "timestamp": datetime.now().isoformat()
+        }
+
+# Example usage
+if __name__ == "__main__":
+    # Initialize writing assistant
+    writer = WritingAssistant(model="gpt-3.5-turbo")
+    
+    print("=== Writing Assistant Demo ===")
+    
+    # Example 1: Improve existing text
+    sample_text = """
+    Artificial intelligence is very very important in today's world. It really helps businesses 
+    and organizations to be more efficient and productive. AI systems are being used by companies 
+    to automate processes, analyze data, and make better decisions which can lead to increased 
+    profits and improved customer satisfaction.
+    """
+    
+    print("=== Text Improvement Demo ===")
+    improvement_result = writer.improve_text(
+        sample_text, 
+        improvement_type="general", 
+        target_audience="business professionals"
+    )
+    
+    print("Original text:")
+    print(improvement_result['original_text'])
+    print(f"\nOriginal stats: {improvement_result['original_stats']['word_count']} words")
+    print(f"Issues found: {improvement_result['original_issues']['issues_found']}")
+    
+    print("\nImproved text:")
+    print(improvement_result['improved_text'])
+    
+    # Example 2: Create new content
+    print("\n" + "="*60)
+    print("=== Content Creation Demo ===")
+    
+    content_result = writer.create_content(
+        topic="benefits of remote work",
+        content_type="blog_post",
+        target_audience="working professionals",
+        length="medium"
+    )
+    
+    print(f"Topic: {content_result['topic']}")
+    print(f"Content type: {content_result['content_type']}")
+    print(f"Word count: {content_result['content_stats']['word_count']}")
+    print(f"Reading time: {content_result['content_stats']['estimated_reading_time_minutes']} minutes")
+    
+    print("\nCreated content:")
+    print(content_result['created_content'][:500] + "..." if len(content_result['created_content']) > 500 else content_result['created_content'])
+    
+    # Example 3: Brainstorm ideas
+    print("\n" + "="*60)
+    print("=== Brainstorming Demo ===")
+    
+    brainstorm_result = writer.brainstorm_ideas(
+        general_topic="productivity tips",
+        content_type="blog_post",
+        num_ideas=5
+    )
+    
+    print("Brainstormed ideas:")
+    print(brainstorm_result['brainstormed_ideas'])
+```
+
+## Deployment and Production Considerations
+
+### Creating Requirements Files
+
+Create `requirements.txt` for each project:
+
+```txt
+# requirements.txt
+chatlas>=0.1.0
+python-dotenv>=1.0.0
+pathlib>=1.0.0
+requests>=2.28.0
+argparse>=1.4.0
+
+# Optional: For web interfaces
+streamlit>=1.28.0
+fastapi>=0.104.0
+uvicorn>=0.24.0
+
+# Optional: For enhanced functionality
+pandas>=2.0.0
+numpy>=1.24.0
+```
+
+### Environment Configuration
+
+Create a template `.env.template`:
+
+```bash
+# LLM API Configuration
+OPENAI_API_KEY=your_openai_key_here
+ANTHROPIC_API_KEY=your_anthropic_key_here
+GOOGLE_API_KEY=your_google_key_here
+
+# Application Configuration
+DEFAULT_MODEL=gpt-3.5-turbo
+MAX_TOKENS=4000
+TEMPERATURE=0.1
+
+# File Paths
+INPUT_DIR=./data/input
+OUTPUT_DIR=./data/output
+LOG_LEVEL=INFO
+```
+
+### Production Deployment Script
+
+Create `deploy.py`:
+
+```python
+"""
+Production deployment utilities for LLM applications
+"""
+
+import os
+import logging
+from pathlib import Path
+
+class ProductionSetup:
+    """Handle production environment setup"""
+    
+    def __init__(self):
+        self.setup_logging()
+        self.setup_directories()
+        self.validate_environment()
+    
+    def setup_logging(self):
+        """Configure logging for production"""
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler('app.log'),
+                logging.StreamHandler()
+            ]
+        )
+        self.logger = logging.getLogger(__name__)
+    
+    def setup_directories(self):
+        """Create necessary directories"""
+        dirs = ['data/input', 'data/output', 'logs', 'sessions', 'cache']
+        for dir_path in dirs:
+            Path(dir_path).mkdir(parents=True, exist_ok=True)
+            self.logger.info(f"Created directory: {dir_path}")
+    
+    def validate_environment(self):
+        """Validate environment variables and dependencies"""
+        required_env_vars = ['OPENAI_API_KEY']
+        missing_vars = []
+        
+        for var in required_env_vars:
+            if not os.getenv(var):
+                missing_vars.append(var)
+        
+        if missing_vars:
+            self.logger.error(f"Missing required environment variables: {missing_vars}")
+            raise EnvironmentError(f"Missing variables: {missing_vars}")
+        
+        self.logger.info("Environment validation passed")
+    
+    def health_check(self):
+        """Perform application health check"""
+        try:
+            from chatlas import ChatOpenAI
+            chat = ChatOpenAI(model="gpt-3.5-turbo")
+            response = chat.chat("Hello")
+            self.logger.info("Health check passed")
+            return {"status": "healthy", "llm_connection": True}
+        except Exception as e:
+            self.logger.error(f"Health check failed: {e}")
+            return {"status": "unhealthy", "error": str(e)}
+
+if __name__ == "__main__":
+    setup = ProductionSetup()
+    health = setup.health_check()
+    print(f"Application status: {health['status']}")
+```
+
+## Summary
+
+You have built four complete, production-ready LLM applications:
+
+✅ **Document Intelligence System** - Analyze and summarize documents automatically  
+✅ **Research Assistant** - Gather and synthesize information from multiple sources  
+✅ **Code Review Bot** - Automated code analysis with improvement suggestions  
+✅ **Writing Assistant** - Content creation, editing, and style improvement  
+
+Each application includes:
+- Full implementation with proper error handling
+- Command-line interfaces and batch processing
+- Extensible architecture for additional features
+- Production deployment considerations
+- Real-world utility and practical value
+
+You now have the skills and templates to build sophisticated LLM applications for any domain!
