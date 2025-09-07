@@ -1,0 +1,40 @@
+---
+title: "Feedback"
+abstract: |
+  Gather feedback on the class
+date: last-modified
+
+format:
+  html: default
+
+# Authors
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# Contributors
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Python", "Programming", "Tutorial", "Data Science", "Jupyter"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Gather feedback on the class
+
+::: {.callout-tip}
+
+## Key Questions
+
+- How did the class go?
+
+Gather feedback from participants.
+
+::: {.callout-important}
+
+## Key Points
+
+- We are constantly seeking to improve this course.

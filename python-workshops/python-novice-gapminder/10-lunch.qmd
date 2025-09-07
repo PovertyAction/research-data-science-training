@@ -1,0 +1,26 @@
+---
+title: "Lunch"
+abstract: |
+  This tutorial covers fundamental Python programming concepts.
+date: last-modified
+
+format:
+  html: default
+
+# Authors
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# Contributors
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Python", "Programming", "Tutorial", "Data Science", "Jupyter"]
+license: "CC BY 4.0"
+---
+
+Over lunch, reflect on and discuss the following:
+
+- What sort of packages might you use in Python and why would you use them?
+- How would data need to be formatted to be used in Pandas data frames? Would the data you have meet these requirements?
+- What limitations or problems might you run into when thinking about how to apply what we've learned to your own projects or data?

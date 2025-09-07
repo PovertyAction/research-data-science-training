@@ -1,0 +1,28 @@
+---
+title: "Morning Coffee"
+abstract: |
+  This tutorial covers fundamental Python programming concepts.
+date: last-modified
+
+format:
+  html: default
+
+# Authors
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# Contributors
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Python", "Programming", "Tutorial", "Data Science", "Jupyter"]
+license: "CC BY 4.0"
+---
+
+## Reflection exercise
+
+Over coffee, reflect on and discuss the following:
+
+- What are the different kinds of errors Python will report?
+- Did the code always produce the results you expected? If not, why?
+- Is there something we can do to prevent errors when we write code?
