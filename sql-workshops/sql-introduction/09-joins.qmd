@@ -1,0 +1,338 @@
+---
+title: "Joins"
+abstract: |
+  Understand the structure of a joined table. Familiarity with the different join types. Use different join types in analysing your data. Understand what other join types can tell you about your data.
+date: last-modified
+
+format:
+  html: default
+
+# Authors
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# Contributors
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["SQL", "Database", "Tutorial", "Data Science", "JOIN", "INNER JOIN", "LEFT JOIN", "RIGHT JOIN"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+## Learning Objectives
+
+- Understand the structure of a joined table
+- Familiarity with the different join types
+- Use different join types in analysing your data
+- Understand what other join types can tell you about your data
+:::
+
+::: {.callout-tip}
+## Key Questions
+
+- What is meant by joining tables?
+- Why would I want to join tables?
+- What different types of joins are there?
+- How do Joins help you discover missing data or gaps in the data
+:::
+
+## About table joins
+
+In any relational database system, the ability to join tables together is a key querying requirement.
+Joins are used to combine the columns from two (or more) tables together to form a single table.
+A join between tables will only be possible if they have at least one column in common.
+The column doesn't have to have the same name in each table, and quite often they won't, but they do have to have a common usage.
+
+In the SAFI database we have three tables. Farms, Plots and Crops. Each farm has a number of plots (or fields) and each plot can be used to grow different crops.
+A question you might ask is: Which Farms with more than 12 people in the household grow Maize? No single table has the answer to this question.
+
+We can write queries to answer each part separately
+
+```sql
+-- how many crops of Maize?
+SELECT *
+FROM Crops
+WHERE D_curr_crop = 'maize'
+;
+```
+
+![](figures/SQL_09_maize.png){alt='Maize'}
+
+and
+
+```sql
+-- Which farms have more than 12 in the Household
+SELECT *
+FROM Farms
+WHERE B_no_membrs > 12
+;
+```
+
+![](figures/SQL_09_household.png){alt='Household'}
+
+Both queries give us part of the answer, but not the complete answer.
+
+In order to provide a complete answer, we need to join the tables together so that the columns from the Farms table and the columns from the Crops table  are available to us as though they were a single table.
+
+```sql
+SELECT *
+FROM Farms
+JOIN Crops
+ON Farms.Id = Crops.Id
+WHERE B_no_membrs > 12 AND D_curr_crop = 'maize'
+;
+```
+
+This produces the correct answer. The columns from both the Farms and the Crops table are available to the `WHERE` clause to filter on.
+
+::: {.callout-note}
+## Exercise
+
+You can see from the results above that farm with an `Id` of 3 (the first record) does grow maize and has more than 12 people in the household.
+
+How many other farms meet these criteria? Write a query which provides the answer. The farm Id should be included in the answer.
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+```sql
+SELECT DISTINCT Farms.Id, B_no_membrs
+FROM Farms
+JOIN Crops
+ON Farms.Id = Crops.Id
+WHERE B_no_membrs > 12 AND D_curr_crop = 'maize'
+;
+```
+
+:::
+:::
+
+## The structure of a joined table
+
+When you join two tables, the structure (columns and rows) of the joined table will be different from either of the original tables.
+
+Consider this simple example:
+
+From the Farms table we have this single row (many columns not shown):
+
+| Id | B_no_membrs | C01_respondent_roof_type |
+| -- | ----------- | ------------------------ |
+| 1  | 13          | grass                    |
+
+And from the Crops table we have these rows:
+
+| Id | plot_Id | D_curr_crop |
+| -- | ------- | ----------- |
+| 1  | 1       | maize       |
+| 1  | 2       | beans       |
+
+When we join on the `Id` column, we get a table like this:
+
+| Id | B_no_membrs | C01_respondent_roof_type | Id | plot_Id | D_curr_crop |
+| -- | ----------- | ------------------------ | -- | ------- | ----------- |
+| 1  | 13          | grass                    | 1  | 1       | maize       |
+| 1  | 13          | grass                    | 1  | 2       | beans       |
+
+From this you can see that:
+
+1. The joined table has columns from both of the original tables.
+2. For the Farms table, the row for the farm with `Id = 1` has been duplicated because the `Id = 1` appears in two rows in the Crops table.
+3. The values in the `Id` column appear in both the Farms and Crops table so there are two `Id` columns in the joined table. In order to distinguish between them in a query, you need to be specific about which one you mean by prefixing the table name e.g. `Farms.Id` or `Crops.Id`.
+
+For the query above, this would be better written as:
+
+```sql
+SELECT Farms.Id, B_no_membrs
+FROM Farms
+JOIN Crops
+ON Farms.Id = Crops.Id
+WHERE B_no_membrs > 12 AND D_curr_crop = 'maize'
+;
+```
+
+## Table name aliases
+
+Writing complete table names each time can be tedious and clutter up the query. You can provide an alias for table names like this:
+
+```sql
+SELECT f.Id, B_no_membrs
+FROM Farms f
+JOIN Crops c
+ON f.Id = c.Id
+WHERE B_no_membrs > 12 AND D_curr_crop = 'maize'
+;
+```
+
+or
+
+```sql
+SELECT f.Id, B_no_membrs
+FROM Farms AS f
+JOIN Crops AS c
+ON f.Id = c.Id
+WHERE B_no_membrs > 12 AND D_curr_crop = 'maize'
+;
+```
+
+Both formats are acceptable, though using the `AS` keyword makes the intent clearer.
+
+## Types of JOINs
+
+What we have seen so far is called an **INNER JOIN**. This is the most commonly used type of join. There are others; **LEFT OUTER JOIN**, **RIGHT OUTER JOIN** and **FULL OUTER JOIN**. In SQLite the **FULL OUTER JOIN** is not supported.
+
+To understand why you would want different types of joins we need some sample data where not all of the values in the columns being joined have matching values in the other table.
+
+In the Farms table there are 131 records and in the Crops table there are 335 records. The `Id` column appears in both tables.
+
+In the Crops table, the `Id` column values can range from 1 to 131 (same as in the Farms table). However not all values have to be present. If farm 55 grew no crops, then there would be no entry for `Id = 55` in the Crops table.
+
+From the Crops table we can see the range of Id values used:
+
+```sql
+SELECT min(Id), max(Id)
+FROM Crops;
+```
+
+You get `1` as the minimum and `131` as the maximum, which does match the range in the Farms table. But this doesn't mean that all of the integer values between 1 and 131 are present as `Id` values in the Crops table.
+
+To see which might be missing we can create a query like this:
+
+```sql
+SELECT DISTINCT Crops.Id
+FROM Crops
+ORDER BY Crops.Id;
+```
+
+Looking through the results we can see that value 135 is missing from the list.  We can check this with:
+
+```sql
+SELECT *
+FROM Crops
+WHERE Id = 135;
+```
+
+This query returns no rows. So we can be confident that Id = 135 is missing from the Crops table.
+
+In the database it is usually the case that tables are joined on columns where all of the values in one table appear somewhere in the other table. This is certainly true for the SAFI database where all of the Id values in the Crops table appear in the Farms table (they have to because that's where they came from).
+
+But it is not true that all of the Id values in the Farms table appear in the Crops table. We have just seen that Id = 135 is one example.
+
+Different joins will handle the missing values in different ways.
+
+## INNER JOIN
+
+For the **INNER JOIN** that we have been using, only rows where the values in the joined columns match in both tables are returned. So for farm with Id = 135, because there are no records in the Crops table with Id = 135, there will be no rows in the joined table either.
+
+## LEFT OUTER JOIN
+
+For the **LEFT OUTER JOIN**, or just **LEFT JOIN**, all rows from the left table (i.e. the one mentioned first in the query) are returned along with the matching rows from the right table. Where there are no matching rows in the right table, `NULL` values will be used to fill the columns.
+
+```sql
+SELECT *
+FROM Farms f
+LEFT JOIN Crops c
+ON f.Id = c.Id
+WHERE f.Id = 135;
+```
+
+This will return one row with all the Farms table columns populated and all of the Crops columns populated with `NULL` values.
+
+## RIGHT OUTER JOIN
+
+The **RIGHT OUTER JOIN**, or **RIGHT JOIN**, is similar to the **LEFT OUTER JOIN** but all the rows from the right table are returned instead. SQLite does not support the **RIGHT OUTER JOIN**.
+
+## Joining tables and Null values
+
+We noted above that when using a **LEFT OUTER JOIN**, where there are no matching rows in the right table, `NULL` values will be used to fill the columns. The consequence of this is that you need to be careful when constructing queries using **LEFT OUTER JOIN**.
+
+We may wish to use this query to see what data is available for all farms:
+
+```sql
+SELECT *
+FROM Farms f
+LEFT JOIN Crops c
+ON f.Id = c.Id;
+```
+
+It will return 335 rows just like the **INNER JOIN** did. But some of the values in the columns from the Crops table will be `NULL`.
+
+If we extend this query with a `WHERE` clause to see what crops are grown on farm 135:
+
+```sql
+SELECT f.Id, D_curr_crop
+FROM Farms f
+LEFT JOIN Crops c
+ON f.Id = c.Id
+WHERE f.Id = 135;
+```
+
+We get a single row with the `Id` populated but `NULL` for the `D_curr_crop`. This tells us that there are no crops recorded for farm 135. The farm exists (otherwise the row wouldn't be returned) but there are no crop records for it.
+
+If we had used an **INNER JOIN**:
+
+```sql
+SELECT f.Id, D_curr_crop
+FROM Farms f
+JOIN Crops c
+ON f.Id = c.Id
+WHERE f.Id = 135;
+```
+
+We would get no rows returned. This tells us nothing. It might be that farm 135 doesn't exist, or it might be that farm 135 has no crop records.
+
+::: {.callout-note}
+## Exercise
+
+The query
+
+```sql
+SELECT a.Id AS Farms_Id, 
+       sum(b.D02_total_plot) AS total_planted,
+       c.D_curr_crop
+FROM Farms AS a
+JOIN Plots AS b
+JOIN Crops  AS c
+ON a.Id = b.Id AND (b.Id = c.Id AND b.plot_id = c.plot_id) AND a.B_no_membrs > 12 AND c.D_curr_crop = 'maize'
+GROUP BY a.Id, c.D_curr_crop
+;
+```
+
+Produces the following results:
+
+| Farms\_Id | total\_planted | D\_curr\_crop |
+| --------- | -------------- | ------------- |
+| 3         | 2              | maize         |
+| 21        | 2              | maize         |
+
+The `total_planted` column is the sum of the `D02_total_plot` from the Plots table.
+
+Re-write the query so that the `total_planted` is calculated for each farm and each crop. i.e. one row for each farm_id and crop combination.
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+```sql
+SELECT a.Id AS Farms_Id,
+       sum(b.D02_total_plot) AS total_planted,
+       c.D_curr_crop
+FROM Farms AS a
+JOIN Plots AS b
+JOIN Crops  AS c
+ON a.Id = b.Id AND (b.Id = c.Id AND b.plot_id = c.plot_id) AND a.B_no_membrs > 12 AND c.D_curr_crop = 'maize'
+GROUP BY a.Id, c.D_curr_crop
+;
+```
+
+:::
+:::
+
+::: {.callout-important}
+## Key Points
+
+- Joins are used to combine data from two or more tables.
+- Tables to be joined must have a column in each which represent the same thing
+- There are several different types of joins
+- The Inner join is the most commonly use
+- You may have to use the other join types to discover missing data or gaps in your data
+:::

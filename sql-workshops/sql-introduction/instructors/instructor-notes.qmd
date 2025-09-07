@@ -1,0 +1,125 @@
+---
+title: "Instructors' Notes"
+abstract: |
+  Setup instructions and teaching notes for instructors conducting SQL workshops for social scientists. Contains information about datasets, lesson structure, and technical requirements.
+date: last-modified
+
+format:
+  html: default
+
+# Authors
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# Contributors
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["SQL", "Database", "Tutorial", "Instructor Notes", "Teaching", "Social Science"]
+license: "CC BY 4.0"
+---
+
+## Setup
+
+There is a seperate file for the setiup instructions for installing the various component used in this lesson. [setup](../learners/setup.md)
+
+- The DB Browser application
+- SQLite Shell program
+- SQLite ODBC connector
+
+## The datasets used
+
+The data from the SN7577 dataset is used. It has been placed into an SQLite database called SN7577.SQLite.
+The data dictionary file for SN7577 is also referenced 'audit\_of\_political\_engagement\_11\_ukda\_data\_dictionary.docx'.
+The SN7577.tab and SN7577\_Text.csv files are used when creating tables. All of the files are in the single [SQL\_data.zip](data/SQL_data.zip) file.
+
+The SN7577.SQLite database file will need to be downloaded to the local machine before it can be opened by DB Browser.
+
+## The Lessons
+
+If time is short, lessons 8 and 10 could be omitted as they don't intoduce any new SQL concepts.
+
+[What is a Relational database](../episodes/01-relational-database.md)
+
+Explains terms like Relational database, Table, Datatype, Keys, Null
+
+[Using DB Browser](../episodes/02-db-browser.md)
+
+The structure of and reason for the initial default layout of DB Browser is given.
+How to start the application
+How to open a database file
+Customization of the DB Browser layout and colours which are retained across sessions.
+THe difference between DB Schema and DB Structure panes.
+Running queries and the layout of the execute SQL pane
+The toolbar options available in the execute SQL pane.
+The Create database wizard is mentioned
+Write changes and Revert changes buttons
+
+[The Select statement](../episodes/03-select.md)
+
+Introduction to SQL, differences between various implementations
+Concepts of DDL and DML
+Simple select statements (SELECT, FROM)
+Selecting all columns using '\*', selecting specific columns
+The most basic form of the WHERE clause with = and <>, <, > etc.
+Using the WHERE clause with multiple criteria; AND and OR
+BETWEEN
+IN, NOT IN
+Examples are built up from simple clauses
+Ordering results using ORDER BY with both ASC and DESC options
+Limiting results with LIMIT
+
+[Missing data](../episodes/04-missing-data.md)
+
+Explains how DB Browser displays NULL values and that the User can change this.
+The concept of NULL values
+The causes of missing values.
+Testing for NULL values in queries using IS NULL and IS NOT NULL
+
+[Creating new columns](../episodes/05-creating-new-columns.md)
+
+Using SQL artithmetic operators (/ * - +) and the concatenation opreator \|\| to create new columns.
+Using column aliases to provide meaningful column names.
+Use of some of the SQLite built-in functions is illustrated.
+The CASE statement is introduced for creating conditional columns
+Example of using CASE to provide binned values
+
+[Aggregation](../episodes/06-aggregation.md)
+
+Covers some of the built-in aggregations functions like SUM(), MAX(), MIN(), COUNT(), AVG()
+The DISTINCT keyword and how it can be used with aggregation functions.
+The GROUP BY clause and its use in aggregation
+The HAVING clause is introduced and the distinction between its use and the WHERE clause is made.
+
+[Creating tables and views](../episodes/07-creating-tables-views.md)
+
+Creating table structures using the CREATE TABLE statement.
+Populating tables using the INSERT INTO statemnet.
+The SQLite plugin is used to read the datasets which will need to have been copied to the local machine.
+All of the options in the plugin wizard are explained.
+Creating views, the close relationship to tables and guidance on naming views is covered.
+
+[The SQLite command line](../episodes/08-sqlite-command-line.md)
+
+Instructions on starting the command line shell are given. It is assumed that the setup instructions have already been completed.
+If the sqlite3.exe has not been placed in the users path, then they eill either need to specify the full path to the executable or specify the full path to the database file when they try to connect. It is probably easier to ensure that the executable is in the path.
+A comparison is made between the shell and the plugin GUI and reasons for wanting to use the shell are given.
+Example of running queries are provided.
+Use of 'dot' commands to change the output format are covered.
+The use of 'dot' commands to save the output to a file is covered.
+How to automate a script is covered.
+
+[Joins](../episodes/09-joins.md)
+
+The need for table joins is discussed
+The different types of joins is discussed and why you may need to do more than just inner joins to investigate your data.
+There are examples of usingthe `join` and `on` SQL syntax.
+There is more discussion on Alias'.
+
+[Using database tables in other environments](../episodes/10-other-environments.md)
+
+The episode requires that the ODBC driver has been installed.  It could be done as an Instructor demo only, but obviously that is not so much fun for the students.
+The purpose and use of connection strings is covered
+There is a detailed demonstration of using ODBC from Excel to connect to the SN7577 database. It doesn't matter what table is used.
+There are code only examples from R and Python. The aim is to emphasise the connection process and sending the query for execution rather than the code itself.
+The code could be run in appropriate environments, but the database location would have to be changed.
