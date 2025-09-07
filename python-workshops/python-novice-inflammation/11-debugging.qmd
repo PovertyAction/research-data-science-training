@@ -1,0 +1,235 @@
+---
+title: "Debugging"
+abstract: |
+  Learn systematic debugging strategies to identify and fix errors in Python code. Master debugging techniques, error isolation, and code testing methods to create more robust programs.
+date: last-modified
+format:
+  html: default
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Python", "Debugging", "Error Detection", "Code Testing", "Problem Solving", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Debug code containing an error systematically.
+- Identify ways of making code less error-prone and more easily tested.
+
+## Questions
+
+- How can I debug my program?
+:::
+
+Once testing has uncovered problems,
+the next step is to fix them.
+Many novices do this by making more-or-less random changes to their code
+until it seems to produce the right answer,
+but that's very inefficient
+(and the result is usually only correct for the one case they're testing).
+The more experienced a programmer is,
+the more systematically they debug,
+and most follow some variation of the rules explained below.
+
+## Know What It's Supposed to Do
+
+The first step in debugging something is to
+*know what it's supposed to do*.
+"My program doesn't work" isn't good enough:
+in order to diagnose and fix problems,
+we need to be able to tell correct output from incorrect.
+If we can write a test case for the failing case --- i.e.,
+if we can assert that with *these* inputs,
+the function should produce *that* result ---
+then we're ready to start debugging.
+If we can't,
+then we need to figure out how we're going to know when we've fixed things.
+
+But writing test cases for scientific software is frequently harder than writing test cases for commercial applications,
+because at many points we don't know what the "right" answer is.
+We often need to debug things in the real world by comparing them with experimental results or the results of previous experiments.
+In those cases,
+we must try to build confidence in our answers by comparing them to what we know should happen:
+conservation laws,
+stable or unstable fixed points,
+and other heuristics.
+
+## Make It Fail Every Time
+
+We can only debug something when it fails,
+so the second step is always to find a test case that *makes it fail every time*.
+The "every time" part is important because
+few things are more frustrating than debugging an intermittent problem:
+if we have to call our function a dozen times to get a single failure,
+the odds are good that we'll scroll past the failure when it actually occurs.
+
+As part of this,
+it's always important to check that our code is "plugged in",
+i.e.,
+that we're actually exercising the problem that we think we are.
+Every programmer has spent hours chasing a bug,
+only to realize that they were actually calling their code on the wrong data set
+or with the wrong configuration parameters,
+or were analyzing the output of an old run.
+This is particularly likely to happen in command-line environments,
+where it's common to re-run the previous command using the shell's history mechanism.
+Always check.
+
+## Make It Fail Fast
+
+If it takes 20 minutes for the bug to surface,
+we can only do three experiments an hour.
+That doesn't must mean we'll get less debugging done;
+it also means that we're less likely to be systematic about it,
+and more likely to frustrated and start making random changes.
+
+For example,
+if our program is supposed to simulate 10,000 particles over 1,000 time steps,
+start by running it with 5 particles for 10 steps.
+The odds are good that we'll spot the bug in that case,
+so we don't need to worry about speed
+until we're sure our code is working.
+
+## Change One Thing at a Time, For a Reason
+
+Replacing random chunks of code is unlikely to do much good.
+(After all, if you got it wrong the first time,
+how likely are you to get it right the second?)
+Good programmers therefore
+*change one thing at a time, for a reason*
+They are either trying to gather more information
+("is the bug in the statistics or in the graphics?")
+or test a fix
+("can we make the bug go away by sorting our data first?").
+
+Every time we make a change,
+however small,
+we should re-run our tests immediately,
+because the more things we change at once,
+the harder it is to know what's responsible for what
+(and the more likely we are to introduce other bugs).
+
+## Keep Track of What You've Done
+
+Good scientists keep track of what they've done
+so that they can reproduce their work.
+Good programmers do this too:
+they comment out the old line(s)
+and write a comment explaining why they made each change.
+Here's an example:
+
+```python
+# times = numpy.arange(10)
+# Invalid: 10 is not a valid end-of-range value
+
+times = numpy.arange(1, 11)
+```
+
+## Be Humble
+
+And speaking of help:
+if we can't find a bug in 10 minutes,
+we should *be humble* and ask for help.
+Just explaining the problem aloud is often enough to bring the solution to light
+(an effect known as "[rubber duck debugging](https://en.wikipedia.org/wiki/Rubber_duck_debugging)").
+
+::: {.callout-note}
+
+## Debug With a Neighbor
+
+Take a function that you have written today, and introduce a tricky bug.
+Your function should still run, but will give the wrong output.
+Switch seats with your neighbor and see whether she can identify the bug.
+Then try it with a second function.
+How easily were the bugs spotted? Keep track of time as one person writes a buggy function
+and the other debugs it.
+Then switch roles. Which person is better at spotting bugs?
+
+::: {.callout-tip collapse="true"}
+
+## Solution: Debug Analysis
+
+This debugging exercise serves a number of purposes.
+
+First, it gives participants a chance to practice debugging as they would have to
+in real life. They have to analyze code written by someone else and figure out why it doesn't work.
+
+Second, it stretches participants --- hopefully they will tackle a tricky bug that
+they are not sure how to fix, giving them a chance to practice an advanced skill.
+
+Finally, it helps participants understand the collaboration that goes on around
+code development. It is common to have to read someone else's code and analyze
+why it doesn't work, as well as to have others do the same to your code.
+
+In discussions, it is worth reminding participants that it is much easier to
+understand a bug introduced into someone else's code than it would be to spot
+the same bug in code you wrote yourself.
+
+When we are writing code, we are performing many tasks in our memory:
+
+- Keeping track of the task at hand that we want to solve.
+- Relating the specific lines of code to the task.
+- Parsing the code into the right boxes: functions, variables, loops, etc.
+
+When we are trying to spot a bug in our own code, we have to do all of the above,
+which makes it clear why finding bugs in our own code is harder than in others'.
+:::
+:::
+
+::: {.callout-note}
+
+## Not Supposed to be the Same
+
+You are assisting a researcher with Python code that computes the
+Body Mass Index (BMI) of patients.  The researcher is concerned because
+all patients seemingly have unusual and identical BMI values, despite having different
+physiques.  Here is the code:
+
+```python
+patients = [[70, 1.8], [80, 1.9], [150, 1.7]]
+
+def calculate_bmi(weight, height):
+    return weight / (height ** 2)
+
+for patient in patients:
+    weight, height = patients[0]
+    bmi = calculate_bmi(weight, height)
+    print(f"Patient's BMI is: {bmi}")
+```
+
+::: {.callout-tip collapse="true"}
+
+## Solution: BMI Bug Fix
+
+The problem is in the loop - `weight, height = patients[0]` should be
+`weight, height = patient`.
+
+Here's the corrected code:
+
+```python
+patients = [[70, 1.8], [80, 1.9], [150, 1.7]]
+
+def calculate_bmi(weight, height):
+    return weight / (height ** 2)
+
+for patient in patients:
+    weight, height = patient  # Fixed: was patients[0]
+    bmi = calculate_bmi(weight, height)
+    print(f"Patient's BMI is: {bmi}")
+```
+
+:::
+:::
+
+## Key Points
+
+- Know what code is supposed to do *before* trying to debug it.
+- Make it fail every time.
+- Make it fail fast.
+- Change one thing at a time, for a reason.
+- Keep track of what you've done.
+- Be humble.

@@ -1,0 +1,456 @@
+---
+title: "Defensive Programming"
+abstract: |
+  Learn defensive programming techniques to make your code robust and reliable. Master using assertions, input validation, and error checking to prevent bugs and create more maintainable programs.
+date: last-modified
+format:
+  html: default
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Python", "Defensive Programming", "Assertions", "Error Prevention", "Code Quality", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Explain what an assertion is.
+- Add assertions that check the program's state is correct.
+- Add precondition and postcondition assertions to functions.
+- Explain what test-driven development is, and use it when creating new functions.
+- Explain why variables should be initialized using actual data values rather than arbitrary constants.
+
+## Questions
+
+- How can I make my programs more reliable?
+:::
+
+Our previous lessons have introduced the basic tools of programming:
+variables and lists,
+file I/O,
+loops,
+conditionals,
+and functions.
+What we haven't seen yet is how to tell whether a program is getting the right answer,
+and how to tell if it's *still* getting the right answer as we make changes to it.
+
+To achieve that,
+we need to:
+
+- Write programs that check their own operation.
+- Write and run tests for widely-used functions.
+- Make sure we know what "correct" actually means.
+
+The good news is,
+doing these things will speed up our programming, not slow it down.
+As in real carpentry --- the kind done with lumber --- the time saved
+by measuring carefully before cutting is much greater than the time that measuring takes.
+
+## Assertions
+
+The first step toward getting the right answers from our programs
+is to assume that mistakes *will* happen
+and to guard against them.
+This is called [defensive programming](../learners/reference.md#defensive-programming),
+and the most common way to do it is to add [assertions](../learners/reference.md#assertion) to our code
+so that it checks itself as it runs.
+An assertion is simply a statement that something must be true at a certain point in a program.
+When Python sees one,
+it evaluates the assertion's condition.
+If it's true,
+Python does nothing,
+but if it's false,
+Python halts the program immediately
+and prints the error message if one is provided.
+For example,
+this piece of code halts as soon as the loop encounters a value that isn't positive:
+
+```python
+numbers = [1.5, 2.3, 0.7, -0.001, 4.4]
+total = 0.0
+for num in numbers:
+    assert num > 0.0, f'Data should only contain positive values: {num}'
+    total += num
+print('total is:', total)
+```
+
+```error
+---------------------------------------------------------------------------
+AssertionError                            Traceback (most recent call last)
+<ipython-input-19-33d87ea29ae4> in <module>()
+      3 for num in numbers:
+----> 4     assert num > 0.0, 'Data should only contain positive values'
+      5     total += num
+      6 print('total is:', total)
+
+AssertionError: Data should only contain positive values
+```
+
+Programs like the Firefox browser are full of assertions:
+10-20% of the code they contain
+are there to check that the other 80-90% are working correctly.
+Broadly speaking,
+assertions fall into three categories:
+
+- A [precondition](../learners/reference.md#precondition) is something that must be true at the start of a function in order for it to work correctly.
+
+- A [postcondition](../learners/reference.md#postcondition) is something that the function guarantees is true when it finishes.
+
+- An [invariant](../learners/reference.md#invariant) is something that is always true at a particular point inside a piece of code.
+
+For example,
+suppose we are representing rectangles using a [tuple](../learners/reference.md#tuple) of four coordinates `(x0, y0, x1, y1)`,
+representing the lower left and upper right corners of the rectangle.
+In order to do some calculations,
+we need to normalize the rectangle so that it is at the origin
+and 1.0 units long on its longest axis.
+This function does that,
+but checks that its input is correctly formatted and that its result makes sense:
+
+```python
+def normalize_rectangle(rect):
+    """Normalizes a rectangle so that it is at the origin and 1.0 units long on its longest axis.
+    Input should be of the format (x0, y0, x1, y1).
+    (x0, y0) and (x1, y1) define the lower left and upper right corners
+    of the rectangle, respectively."""
+    assert len(rect) == 4, 'Rectangles must contain 4 coordinates'
+    x0, y0, x1, y1 = rect
+    assert x0 < x1, 'Invalid X coordinates'
+    assert y0 < y1, 'Invalid Y coordinates'
+
+    dx = x1 - x0
+    dy = y1 - y0
+    if dx > dy:
+        scaled = dx / dy
+        upper_x, upper_y = 1.0, scaled
+    else:
+        scaled = dx / dy
+        upper_x, upper_y = scaled, 1.0
+
+    assert 0 < upper_x <= 1.0, 'Calculated upper X coordinate invalid'
+    assert 0 < upper_y <= 1.0, 'Calculated upper Y coordinate invalid'
+
+    return (0, 0, upper_x, upper_y)
+```
+
+The preconditions on lines 5, 7, and 8 catch invalid inputs:
+
+```python
+print(normalize_rectangle( (0.0, 1.0, 2.0) )) # missing the fourth coordinate
+```
+
+```error
+---------------------------------------------------------------------------
+AssertionError                            Traceback (most recent call last)
+<ipython-input-21-3a97b1dcab70> in <module>()
+----> 1 print(normalize_rectangle( (0.0, 1.0, 2.0) )) # missing the fourth coordinate
+
+<ipython-input-20-408dc39f3915> in normalize_rectangle(rect)
+      3     """Normalizes a rectangle so that it is at the origin and 1.0 units long on its longest axis."""
+      4     assert len(rect) == 4, 'Rectangles must contain 4 coordinates'
+----> 5     x0, y0, x1, y1 = rect
+      6     assert x0 < x1, 'Invalid X coordinates'
+      7     assert y0 < y1, 'Invalid Y coordinates'
+
+ValueError: not enough values to unpack (expected 4, got 3)
+```
+
+```python
+print(normalize_rectangle( (4.0, 2.0, 1.0, 5.0) )) # X axis inverted
+```
+
+```error
+---------------------------------------------------------------------------
+AssertionError                            Traceback (most recent call last)
+<ipython-input-22-f05ae7878a45> in <module>()
+----> 1 print(normalize_rectangle( (4.0, 2.0, 1.0, 5.0) )) # X axis inverted
+
+<ipython-input-20-408dc39f3915> in normalize_rectangle(rect)
+      5     x0, y0, x1, y1 = rect
+----> 6     assert x0 < x1, 'Invalid X coordinates'
+      7     assert y0 < y1, 'Invalid Y coordinates'
+
+AssertionError: Invalid X coordinates
+```
+
+The post-conditions help us catch bugs by telling us when our calculations might have been wrong.
+For example,
+if we normalize a rectangle that is taller than it is wide everything seems OK:
+
+```python
+print(normalize_rectangle( (0.0, 0.0, 1.0, 5.0) ))
+```
+
+```output
+(0, 0, 0.2, 1.0)
+```
+
+but if we normalize one that's wider than it is tall,
+the assertion is triggered:
+
+```python
+print(normalize_rectangle( (0.0, 0.0, 5.0, 1.0) ))
+```
+
+```error
+---------------------------------------------------------------------------
+AssertionError                            Traceback (most recent call last)
+<ipython-input-24-5f0ef7954aae> in <module>()
+----> 1 print(normalize_rectangle( (0.0, 0.0, 5.0, 1.0) ))
+
+<ipython-input-20-408dc39f3915> in normalize_rectangle(rect)
+     16
+     17     assert 0 < upper_x <= 1.0, 'Calculated upper X coordinate invalid'
+---> 18     assert 0 < upper_y <= 1.0, 'Calculated upper Y coordinate invalid'
+     19
+     20     return (0, 0, upper_x, upper_y)
+
+AssertionError: Calculated upper Y coordinate invalid
+```
+
+Re-reading our function,
+we realize that line 10 should divide `dy` by `dx` rather than `dx` by `dy`.
+(You can display line numbers by typing Ctrl+M, then L.)
+If we had left out the assertion at the end of the function,
+we would have created and returned something that had the right shape as a valid answer,
+but wasn't.
+Detecting and debugging that would have been much harder in a larger program:
+the bug would not have surfaced until we were trying to draw the rectangle.
+
+::: {.callout-note}
+
+## Post-Condition Testing
+
+Suppose you are writing a function called `average` that calculates the average of the numbers in a list.
+What pre-conditions and post-conditions would you write for it?
+Compare your answer to your neighbor's:
+can you think of a function that will pass your tests but not theirs or vice versa?
+
+::: {.callout-tip collapse="true"}
+
+## Solution: Preconditions and Postconditions
+
+```python
+# a possible pre-condition:
+assert len(input_list) > 0, 'List length must be non-zero'
+# a possible post-condition:
+assert min(input_list) <= average <= max(input_list), 'Average should be between min and max of input values'
+```
+
+:::
+:::
+
+::: {.callout-note}
+
+## Testing Assertions
+
+Given a sequence of a number of cars, the function `get_total_cars` returns
+the total number of cars.
+
+```python
+get_total_cars([1, 2, 3, 4])
+```
+
+```output
+10
+```
+
+Explain why the two assertions in this function are both useful.
+
+```python
+def get_total_cars(values):
+    assert len(values) > 0
+    assert False not in [v >= 0 for v in values]
+    total = sum(values)
+    assert total > 0
+    return total
+```
+
+::: {.callout-tip collapse="true"}
+
+## Solution: Testing Assertions
+
+The first assertion checks that the input sequence `values` is not empty.
+An empty sequence, which would be a logical error, would result in a sum of 0.
+This would be a problem in the function since we're summing cars and there
+should be at least one car.
+
+The second assertion checks that all values in the list are non-negative
+(since a negative number of cars wouldn't make sense).
+
+The third assertion checks that the total is positive, which should be the case
+if we have both a non-empty list and no negative values.
+:::
+:::
+
+## Test-Driven Development
+
+An assertion checks that something is true at a particular point in the program.
+The next step is to check the overall behavior of a piece of code,
+i.e.,
+to make sure that it produces the right answer when it's supposed to
+and the right kind of error when it's not.
+
+For example,
+suppose we need to find where two or more time series overlap.
+The range of each time series is represented as a pair of numbers,
+which are the time the interval started and ended.
+The output is the largest range that they all include:
+
+![Three number lines showing how the intersection of two ranges is computed](figures/python-overlapping-ranges.svg)
+
+Most novice programmers would solve this problem like this:
+
+1. Write a function `range_overlap`.
+2. Call it interactively on two or three different inputs.
+3. If it produces the wrong answer, fix the function and re-run that test.
+
+This clearly works --- after all,
+thousands of scientists are doing it right now --- but
+there's a better way:
+
+1. Write a short function for each test.
+2. Write a `range_overlap` function that should pass those tests.
+3. If `range_overlap` produces any wrong answers, fix it and re-run the tests.
+
+Writing the tests *before* writing the function they exercise
+is called [test-driven development](../learners/reference.md#test-driven-development) (TDD).
+Its advocates believe it produces better code faster because:
+
+1. If people write tests after writing the thing to be tested,
+   they are subject to confirmation bias,
+   i.e.,
+   they subconsciously write tests to show that their code is correct,
+   rather than to find errors.
+
+2. Writing tests helps programmers figure out what the function is actually supposed to do.
+
+We'll start by testing `range_overlap` with the easy case:
+no arguments.
+`range_overlap` should return `None` when there's no ranges to overlap:
+
+```python
+assert range_overlap([]) is None
+```
+
+The `is` operator checks whether two variables refer to the same object.
+
+We expected `range_overlap([])` to return `None`,
+but we haven't written our function yet,
+so we can't test whether it actually does.
+If we try to run this assertion,
+Python tells us that there's no such thing as `range_overlap`.
+
+The simplest thing that could possibly work is this:
+
+```python
+def range_overlap(ranges):
+    return None
+```
+
+This function doesn't look at its arguments,
+but at least we can call it.
+And surprisingly,
+our test passes:
+
+```python
+assert range_overlap([]) is None
+```
+
+Now let's write our second test:
+`range_overlap` should return the common overlap when there's exactly one range in the list:
+
+```python
+assert range_overlap([(1.0, 3.0)]) == (1.0, 3.0)
+```
+
+Oops: that doesn't work, because our dumb function returns `None` regardless of its input.
+Let's fix it:
+
+```python
+def range_overlap(ranges):
+    if not ranges:
+        return None
+    return ranges[0]
+```
+
+```python
+assert range_overlap([]) is None
+assert range_overlap([(1.0, 3.0)]) == (1.0, 3.0)
+```
+
+So far so good.
+Now let's test the case where we have two ranges that overlap:
+
+```python
+assert range_overlap([(1.0, 3.0), (2.0, 4.0)]) == (2.0, 3.0)
+```
+
+This test fails because our function doesn't handle multiple ranges yet.
+The right thing to do now is to fix the function to handle this case (and re-run all of our tests to make sure we haven't broken anything we've done so far).
+
+For teaching purposes though,
+let's sharpen our understanding by working backward from the right answer.
+We know that the answer is `(2.0, 3.0)` because:
+
+- The left edge of the overlap is the maximum of the left edges of the input ranges: `max(1.0, 2.0)` is `2.0`.
+- The right edge is the minimum of the right edges: `min(3.0, 4.0)` is `3.0`.
+
+To implement this we could write:
+
+```python
+def range_overlap(ranges):
+    if not ranges:
+        return None
+    if len(ranges) == 1:
+        return ranges[0]
+    left_max = max(left for left, right in ranges)
+    right_min = min(right for left, right in ranges)
+    return (left_max, right_min)
+```
+
+::: {.callout-note}
+
+## Testing Edge Cases
+
+Now we're ready to build a more comprehensive set of tests for our `range_overlap` function.
+Three largely-overlapping ranges like `(1.0, 3.0)`, `(2.0, 4.0)` and `(0.0, 3.5)` produce `(2.0, 3.0)`,
+but what should our function do if there's no overlap at all?
+Decide what the function should do in this case,
+write some tests for it,
+and modify the function to make the tests pass.
+
+::: {.callout-tip collapse="true"}
+
+## Solution: Range Overlap Function
+
+```python
+assert range_overlap([(1.0, 2.0), (3.0, 4.0)]) is None
+```
+
+Since there's no overlap, the function should return `None`.
+
+```python
+def range_overlap(ranges):
+    if not ranges:
+        return None
+    if len(ranges) == 1:
+        return ranges[0]
+    left_max = max(left for left, right in ranges)
+    right_min = min(right for left, right in ranges)
+    if left_max >= right_min:    # no overlap
+        return None
+    return (left_max, right_min)
+```
+
+:::
+:::
+
+## Key Points
+
+- Program defensively, i.e., assume that errors are going to arise, and write code to detect them when they do.
+- Put assertions in programs to check their state as they run, and to help readers understand how those programs are supposed to work.
+- Write tests before writing code in order to help determine exactly what that code is supposed to do.

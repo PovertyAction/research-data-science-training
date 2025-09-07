@@ -21,6 +21,7 @@ repos:
     rev: v0.45.0
     hooks:
       - id: markdownlint-fix
+        exclude: ^python-workshops/python-novice-inflammation/
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.2
@@ -29,5 +30,7 @@ repos:
         args: [--fix, --exit-non-zero-on-fix]
         types_or: [python, pyi, jupyter]
         require_serial: true
+        exclude: ^python-workshops/python-novice-inflammation/
       - id: ruff-format
         types_or: [python, pyi, jupyter]
+        exclude: ^python-workshops/python-novice-inflammation/

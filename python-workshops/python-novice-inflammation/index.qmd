@@ -1,0 +1,65 @@
+---
+title: "Programming with Python"
+abstract: |
+  A comprehensive tutorial series introducing Python programming fundamentals through practical data analysis. Learn programming concepts, data manipulation, visualization, and best practices using real-world inflammation research data.
+date: last-modified
+format:
+  html: default
+# authors-ipa:
+#   - "[Author Name](https://poverty-action.org/people/author_name)"
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Python", "Programming", "Data Analysis", "Scientific Computing", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+This tutorial teaches novice programmers to write modular code and best practices for using Python for data analysis. The emphasis is on teaching Python as a general-purpose programming language. The examples used in this lesson can be applied beyond neuroscience. For instance, the inflammation data used in these lessons often occurs in the context of clinical trials.
+
+## Episodes
+
+1. [Python Fundamentals](01-intro.qmd) - Learn the fundamentals of Python programming including variables, data types, and built-in functions.
+
+2. [Analyzing Patient Data](02-numpy.qmd) - Process tabular data files using NumPy, Python's numerical computing library.
+
+3. [Visualizing Tabular Data](03-matplotlib.qmd) - Create effective data visualizations using Python's matplotlib library.
+
+4. [Storing Multiple Values in Lists](04-lists.qmd) - Work with Python lists to store and manipulate multiple values.
+
+5. [Repeating Actions with Loops](05-loop.qmd) - Use for loops in Python to efficiently repeat operations on collections of data.
+
+6. [Analyzing Data from Multiple Files](06-files.qmd) - Process multiple data files efficiently using Python's glob library and for loops.
+
+7. [Making Choices](07-cond.qmd) - Implement decision-making logic in Python using conditional statements.
+
+8. [Creating Functions](08-func.qmd) - Create reusable code with Python functions and learn about modularity.
+
+9. [Errors and Exceptions](09-errors.qmd) - Understand and handle Python errors effectively through debugging techniques.
+
+10. [Defensive Programming](10-defensive.qmd) - Learn defensive programming techniques to make your code robust and reliable.
+
+11. [Debugging](11-debugging.qmd) - Master systematic debugging strategies to identify and fix errors in Python code.
+
+12. [Command-Line Programs](12-cmdline.qmd) - Create Python programs that can be run from the command line with arguments.
+
+## Learning Objectives
+
+By the end of this tutorial, learners will be able to:
+
+- Read tabular data from a file into a program.
+- Select individual values and subsections from data.
+- Perform operations on arrays of data.
+- Display simple graphs.
+- Repeat actions with loops.
+- Make choices using conditionals.
+- Create and use functions.
+- Handle errors that arise in programs.
+- Understand and apply defensive programming principles.
+- Create command-line programs.
+
+## Prerequisites
+
+This lesson assumes no prior experience with the tools covered in the lesson. A basic understanding of how to use a text editor on your system is helpful, but not required.
+
+## Setup
+
+To get started with this tutorial, you'll need Python installed on your system along with several libraries. Please follow the setup instructions provided with this course to ensure you have all necessary software installed.

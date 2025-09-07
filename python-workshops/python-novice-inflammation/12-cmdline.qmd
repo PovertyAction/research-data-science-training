@@ -1,0 +1,567 @@
+---
+title: "Command-Line Programs"
+abstract: |
+  Learn to create Python programs that can be run from the command line with arguments. Master using sys.argv, handling command-line flags, and building flexible scripts for batch processing.
+date: last-modified
+format:
+  html: default
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Python", "Command Line", "Script Arguments", "System Integration", "Batch Processing", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Use the values of command-line arguments in a program.
+- Handle flags and files separately in a command-line program.
+- Read data from standard input in a program so that it can be used in a pipeline.
+
+## Questions
+
+- How can I write Python programs that will work like Unix command-line tools?
+:::
+
+The Jupyter Notebook and other interactive tools are great for prototyping code and exploring data,
+but sooner or later we will want to use our program in a pipeline
+or run it in a shell script to process thousands of data files.
+In order to do that,
+we need to make our programs work like other Unix command-line tools.
+For example,
+we may want a program that reads a dataset
+and prints the average inflammation per patient:
+
+```bash
+$ python readings.py --mean data/inflammation-01.csv
+5.45
+5.425
+6.1
+...
+5.9
+5.55
+```
+
+but we might also want to look at the minimum inflammation per patient:
+
+```bash
+$ python readings.py --min data/inflammation-01.csv
+0.0
+0.0
+1.0
+...
+0.0
+0.0
+```
+
+or the maximum inflammation per patient:
+
+```bash
+$ python readings.py --max data/inflammation-01.csv
+20.0
+18.0
+19.0
+...
+18.0
+13.0
+```
+
+Our overall requirements are:
+
+1. If no filename is given on the command line, read data from [standard input](../learners/reference.md#standard-input).
+2. If one or more filenames are given, read data from them and report statistics for each file separately.
+3. Use the `--min`, `--mean`, or `--max` flag to determine what statistic to print.
+
+To make this work,
+we need to know how to handle command-line arguments in a program,
+and understand how to handle standard input.
+We'll tackle these one by one below.
+
+## Command-Line Arguments
+
+Using the text editor of your choice,
+save the following in a text file called `sys-version.py`:
+
+```python
+import sys
+print('version is', sys.version)
+```
+
+The first line imports a library called `sys`,
+which is short for "system".
+It defines values such as `sys.version`,
+which describes which version of Python we are running.
+We can run this script from the command line like this:
+
+```bash
+python sys-version.py
+```
+
+```output
+version is 3.4.3+ (default, Jul 28 2015, 13:17:50)
+[GCC 4.9.3] on linux
+```
+
+Create another file called `argv-list.py` and save the following text to it:
+
+```python
+import sys
+print('sys.argv is', sys.argv)
+```
+
+The strange name `argv` stands for "argument values".
+Whenever Python runs a program,
+it takes all of the values given on the command line
+and puts them in the list `sys.argv`
+so that the program can determine what they were.
+If we run this program with no arguments:
+
+```bash
+python argv-list.py
+```
+
+```output
+sys.argv is ['argv-list.py']
+```
+
+the only thing in the list is the full path to our script,
+which is always `sys.argv[0]`.
+If we run it with a few arguments:
+
+```bash
+python argv-list.py first second third
+```
+
+```output
+sys.argv is ['argv-list.py', 'first', 'second', 'third']
+```
+
+then Python adds each of those arguments to that magic list.
+
+With this in hand,
+let's build a version of `readings.py` that always prints the per-patient mean of a single data file.
+The first step is to write a function that outlines our implementation,
+and a placeholder for the function that does the actual work.
+By defining our interface like this,
+we can concentrate on one thing at a time:
+
+```python
+import sys
+import numpy
+
+def main():
+    script = sys.argv[0]
+    filename = sys.argv[1]
+    data = numpy.loadtxt(filename, delimiter=',')
+    for row_mean in numpy.mean(data, axis=1):
+        print(row_mean)
+
+if __name__ == '__main__':
+   main()
+```
+
+This program always reads the second item from `sys.argv` and assumes it's the name of the file we want to process.
+Let's save it as `readings-01.py` and test it by running:
+
+```bash
+python readings-01.py data/inflammation-01.csv
+```
+
+Here's a simpler `readings-02.py` script that implements one way of doing this:
+
+```python
+import sys
+import numpy
+
+def main():
+    script = sys.argv[0]
+    action = sys.argv[1]
+    filename = sys.argv[2]
+    data = numpy.loadtxt(filename, delimiter=',')
+
+    if action == '--min':
+        values = numpy.min(data, axis=1)
+    elif action == '--mean':
+        values = numpy.mean(data, axis=1)
+    elif action == '--max':
+        values = numpy.max(data, axis=1)
+
+    for val in values:
+        print(val)
+
+if __name__ == '__main__':
+   main()
+```
+
+This is four lines longer than the previous version,
+but the extra effort will be worth it when we want to add the changes below.
+
+Let's test:
+
+```bash
+python readings-02.py --max data/inflammation-01.csv
+```
+
+but what if someone accidentally passes us a flag that isn't a recognized option?
+
+```bash
+python readings-02.py --median data/inflammation-01.csv
+```
+
+Using if...elif like this doesn't scale well, and it doesn't provide a helpful error message.
+Let's try a different approach:
+
+```python
+import sys
+import numpy
+
+def main():
+    script = sys.argv[0]
+    action = sys.argv[1]
+    filename = sys.argv[2]
+    data = numpy.loadtxt(filename, delimiter=',')
+
+    if action == '--min':
+        values = numpy.min(data, axis=1)
+    elif action == '--mean':
+        values = numpy.mean(data, axis=1)
+    elif action == '--max':
+        values = numpy.max(data, axis=1)
+    else:
+        assert False, f'{action} not recognized'
+
+    for val in values:
+        print(val)
+
+if __name__ == '__main__':
+   main()
+```
+
+This is better, but still not great. The assertion will help,  but what the user *should* get is not an error but a message that tells them how to use the program.
+
+## Handling Standard Input
+
+The next requirement is that our program do the right thing if no arguments are provided.
+The easiest way to do this is to check the number of arguments,
+and if there aren't enough,
+process standard input instead of a named file.
+
+Here's `readings-04.py`, which lets us use `stdin` if no filename is provided:
+
+```python
+import sys
+import numpy
+
+def main():
+    script = sys.argv[0]
+    action = sys.argv[1]
+    
+    if len(sys.argv) == 3:
+        filename = sys.argv[2]
+        data = numpy.loadtxt(filename, delimiter=',')
+    elif len(sys.argv) == 2:
+        data = numpy.loadtxt(sys.stdin, delimiter=',')
+    else:
+        print('Usage: python readings-04.py action [file]')
+        sys.exit(1)
+
+    if action == '--min':
+        values = numpy.min(data, axis=1)
+    elif action == '--mean':
+        values = numpy.mean(data, axis=1)
+    elif action == '--max':
+        values = numpy.max(data, axis=1)
+    else:
+        print(f'Action "{action}" not recognized')
+        print('Should be one of: --min --mean --max')
+        sys.exit(1)
+
+    for val in values:
+        print(val)
+
+if __name__ == '__main__':
+   main()
+```
+
+Let's test it:
+
+```bash
+python readings-04.py --max data/inflammation-01.csv
+```
+
+That's better.
+In fact,
+that's good enough for now.
+
+::: {.callout-note}
+
+## Arithmetic on the Command Line
+
+Write a command-line program that does addition and subtraction:
+
+```bash
+python arith.py add 1 2
+```
+
+```output
+3
+```
+
+```bash
+python arith.py subtract 3 4
+```
+
+```output
+-1
+```
+
+::: {.callout-tip collapse="true"}
+
+## Solution: Arithmetic Operations
+
+```python
+import sys
+
+def main():
+    assert len(sys.argv) == 4, 'Need exactly 3 arguments'
+
+    operator = sys.argv[1]
+    try:
+        operand1, operand2 = float(sys.argv[2]), float(sys.argv[3])
+    except ValueError:
+        print('ERROR: cannot convert input to a number')
+        return
+
+    do_arithmetic(operator, operand1, operand2)
+
+def do_arithmetic(operator, operand1, operand2):
+
+    if operator == 'add':
+        value = operand1 + operand2
+    elif operator == 'subtract':
+        value = operand1 - operand2
+    elif operator == 'multiply':
+        value = operand1 * operand2
+    elif operator == 'divide':
+        value = operand1 / operand2
+    else:
+        print(f'ERROR: operator {operator} not recognized')
+        return
+
+    print(value)
+
+if __name__ == '__main__':
+   main()
+```
+
+:::
+:::
+
+::: {.callout-note}
+
+## Finding Particular Files
+
+Using the `glob` module introduced [earlier](06-files.md), write a simple version of `ls` that shows files in the current directory with a particular suffix:
+
+```bash
+python my_ls.py py
+```
+
+```output
+left.py
+right.py
+zero.py
+```
+
+::: {.callout-tip collapse="true"}
+
+## Solution: File Listing
+
+```python
+import sys
+import glob
+
+def main():
+    """prints names of all files with sys.argv as suffix"""
+    assert len(sys.argv) >= 2, 'Argument list cannot be empty'
+    suffix = sys.argv[1] # NB: behaviour is not as you'd expect if sys.argv[1] is *
+    glob_input = '*.' + suffix # construct the input
+    glob_output = sorted(glob.glob(glob_input)) # call the glob function
+    for item in glob_output: # print the output
+        print(item)
+
+if __name__ == '__main__':
+   main()
+```
+
+:::
+:::
+
+::: {.callout-note}
+
+## Changing Flags
+
+Rewrite `readings.py` so that it uses `-n`, `-m`, and `-x` instead of `--min`, `--mean`, and `--max` respectively.
+Is the code easier to read?
+Is the program easier to understand?
+
+::: {.callout-tip collapse="true"}
+
+## Solution: Short Flag Names
+
+```python
+import sys
+import numpy
+
+def main():
+    script = sys.argv[0]
+    action = sys.argv[1]
+    
+    if len(sys.argv) == 3:
+        filename = sys.argv[2]
+        data = numpy.loadtxt(filename, delimiter=',')
+    elif len(sys.argv) == 2:
+        data = numpy.loadtxt(sys.stdin, delimiter=',')
+    else:
+        print('Usage: python readings-04.py action [file]')
+        sys.exit(1)
+
+    if action == '-n':
+        values = numpy.min(data, axis=1)
+    elif action == '-m':
+        values = numpy.mean(data, axis=1)
+    elif action == '-x':
+        values = numpy.max(data, axis=1)
+    else:
+        print(f'Action "{action}" not recognized')
+        print('Should be one of: -n -m -x')
+        sys.exit(1)
+
+    for val in values:
+        print(val)
+
+if __name__ == '__main__':
+   main()
+```
+
+The program is neither easier to read nor easier to understand.
+:::
+:::
+
+::: {.callout-note}
+
+## Adding a Help Message
+
+Separately, modify `readings.py` so that if no parameters are given (i.e., no action is specified and no filename is given), it prints a message explaining how it should be used.
+
+::: {.callout-tip collapse="true"}
+
+## Solution: Help Message
+
+```python
+import sys
+import numpy
+
+def main():
+    if len(sys.argv) == 1:
+        print('Usage: python readings.py action [file]')
+        print('action should be one of: --min --mean --max')
+        print('if file is not given, stdin is used')
+        sys.exit(1)
+        
+    script = sys.argv[0]
+    action = sys.argv[1]
+    
+    if len(sys.argv) == 3:
+        filename = sys.argv[2]
+        data = numpy.loadtxt(filename, delimiter=',')
+    elif len(sys.argv) == 2:
+        data = numpy.loadtxt(sys.stdin, delimiter=',')
+    else:
+        print('Usage: python readings.py action [file]')
+        sys.exit(1)
+
+    if action == '--min':
+        values = numpy.min(data, axis=1)
+    elif action == '--mean':
+        values = numpy.mean(data, axis=1)
+    elif action == '--max':
+        values = numpy.max(data, axis=1)
+    else:
+        print(f'Action "{action}" not recognized')
+        print('Should be one of: --min --mean --max')
+        sys.exit(1)
+
+    for val in values:
+        print(val)
+
+if __name__ == '__main__':
+   main()
+```
+
+:::
+:::
+
+::: {.callout-note}
+
+## Adding a Default Action
+
+Separately, modify `readings.py` so that if no action is given it displays the means of the data.
+
+::: {.callout-tip collapse="true"}
+
+## Solution: Default Action
+
+```python
+import sys
+import numpy
+
+def main():
+    script = sys.argv[0]
+    
+    if len(sys.argv) == 3:
+        action = sys.argv[1]
+        filename = sys.argv[2]
+        data = numpy.loadtxt(filename, delimiter=',')
+    elif len(sys.argv) == 2:
+        action = '--mean'  # default action
+        filename = sys.argv[1]
+        data = numpy.loadtxt(filename, delimiter=',')
+    elif len(sys.argv) == 1:
+        action = '--mean'  # default action
+        data = numpy.loadtxt(sys.stdin, delimiter=',')
+    else:
+        print('Usage: python readings.py [action] [file]')
+        sys.exit(1)
+
+    if action == '--min':
+        values = numpy.min(data, axis=1)
+    elif action == '--mean':
+        values = numpy.mean(data, axis=1)
+    elif action == '--max':
+        values = numpy.max(data, axis=1)
+    else:
+        print(f'Action "{action}" not recognized')
+        print('Should be one of: --min --mean --max')
+        sys.exit(1)
+
+    for val in values:
+        print(val)
+
+if __name__ == '__main__':
+   main()
+```
+
+:::
+:::
+
+## Key Points
+
+- The `sys` library connects a Python program to the system it is running on.
+- The list `sys.argv` contains the command-line arguments that a program was run with.
+- Avoid silent failures.
+- The "file" `sys.stdin` connects to a program's standard input.
+- The "file" `sys.stdout` connects to a program's standard output.
