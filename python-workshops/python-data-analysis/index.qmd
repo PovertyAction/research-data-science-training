@@ -33,13 +33,14 @@ as well (e.g., repl.it, Anaconda).
   what a working directory is,
   and how to start a Python interpreter.
 
-2. Learners must install Python 3 before the class starts.
+2. Learners must install Python 3 and required packages before the class starts.
+   We use **uv**, a modern Python package manager that makes setup simple.
 
 3. Learners must get the gapminder data before class starts:
   please download and unzip the file
   [python-data-analysis-data.zip](episodes/files/python-data-analysis-data.zip).
 
 Please see [the setup instructions](learners/setup.md)
-for more details.
+for detailed installation steps using uv.
 
 [jupyterlab]: https://jupyterlab.readthedocs.io/en/stable/

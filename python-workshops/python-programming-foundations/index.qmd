@@ -62,4 +62,4 @@ This lesson assumes no prior experience with the tools covered in the lesson. A 
 
 ## Setup
 
-To get started with this tutorial, you'll need Python installed on your system along with several libraries. Please follow the setup instructions provided with this course to ensure you have all necessary software installed.
+To get started with this tutorial, you'll need Python installed on your system along with several libraries. We use **uv**, a modern Python package manager that makes installation simple and reliable. Please follow the [setup instructions](learners/setup.md) to install uv and create your project environment.

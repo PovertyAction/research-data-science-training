@@ -36,7 +36,7 @@ we may want a program that reads a dataset
 and prints the average inflammation per patient:
 
 ```bash
-$ python readings.py --mean data/inflammation-01.csv
+$ uv run python readings.py --mean data/inflammation-01.csv
 5.45
 5.425
 6.1
@@ -48,7 +48,7 @@ $ python readings.py --mean data/inflammation-01.csv
 but we might also want to look at the minimum inflammation per patient:
 
 ```bash
-$ python readings.py --min data/inflammation-01.csv
+$ uv run python readings.py --min data/inflammation-01.csv
 0.0
 0.0
 1.0
@@ -60,7 +60,7 @@ $ python readings.py --min data/inflammation-01.csv
 or the maximum inflammation per patient:
 
 ```bash
-$ python readings.py --max data/inflammation-01.csv
+$ uv run python readings.py --max data/inflammation-01.csv
 20.0
 18.0
 19.0
@@ -97,7 +97,7 @@ which describes which version of Python we are running.
 We can run this script from the command line like this:
 
 ```bash
-python sys-version.py
+uv run python sys-version.py
 ```
 
 ```output
@@ -120,7 +120,7 @@ so that the program can determine what they were.
 If we run this program with no arguments:
 
 ```bash
-python argv-list.py
+uv run python argv-list.py
 ```
 
 ```output
@@ -132,7 +132,7 @@ which is always `sys.argv[0]`.
 If we run it with a few arguments:
 
 ```bash
-python argv-list.py first second third
+uv run python argv-list.py first second third
 ```
 
 ```output
@@ -167,7 +167,7 @@ This program always reads the second item from `sys.argv` and assumes it's the n
 Let's save it as `readings-01.py` and test it by running:
 
 ```bash
-python readings-01.py data/inflammation-01.csv
+uv run python readings-01.py data/inflammation-01.csv
 ```
 
 Here's a simpler `readings-02.py` script that implements one way of doing this:
@@ -202,13 +202,13 @@ but the extra effort will be worth it when we want to add the changes below.
 Let's test:
 
 ```bash
-python readings-02.py --max data/inflammation-01.csv
+uv run python readings-02.py --max data/inflammation-01.csv
 ```
 
 but what if someone accidentally passes us a flag that isn't a recognized option?
 
 ```bash
-python readings-02.py --median data/inflammation-01.csv
+uv run python readings-02.py --median data/inflammation-01.csv
 ```
 
 Using if...elif like this doesn't scale well, and it doesn't provide a helpful error message.
@@ -265,7 +265,7 @@ def main():
     elif len(sys.argv) == 2:
         data = numpy.loadtxt(sys.stdin, delimiter=',')
     else:
-        print('Usage: python readings-04.py action [file]')
+        print('Usage: uv run python readings-04.py action [file]')
         sys.exit(1)
 
     if action == '--min':
@@ -289,7 +289,7 @@ if __name__ == '__main__':
 Let's test it:
 
 ```bash
-python readings-04.py --max data/inflammation-01.csv
+uv run python readings-04.py --max data/inflammation-01.csv
 ```
 
 That's better.
@@ -303,7 +303,7 @@ that's good enough for now.
 Write a command-line program that does addition and subtraction:
 
 ```bash
-python arith.py add 1 2
+uv run python arith.py add 1 2
 ```
 
 ```output
@@ -311,7 +311,7 @@ python arith.py add 1 2
 ```
 
 ```bash
-python arith.py subtract 3 4
+uv run python arith.py subtract 3 4
 ```
 
 ```output
@@ -367,7 +367,7 @@ if __name__ == '__main__':
 Using the `glob` module introduced [earlier](06-files.md), write a simple version of `ls` that shows files in the current directory with a particular suffix:
 
 ```bash
-python my_ls.py py
+uv run python my_ls.py py
 ```
 
 ```output
@@ -426,7 +426,7 @@ def main():
     elif len(sys.argv) == 2:
         data = numpy.loadtxt(sys.stdin, delimiter=',')
     else:
-        print('Usage: python readings-04.py action [file]')
+        print('Usage: uv run python readings-04.py action [file]')
         sys.exit(1)
 
     if action == '-n':

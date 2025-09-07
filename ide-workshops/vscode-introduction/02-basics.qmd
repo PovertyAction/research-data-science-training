@@ -303,7 +303,7 @@ Create `.vscode/settings.json` in your project root:
 ```json
 {
     "editor.fontSize": 16,
-    "python.defaultInterpreterPath": "./venv/bin/python"
+    "python.defaultInterpreterPath": "./.venv/bin/python"
 }
 ```
 

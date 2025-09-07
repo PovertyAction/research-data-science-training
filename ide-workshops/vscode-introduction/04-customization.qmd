@@ -324,7 +324,7 @@ Understand different types of settings and when to use each.
 ```json
 {
     "editor.fontSize": 16,
-    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.defaultInterpreterPath": "./.venv/bin/python",
     "files.exclude": {
         "**/__pycache__": true,
         "**/.pytest_cache": true
@@ -453,7 +453,7 @@ Create recommendations for team members:
 
 ```json
 {
-    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.defaultInterpreterPath": "./.venv/bin/python",
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
     "python.formatting.provider": "black",

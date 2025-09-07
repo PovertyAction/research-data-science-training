@@ -476,7 +476,7 @@ __pycache__/
 *.pyd
 .Python
 env/
-venv/
+.venv/
 
 # IDE
 .vscode/settings.json

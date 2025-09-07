@@ -10,125 +10,150 @@ and instructions on how to obtain them are provided below.
 
 ## Install Python
 
-In this lesson, we will be using Python 3 with some of its most popular scientific libraries.
-One can install a plain-vanilla Python and all required libraries by hand.
+In this lesson, we will be using Python 3 with some of its most popular scientific libraries. We'll use **uv**, a modern Python package manager that makes installation simple and reliable.
+
+### Step 1: Install uv
+
+First, install uv using one of these methods:
+
+**Windows (PowerShell):**
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+or
+
+```powershell
+winget install -e --id astral-sh.uv
+```
+
+**macOS/Linux:**
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+or
+
+```bash
+brew install uv
+```
+
+### Step 2: Install Python
+
+uv makes Python installation simple - it will automatically install Python when needed:
+
+```bash
+uv python install
+```
+
+This installs the latest stable Python version. You can also specify a version:
+
+```bash
+uv python install 3.12
+```
+
+### Step 3: Install Required Libraries
+
+Create a new project for this workshop:
+
+```bash
+uv init swc-python
+cd swc-python
+```
+
+Add the scientific libraries we'll need:
+
+```bash
+uv add numpy matplotlib
+```
+
+This automatically creates a virtual environment and installs the packages.
 
 ## Obtain lesson materials
 
 1. Download [python-programming-foundations-data.zip][zipfile1]
   and [python-programming-foundations-code.zip][zipfile2].
-2. Create a folder called `swc-python` on your Desktop.
-3. Move downloaded files to `swc-python`.
-4. Unzip the files.
+2. Move downloaded files to your `swc-python` project directory.
+3. Unzip the files.
 
-You should see two folders called `data` and `code` in the `swc-python` directory on your
-Desktop.
+You should see two folders called `data` and `code` in the `swc-python` directory.
 
 ## Launch Python interface
 
-To start working with Python, we need to launch a program that will interpret and execute our
-Python commands. Below we list several options. If you don't have a preference, proceed with the
-top option in the list that is available on your machine. Otherwise, you may use any interface
-you like.
+To start working with Python, we'll use uv to run Python in your project environment. This ensures you have access to all the libraries we installed. Below are several options for working with Python:
+
+### Recommended: Using uv run
+
+The simplest approach is to use `uv run` with your preferred Python interface. This automatically uses your project's virtual environment.
 
 ## Option A: Jupyter Notebook
 
 A Jupyter Notebook provides a browser-based interface for working with Python.
-You can launch a notebook from the command line:
 
-:::::::::::::::: spoiler
-
-## Command line (Terminal)
-
-1\. Navigate to the `data` directory:
-
-::::::::::::::::: spoiler
-
-## Unix shell
-
-If you're using a Unix shell application, such as Terminal app in macOS, Console or Terminal
-in Linux, or [Git Bash][gitbash] on Windows, execute the following command:
+First, add Jupyter to your project:
 
 ```bash
-cd ~/Desktop/swc-python/data
+uv add jupyter
 ```
 
-:::::::::::::::::::::::::
+Then launch a notebook using uv:
 
-::::::::::::::::: spoiler
-
-## Command Prompt (Windows)
-
-On Windows, you can use its native Command Prompt program.  The easiest way to start it up is
-pressing <kbd>Windows Logo Key</kbd>\+<kbd>R</kbd>, entering `cmd`, and hitting
-<kbd>Return</kbd>. In the Command Prompt, use the following command to navigate to
-the `data` folder:
-
-```source
-cd /D %userprofile%\Desktop\swc-python\data
-```
-
-:::::::::::::::::::::::::
-
-2\. Start Jupyter server
-
-::::::::::::::::: spoiler
-
-## Unix shell
+1. Navigate to your project directory:
 
 ```bash
-jupyter notebook
+cd swc-python
 ```
 
-:::::::::::::::::::::::::
+2. Navigate to the `data` directory:
 
-::::::::::::::::: spoiler
-
-## Command Prompt (Windows)
-
-```source
-python -m notebook
+```bash
+cd data
 ```
 
-:::::::::::::::::::::::::
+3. Start Jupyter using uv:
 
-3\. Launch the notebook by clicking on the "New" button on the right and selecting "Python 3"
-from the drop-down menu:
-![](figures/jupyter-notebook-launch-notebook2.png){alt='Anaconda Navigator Notebook directory'}
+```bash
+uv run jupyter notebook
+```
 
-:::::::::::::::::::::::::
-
-  <!-- vertical spacer -->
+4. In the browser window that opens, click "New" and select "Python 3" to create a new notebook.
 
 ## Option B: IPython interpreter
 
 IPython is an alternative solution situated somewhere in between the plain-vanilla Python
-interpreter and Jupyter Notebook. It provides an interactive command-line based interpreter with
-various convenience features and commands.  You can install IPython on your system
-[system](https://ipython.org/install.html).
+interpreter and Jupyter Notebook. First add IPython to your project:
 
-To start using IPython, execute:
-
-```source
-ipython
+```bash
+uv add ipython
 ```
 
-  <!-- vertical spacer -->
+To start using IPython with uv:
 
-## Option C: plain-vanilla Python interpreter
-
-To launch a plain-vanilla Python interpreter, execute:
-
-```source
-python
+```bash
+uv run ipython
 ```
 
-If you are using [Git Bash on Windows][gitbash], you have to call Python *via* `winpty`:
+## Option C: Plain Python interpreter
 
-```source
-winpty python
+To launch a plain Python interpreter using uv:
+
+```bash
+uv run python
 ```
+
+This ensures you're using the Python version and packages from your project environment.
+
+## Why use uv?
+
+uv is a modern Python package manager that provides several benefits for beginners:
+
+- **Automatic environment management**: Creates isolated environments for each project
+- **Fast and reliable**: Downloads and installs packages quickly
+- **Simple commands**: `uv add package_name` instead of complex pip commands
+- **No conflicts**: Each project has its own dependencies
+- **Automatic Python installation**: No need to manually install Python first
 
 [zipfile1]: data/python-programming-foundations-data.zip
 [zipfile2]: ../episodes/files/code/python-programming-foundations-code.zip
-[gitbash]: https://gitforwindows.org

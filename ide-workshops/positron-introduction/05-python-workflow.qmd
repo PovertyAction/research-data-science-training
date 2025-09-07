@@ -48,57 +48,62 @@ We'll work on a complete data science project analyzing a real dataset. Our goal
 
 ## Part 1: Setting Up the Project
 
-### Step 1: Create Project Structure
+### Step 1: Create Project Structure with uv
 
-1. **Create a new folder** for your project:
-   - Use File Explorer/Finder to create: `housing_analysis_project`
-   - Or use Positron terminal: `mkdir housing_analysis_project`
+We'll use uv to create a well-organized Python project:
+
+1. **Initialize the project** using Positron terminal:
+
+   ```bash
+   uv init housing_analysis_project
+   cd housing_analysis_project
+   ```
 
 2. **Open the project in Positron**:
    - `File > Open Folder`
    - Select your `housing_analysis_project` folder
 
-3. **Create project structure**:
+3. **Create additional project folders**:
+
+   ```bash
+   mkdir data notebooks plots
+   ```
+
+4. **Final project structure**:
 
    ```
    housing_analysis_project/
    ├── data/           # Raw and processed data
    ├── notebooks/      # Jupyter notebooks
-   ├── scripts/        # Python scripts
    ├── plots/          # Generated visualizations
-   └── README.md       # Project documentation
+   ├── .venv/          # Virtual environment (created by uv)
+   ├── pyproject.toml  # Project dependencies (created by uv)
+   └── README.md       # Project documentation (created by uv)
    ```
 
-4. **Create folders using terminal**:
+### Step 2: Set Up Python Environment with uv
+
+We'll use **uv**, a modern Python package manager that simplifies environment management:
+
+1. **Initialize project with uv**:
 
    ```bash
-   mkdir data notebooks scripts plots
+   uv init housing_analysis_project
+   cd housing_analysis_project
    ```
 
-### Step 2: Set Up Virtual Environment
-
-1. **Create virtual environment**:
+2. **Add required packages**:
 
    ```bash
-   python -m venv housing_env
+   uv add pandas numpy matplotlib seaborn scikit-learn jupyter
    ```
-
-2. **Activate environment**:
-   - **Windows**: `housing_env\Scripts\activate`
-   - **macOS/Linux**: `source housing_env/bin/activate`
 
 3. **Select interpreter in Positron**:
    - `Ctrl+Shift+P` → "Python: Select Interpreter"
-   - Choose the environment you just created
-
-4. **Install required packages**:
-
-   ```bash
-   pip install pandas numpy matplotlib seaborn scikit-learn jupyter
-   ```
+   - Choose the Python interpreter from `.venv/Scripts/python.exe` (Windows) or `.venv/bin/python` (macOS/Linux)
 
 ::: {.callout-tip}
-Always use virtual environments for projects to keep dependencies organized and avoid conflicts.
+uv automatically creates a virtual environment (`.venv`) and manages dependencies, making Python project setup much simpler for beginners.
 :::
 
 ## Part 2: Data Import and Initial Exploration
@@ -530,8 +535,8 @@ This project analyzes factors influencing housing prices in California using Pyt
 - `plots/`: Generated visualizations
 
 ## How to Run
-1. Install dependencies: `pip install pandas numpy matplotlib seaborn scikit-learn`
-2. Run the main script: `python scripts/housing_analysis.py`
+1. Install dependencies: `uv add pandas numpy matplotlib seaborn scikit-learn`
+2. Run the main script: `uv run python scripts/housing_analysis.py`
 3. Or open the Jupyter notebook for interactive exploration
 
 ## Results
