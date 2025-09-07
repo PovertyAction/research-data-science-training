@@ -91,7 +91,7 @@ which are covered in the lesson on the shell.
   not to introduce aliasing imports in this novice lesson due to the
   additional cognitive load it puts on students, despite the typing that
   it saves. A good summary of arguments for and against can be found in
-  [PR #61](https://github.com/swcarpentry/python-novice-inflammation/pull/61).
+  [PR #61](https://github.com/swcarpentry/python-programming-foundations/pull/61).
   
   It is up to you as an individual instructor whether you want to introduce
   these aliases when you teach this lesson, but we encourage you to please
@@ -102,14 +102,14 @@ which are covered in the lesson on the shell.
   We used to use NumPy array methods in the first [NumPy topic](02-numpy.html).
   We switched these methods to the equivalent functions because a majority
   of instructors supported the change; see
-  [PR #244](https://github.com/swcarpentry/python-novice-inflammation/pull/244)
+  [PR #244](https://github.com/swcarpentry/python-programming-foundations/pull/244)
   for detailed arguments for and against the change.
 
 - Underscores vs. hyphens in filenames
   
   We used to use hyphens in filenames in order to signify that these Python
   files should only be run as scripts and never imported. However, after some
-  [discussion](https://github.com/swcarpentry/python-novice-inflammation/pull/254),
+  [discussion](https://github.com/swcarpentry/python-programming-foundations/pull/254),
   including an informal Twitter poll, we switched over to underscores because
   many files that start off as Python scripts end up being imported eventually.
   For that reason, we also added `if __name__ == '__main__'` guards around

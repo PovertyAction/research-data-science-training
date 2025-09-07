@@ -1,7 +1,7 @@
-# python-novice-gapminder
+# Python Data Analysis
 
 Introduction to Python for non-programmers with a focus on plotting and data analysis.
-Please see [https://swcarpentry.github.io/python-novice-gapminder/](https://swcarpentry.github.io/python-novice-gapminder/).
+This workshop teaches Python programming through practical data analysis with real-world datasets.
 
 Please cite this lesson as:
 

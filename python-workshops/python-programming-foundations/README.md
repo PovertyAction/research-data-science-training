@@ -1,6 +1,6 @@
-# Programming with Python
+# Python Programming Foundations
 
-An introduction to Python for non-programmers using inflammation data.
+Build robust Python programming skills with a focus on best practices, error handling, and scientific computing fundamentals.
 
 ## About the Lesson
 
@@ -15,8 +15,7 @@ data collected from a trial for a new treatment for arthritis. Learners are show
 how it is better to automate analysis using functions instead of repeating analysis
 steps manually.
 
-The rendered version of the lesson is available at:
-[https://swcarpentry.github.io/python-novice-inflammation/](https://swcarpentry.github.io/python-novice-inflammation/).
+This workshop focuses on building strong programming foundations through hands-on practice with data analysis.
 
 This lesson is also available in [R] and [MATLAB].
 
@@ -117,7 +116,7 @@ Please cite as:
 
 Azalee Bostroem, Trevor Bekolay, and Valentina Staneva (eds):
 "Software Carpentry: Programming with Python."  Version 2016.06, June
-2016, <https://github.com/swcarpentry/python-novice-inflammation>,
+2016, <https://github.com/swcarpentry/python-programming-foundations>,
 10.5281/zenodo.57492.
 
 ## About Software Carpentry
@@ -135,18 +134,18 @@ industry and government. More information can be found [here][cp-about].
 [good-practices]: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510
 [R]: https://github.com/swcarpentry/r-novice-inflammation
 [MATLAB]: https://github.com/swcarpentry/matlab-novice-inflammation
-[episode01]: https://swcarpentry.github.io/python-novice-inflammation/01-intro.html
-[episode02]: https://swcarpentry.github.io/python-novice-inflammation/02-numpy.html
-[episode03]: https://swcarpentry.github.io/python-novice-inflammation/03-matplotlib.html
-[episode04]: https://swcarpentry.github.io/python-novice-inflammation/04-lists.html
-[episode05]: https://swcarpentry.github.io/python-novice-inflammation/05-loop.html
-[episode06]: https://swcarpentry.github.io/python-novice-inflammation/06-files.html
-[episode07]: https://swcarpentry.github.io/python-novice-inflammation/07-cond.html
-[episode08]: https://swcarpentry.github.io/python-novice-inflammation/08-func.html
-[episode09]: https://swcarpentry.github.io/python-novice-inflammation/09-errors.html
-[episode10]: https://swcarpentry.github.io/python-novice-inflammation/10-defensive.html
-[episode11]: https://swcarpentry.github.io/python-novice-inflammation/11-debugging.html
-[episode12]: https://swcarpentry.github.io/python-novice-inflammation/12-cmdline.html
+[episode01]: episodes/01-intro.html
+[episode02]: episodes/02-numpy.html
+[episode03]: episodes/03-matplotlib.html
+[episode04]: episodes/04-lists.html
+[episode05]: episodes/05-loop.html
+[episode06]: episodes/06-files.html
+[episode07]: episodes/07-cond.html
+[episode08]: episodes/08-func.html
+[episode09]: episodes/09-errors.html
+[episode10]: episodes/10-defensive.html
+[episode11]: episodes/11-debugging.html
+[episode12]: episodes/12-cmdline.html
 [cc-by-human]: https://creativecommons.org/licenses/by/4.0/
 [cc-by-legal]: https://creativecommons.org/licenses/by/4.0/legalcode
 [mit-license]: https://opensource.org/licenses/mit-license.html

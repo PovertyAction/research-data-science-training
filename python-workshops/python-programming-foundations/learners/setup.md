@@ -15,8 +15,8 @@ One can install a plain-vanilla Python and all required libraries by hand.
 
 ## Obtain lesson materials
 
-1. Download [python-novice-inflammation-data.zip][zipfile1]
-  and [python-novice-inflammation-code.zip][zipfile2].
+1. Download [python-programming-foundations-data.zip][zipfile1]
+  and [python-programming-foundations-code.zip][zipfile2].
 2. Create a folder called `swc-python` on your Desktop.
 3. Move downloaded files to `swc-python`.
 4. Unzip the files.
@@ -129,6 +129,6 @@ If you are using [Git Bash on Windows][gitbash], you have to call Python *via* `
 winpty python
 ```
 
-[zipfile1]: data/python-novice-inflammation-data.zip
-[zipfile2]: ../episodes/files/code/python-novice-inflammation-code.zip
+[zipfile1]: data/python-programming-foundations-data.zip
+[zipfile2]: ../episodes/files/code/python-programming-foundations-code.zip
 [gitbash]: https://gitforwindows.org

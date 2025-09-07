@@ -4,10 +4,10 @@ This repository contains workshop materials for teaching and learning Python.
 
 ## Contents
 
-- `python-novice-gapminder`: Introduction to Python for non-programmers with a focus on plotting and data analysis.
+- `python-data-analysis`: Learn Python programming through practical data analysis using real-world datasets.
 
-  - Based on Software Carpentry: [https://swcarpentry.github.io/python-novice-gapminder/](https://swcarpentry.github.io/python-novice-gapminder/).
+  - Based on Software Carpentry Gapminder workshop.
 
-- `python-novice-inflammation`: Introduction to Python for non-programmers with a focus on programming and data analysis.
+- `python-programming-foundations`: Build robust Python programming skills with a focus on best practices, error handling, and scientific computing.
 
-  - Based on Software Carpentry: [https://swcarpentry.github.io/python-novice-inflammation/](https://swcarpentry.github.io/python-novice-inflammation/).
+  - Based on Software Carpentry Programming with Python workshop.
