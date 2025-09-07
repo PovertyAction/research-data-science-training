@@ -1,0 +1,84 @@
+---
+title: "Finding Things"
+abstract: |
+  Master powerful search techniques using find and grep commands. Learn to locate files and directories by various criteria, search within file contents, and use regular expressions for complex pattern matching. Essential skills for managing large datasets and codebases.
+date: last-modified
+format:
+  html: default
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Shell", "Find", "Grep", "Search", "Regular Expressions", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Use `grep` to select lines from text files that match simple patterns.
+- Use `find` to find files and directories whose names match simple patterns.
+- Use the output of one command as the command-line argument(s) to another command.
+- Explain what is meant by 'text' and 'binary' files, and why many common tools don't handle the latter well.
+
+## Questions
+
+- How can I find files?
+- How can I find things in files?
+:::
+
+In the same way that many of us now use "Google" as a
+verb meaning "to find", Unix programmers often use the
+word "grep".
+"grep" is a contraction of "global/regular expression/print",
+a common sequence of operations in early Unix text editors.
+It is also the name of a very useful command-line program.
+
+`grep` finds and prints lines in files that match a pattern.
+For our examples,
+we will use a file that contains three haikus taken from a
+1998 competition in *Salon* magazine. For this set of examples,
+we're going to be working in the writing subdirectory:
+
+```bash
+cd
+cd Desktop/data/exercise-data/writing
+cat haiku.txt
+```
+
+```output
+The Tao that is seen
+Is not the true Tao, until
+You bring fresh toner.
+
+With searching comes loss
+and the presence of absence:
+"My Thesis" not found.
+
+Yesterday it worked
+Today it is not working
+Software is like that.
+```
+
+## Using `grep`
+
+Let's find lines that contain the word "not":
+
+```bash
+grep not haiku.txt
+```
+
+```output
+Is not the true Tao, until
+"My Thesis" not found.
+Today it is not working
+```
+
+## Key Points
+
+- `find` finds files with specific properties that match patterns.
+- `grep` selects lines in files that match patterns.
+- `--help` is an option supported by many bash commands, and programs that can be run from within Bash, to display more information on how to use these commands or programs.
+- `man [command]` displays the manual page for a given command.
+- `$([command])` inserts a command's output in place.

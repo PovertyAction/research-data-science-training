@@ -1,0 +1,76 @@
+---
+title: "Loops"
+abstract: |
+  Automate repetitive tasks using shell loops. Learn to write for loops that process multiple files efficiently, applying the same operations across datasets. Master the syntax and patterns for effective shell scripting automation.
+date: last-modified
+format:
+  html: default
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Shell", "Loops", "Automation", "Scripting", "Batch Processing", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Write a loop that applies one or more commands separately to each file in a set of files.
+- Trace the values taken on by a loop variable during execution of the loop.
+- Explain the difference between a variable's name and its value.
+- Explain why spaces and some punctuation characters shouldn't be used in file names.
+- Demonstrate how to see what commands have recently been executed.
+- Re-run recently executed commands without retyping them.
+
+## Questions
+
+- How can I perform the same actions on many different files?
+:::
+
+**Loops** are a programming construct which allow us to repeat a command or set of commands
+for each item in a list.
+As such they are key to productivity improvements through automation.
+Similar to wildcards and tab completion, using loops also reduces the
+amount of typing required (and hence reduces the number of typing mistakes).
+
+Suppose we have several hundred genome data files named `basilisk.dat`, `minotaur.dat`, and
+`unicorn.dat`.
+For this example, we'll use the `exercise-data/alkanes` directory which only has two example files,
+but the principles can be applied to many many more files at once.
+
+The structure of these files is the same: the common name, classification, and updated date are
+presented on the first three lines, with DNA sequences on the following lines.
+Let's look at the files:
+
+```bash
+head -n 5 exercise-data/alkanes/*.pdb
+```
+
+```output
+==> exercise-data/alkanes/cubane.pdb <==
+COMPND      CUBANE
+AUTHOR      DAVE WOODCOCK  95 12 18
+ATOM      1  C           1      -0.748  -0.015   0.024  1.00  0.00
+ATOM      2  C           1      -0.009  -0.811   0.903  1.00  0.00
+ATOM      3  C           1      -0.009   0.420  -0.957  1.00  0.00
+
+==> exercise-data/alkanes/ethane.pdb <==
+COMPND      ETHANE
+AUTHOR      DAVE WOODCOCK  95 12 18
+ATOM      1  C           1      -0.752   0.001   0.141  1.00  0.00
+ATOM      2  C           1       0.752  -0.001  -0.141  1.00  0.00
+ATOM      3  H           1      -1.158   0.991   0.070  1.00  0.00
+```
+
+## Key Points
+
+- A `for` loop repeats commands once for every thing in a list.
+- Every `for` loop needs a variable to refer to the thing it is currently operating on.
+- Use `$name` to expand a variable (i.e., get its value). `${name}` can also be used.
+- Do not use spaces, quotes, or wildcard characters such as '*' or '?' in filenames, as it complicates variable expansion.
+- Give files consistent names that are easy to match with wildcard patterns to make it easy to select them for looping.
+- Use the up-arrow key to scroll up through previous commands to edit and repeat them.
+- Use `Ctrl+R` to search through the previously entered commands.
+- Use `history` to display recent commands, and `![number]` to repeat a command by number.

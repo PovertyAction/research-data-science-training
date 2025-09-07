@@ -1,0 +1,70 @@
+---
+title: "Shell Scripts"
+abstract: |
+  Learn to create reusable shell scripts that automate complex workflows. Discover how to write, execute, and debug shell scripts, making your computational tasks reproducible and shareable. Master the fundamentals of shell scripting for research automation.
+date: last-modified
+format:
+  html: default
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Shell", "Scripts", "Automation", "Reproducible Research", "Command Line", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Write a shell script that runs a command or series of commands for a fixed set of files.
+- Run a shell script from the command line.
+- Write a shell script that operates on a set of files defined by the user on the command line.
+- Create pipelines that include shell scripts you, and others, have written.
+
+## Questions
+
+- How can I save and re-use commands?
+:::
+
+We are finally ready to see what makes the shell such a powerful programming environment.
+We are going to take the commands we repeat frequently and save them in files
+so that we can re-run all those operations again later by typing a single command.
+For historical reasons,
+a bunch of commands saved in a file is usually called a **shell script**,
+but make no mistake:
+these are actually small programs.
+
+Not only will writing shell scripts make your work faster —
+you won't have to retype the same commands over and over again —
+it will also make your work more accurate (fewer chances for typos)
+and more reproducible.
+If you come back to your work later (or if someone else finds your work and wants to build on it)
+you will be able to reproduce the same results simply by running your script,
+rather than having to remember or retype a long list of commands.
+
+Let's start by going back to `exercise-data/proteins/` and creating a new file, `middle.sh` which will
+become our shell script:
+
+```bash
+cd exercise-data/proteins/
+nano middle.sh
+```
+
+The command `nano middle.sh` opens the file `middle.sh` within the text editor 'nano'
+(which runs within the shell).
+If the file does not exist, it will be created.
+We can use the text editor to directly edit the file -- we'll simply insert the following line:
+
+```bash
+head -n 15 octane.pdb | tail -n 5
+```
+
+## Key Points
+
+- Save commands in files (usually called shell scripts) for re-use.
+- `bash [filename]` runs the commands saved in a file.
+- `$@` refers to all of a shell script's command-line arguments.
+- `$1`, `$2`, etc., refer to the first command-line argument, the second command-line argument, etc.
+- Place variables in quotes if the values might have spaces in them.
+- Letting users decide what files to process is more flexible and more consistent with built-in Unix commands.

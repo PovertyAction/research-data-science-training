@@ -1,0 +1,91 @@
+---
+title: "Navigating Files and Directories"
+abstract: |
+  Learn essential file system navigation using the Unix shell. Master commands for moving between directories, listing contents, and understanding absolute vs relative paths. Discover how to use tab completion to work efficiently in the command line.
+date: last-modified
+format:
+  html: default
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Shell", "File Navigation", "Directories", "Command Line", "File System", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Explain the similarities and differences between a file and a directory.
+- Translate an absolute path into a relative path and vice versa.
+- Construct absolute and relative paths that identify specific files and directories.
+- Use options and arguments to change the behaviour of a shell command.
+- Demonstrate the use of tab completion and explain its advantages.
+
+## Questions
+
+- How can I move around on my computer?
+- How can I see what files and directories I have?
+- How can I specify the location of a file or directory on my computer?
+:::
+
+The part of the operating system responsible for managing files and directories
+is called the **file system**.
+It organizes our data into files,
+which hold information,
+and directories (also called 'folders'),
+which hold files or other directories.
+
+Several commands are frequently used to create, inspect, rename, and delete files and directories.
+To start exploring them, we'll go to our open shell window.
+
+First, let's find out where we are by running a command called `pwd`
+(which stands for 'print working directory'). Directories are like *places* — at any time
+while we are using the shell, we are in exactly one place called
+our **current working directory**. Commands mostly read and write files in the
+current working directory, i.e. 'here', so knowing where you are before running
+a command is important. `pwd` shows you where you are:
+
+```bash
+pwd
+```
+
+```output
+/Users/nelle
+```
+
+Here,
+the computer's response is `/Users/nelle`,
+which is Nelle's **home directory**.
+
+To understand what a 'home directory' is,
+let's have a look at how the file system as a whole is organized.  For the
+sake of this example, we'll be
+illustrating the filesystem on our scientist Nelle's computer.  After this
+illustration, you'll be learning commands to explore your own filesystem,
+which will be constructed in a similar way, but not be exactly identical.
+
+On Nelle's computer, the filesystem looks like this:
+
+![File system structure](figures/filesystem.svg){alt='The file system is made up of a root directory that contains sub-directories titled bin, data, users, and tmp'}
+
+At the top is the **root directory**
+that holds everything else.
+We refer to it using a slash character, `/`, on its own;
+this character is the "root" of the entire file system.
+
+## Key Points
+
+- The file system is responsible for managing information on the disk.
+- Information is stored in files, which are stored in directories (folders).
+- Directories can also store other directories, which then form a directory tree.
+- `pwd` prints the user's current working directory.
+- `ls [path]` prints a listing of a specific file or directory; `ls` on its own lists the current working directory.
+- `cd [path]` changes the current working directory.
+- Most commands take options that begin with a single `-`.
+- Directory names in a path are separated with `/` on Unix, but `\` on Windows.
+- `/` on its own is the root directory of the whole file system.
+- An absolute path specifies a location from the root of the file system.
+- A relative path specifies a location starting from the current location.
+- `.` on its own means 'the current directory'; `..` means 'the directory above the current one'.

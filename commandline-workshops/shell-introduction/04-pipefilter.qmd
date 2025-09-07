@@ -1,0 +1,70 @@
+---
+title: "Pipes and Filters"
+abstract: |
+  Discover the power of combining shell commands using pipes and filters. Learn to chain simple commands together to perform complex data processing tasks efficiently. Master the Unix philosophy of building powerful workflows from simple tools.
+date: last-modified
+format:
+  html: default
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+keywords: ["Shell", "Pipes", "Filters", "Command Chaining", "Data Processing", "Tutorial"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Redirect a command's output to a file.
+- Construct command pipelines with two or more stages.
+- Explain what usually happens if a program or pipeline isn't given any input to process.
+- Explain Unix's "small pieces, loosely joined" philosophy.
+
+## Questions
+
+- How can I combine existing commands to do new things?
+:::
+
+Now that we know a few basic commands,
+we can finally look at the shell's most powerful feature:
+the ease with which it lets us combine existing programs in new ways.
+We'll start with the directory `data/exercise-data/proteins`
+that contains six files describing some simple organic molecules.
+The `.pdb` extension indicates that these files are in Protein Data Bank format,
+a simple text format that specifies the type and position of each atom in the molecule.
+
+```bash
+ls exercise-data/proteins
+```
+
+```output
+cubane.pdb    ethane.pdb    methane.pdb
+octane.pdb    pentane.pdb   propane.pdb
+```
+
+Let's go into that directory with `cd` and run an example command:
+
+```bash
+cd exercise-data/proteins
+wc cubane.pdb
+```
+
+```output
+20  156 1158 cubane.pdb
+```
+
+`wc` is the 'word count' command: it counts the number of lines, words, and characters in files (from left to right, in that order).
+
+## Key Points
+
+- `wc` counts lines, words, and characters in its inputs.
+- `cat` displays the contents of its inputs.
+- `sort` sorts its inputs.
+- `head` displays the first 10 lines of its input.
+- `tail` displays the last 10 lines of its input.
+- `command > [file]` redirects a command's output to a file (overwriting any existing content).
+- `command >> [file]` appends a command's output to a file.
+- `[first] | [second]` is a pipeline: the output of the first command is used as the input to the second.
+- The best way to use the shell is to use pipes to combine simple single-purpose programs (filters).
