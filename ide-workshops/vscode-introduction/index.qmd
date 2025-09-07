@@ -1,0 +1,93 @@
+---
+title: "Visual Studio Code Introduction"
+abstract: |
+  A comprehensive introduction to Visual Studio Code for researchers and data scientists. Learn to install, configure, and use VS Code effectively for your programming projects.
+date: last-modified
+
+format:
+  html: default
+
+# Authors
+authors-ipa:
+  - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# Contributors
+contributors:
+  - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Visual Studio Code", "VS Code", "IDE", "Text Editor", "Tutorial", "Programming", "Development Environment"]
+license: "CC BY 4.0"
+---
+
+## About This Tutorial Series
+
+This tutorial series provides a comprehensive introduction to Visual Studio Code (VS Code), one of the most popular code editors for researchers, data scientists, and developers. These tutorials are based on the official Microsoft VS Code documentation and video series.
+
+::: {.callout-note}
+
+## Attribution
+
+This content is adapted from the official [Visual Studio Code documentation](https://code.visualstudio.com/docs), which is licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/us/). The original documentation is © Microsoft Corporation.
+:::
+
+## What You'll Learn
+
+By completing this tutorial series, you will:
+
+- Install and set up Visual Studio Code
+- Navigate the VS Code user interface effectively
+- Customize VS Code for your workflow
+- Use essential features like IntelliSense and debugging
+- Work with extensions to enhance functionality
+- Integrate version control with Git
+- Leverage AI-assisted coding features
+
+## Tutorial Structure
+
+This introduction follows the Diátaxis framework, focusing on practical tutorials that guide you through hands-on learning experiences.
+
+### Prerequisites
+
+- Basic computer literacy
+- Familiarity with file systems and directories
+- No prior programming experience required (though helpful)
+
+### Estimated Time
+
+- Complete series: 2-3 hours
+- Individual tutorials: 15-30 minutes each
+
+## Tutorials in This Series
+
+1. **[Getting Started](01-getting-started.qmd)** - Install VS Code and explore the basic interface
+2. **[Basic Features](02-basics.qmd)** - Learn core editing and navigation features with video walkthrough
+3. **[Code Editing](03-code-editing.qmd)** - Master advanced editing features and productivity tips
+4. **[Customization](04-customization.qmd)** - Personalize your VS Code environment
+5. **[Extensions](05-extensions.qmd)** - Discover and install useful extensions
+6. **[Debugging](06-debugging.qmd)** - Learn to debug code effectively
+7. **[Version Control](07-version-control.qmd)** - Integrate Git version control
+
+## Why Visual Studio Code?
+
+Visual Studio Code has become the preferred editor for many researchers and data scientists because it:
+
+- **Free and open source** - No licensing costs or restrictions
+- **Cross-platform** - Works on Windows, macOS, and Linux
+- **Extensible** - Thousands of extensions for different languages and tools
+- **Integrated terminal** - No need to switch between editor and command line
+- **Built-in Git support** - Version control without additional tools
+- **IntelliSense** - Smart code completion and suggestions
+- **Debugging support** - Built-in debugger for multiple languages
+- **Remote development** - Work on remote servers and containers
+
+## Getting Help
+
+If you encounter issues during these tutorials:
+
+- Check the [VS Code documentation](https://code.visualstudio.com/docs)
+- Visit the [VS Code community forum](https://github.com/microsoft/vscode/discussions)
+- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/visual-studio-code)
+
+## Next Steps
+
+Ready to get started? Begin with the [Getting Started](01-getting-started.qmd) tutorial to install and set up VS Code on your system.

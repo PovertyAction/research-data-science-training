@@ -1,0 +1,450 @@
+---
+title: "Quarto Markdown Tutorial"
+abstract: |
+  Explore the advanced features of Quarto Markdown for scientific and technical publishing. Learn to create cross-references, citations, callout blocks, executable code chunks, mathematical expressions, and interactive diagrams for professional academic and research documents.
+date: last-modified
+
+format:
+  html: default
+
+authors-ipa:
+  - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["tutorial", "Quarto", "scientific publishing", "cross-references", "citations", "callouts", "executable code"]
+license: "CC BY 4.0"
+---
+
+## What is Quarto Markdown?
+
+Quarto is a next-generation scientific and technical publishing system that extends Markdown with powerful features for academic and research documents. It combines the simplicity of Markdown with the capabilities needed for professional scientific publishing.
+
+## YAML Front Matter
+
+Quarto documents start with YAML metadata that controls document properties:
+
+```yaml
+---
+title: "Your Document Title"
+author: "Your Name"
+date: today
+format:
+  html: default
+  pdf: default
+bibliography: references.bib
+---
+```
+
+## Callout Blocks
+
+Quarto provides five types of callout blocks for highlighting important information:
+
+### Note Callouts
+
+```markdown
+::: {.callout-note}
+This is important information that readers should note.
+:::
+```
+
+::: {.callout-note}
+This is important information that readers should note.
+:::
+
+### Warning Callouts
+
+```markdown
+::: {.callout-warning}
+Be careful when implementing this approach.
+:::
+```
+
+::: {.callout-warning}
+Be careful when implementing this approach.
+:::
+
+### Important Callouts
+
+```markdown
+::: {.callout-important}
+This is critical information that must not be overlooked.
+:::
+```
+
+::: {.callout-important}
+This is critical information that must not be overlooked.
+:::
+
+### Tip Callouts
+
+```markdown
+::: {.callout-tip}
+## Pro Tip
+Here's a helpful suggestion to improve your workflow.
+:::
+```
+
+::: {.callout-tip}
+
+## Pro Tip
+
+Here's a helpful suggestion to improve your workflow.
+:::
+
+### Caution Callouts
+
+```markdown
+::: {.callout-caution collapse="true"}
+## Advanced Warning
+This content is collapsed by default. Click to expand.
+
+This technique requires advanced knowledge and may have unintended consequences.
+:::
+```
+
+::: {.callout-caution collapse="true"}
+
+## Advanced Warning
+
+This content is collapsed by default. Click to expand.
+
+This technique requires advanced knowledge and may have unintended consequences.
+:::
+
+## Cross-References
+
+### Section References
+
+Create labeled sections and reference them:
+
+```markdown
+## Introduction {#sec-introduction}
+
+This is the introduction section.
+
+## Methods {#sec-methods}
+
+As discussed in @sec-introduction, we will now cover the methods.
+```
+
+### Figure References
+
+```markdown
+![Sample histogram of research data](histogram.png){#fig-histogram}
+
+The distribution shown in @fig-histogram demonstrates...
+```
+
+### Table References
+
+```markdown
+| Variable | Mean | SD |
+|----------|------|----|
+| Age      | 35.2 | 12.1 |
+| Income   | 45000 | 15000 |
+
+: Descriptive Statistics {#tbl-descriptives}
+
+@tbl-descriptives shows the summary statistics...
+```
+
+## Mathematical Expressions
+
+### Inline Math
+
+Use single dollar signs for inline math: `$\alpha = 0.05$` renders as $\alpha = 0.05$
+
+### Display Math
+
+Use double dollar signs for display equations:
+
+```markdown
+$$
+\bar{X} = \frac{1}{n}\sum_{i=1}^{n} X_i
+$$
+```
+
+$$
+\bar{X} = \frac{1}{n}\sum_{i=1}^{n} X_i
+$$
+
+### Numbered Equations
+
+```markdown
+$$
+\text{Effect Size} = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+$$ {#eq-effect-size}
+
+Equation @eq-effect-size shows the calculation for effect size.
+```
+
+## Code Execution
+
+### Executable Code Blocks
+
+Quarto can execute code and include the results:
+
+````markdown
+```{python}
+import pandas as pd
+import numpy as np
+
+# Generate sample data
+np.random.seed(42)
+data = pd.DataFrame({
+    'treatment': np.random.choice(['A', 'B'], 100),
+    'outcome': np.random.normal(50, 10, 100)
+})
+
+print(f"Sample size: {len(data)}")
+print(f"Mean outcome: {data['outcome'].mean():.2f}")
+```
+````
+
+### Code Options
+
+Control code execution and output:
+
+````markdown
+```{python}
+#| echo: false
+#| warning: false
+#| fig-cap: "Distribution of Outcomes"
+
+import matplotlib.pyplot as plt
+data['outcome'].hist(bins=20)
+plt.xlabel('Outcome')
+plt.ylabel('Frequency')
+plt.show()
+```
+````
+
+Common code options:
+
+- `echo: false` - Don't show the code
+- `eval: false` - Don't execute the code
+- `warning: false` - Hide warnings
+- `message: false` - Hide messages
+- `fig-cap: "Caption"` - Add figure caption
+
+## Citations and Bibliography
+
+### In-text Citations
+
+```markdown
+Research shows significant effects [@smith2023; @johnson2022].
+According to @brown2024, the methodology is sound.
+```
+
+### Bibliography File
+
+Create a `references.bib` file:
+
+```bibtex
+@article{smith2023,
+  title = {Effects of Educational Interventions},
+  author = {Smith, John and Doe, Jane},
+  journal = {Journal of Educational Research},
+  year = {2023},
+  volume = {45},
+  pages = {123-145}
+}
+```
+
+## Divs and Spans
+
+### Custom Divs
+
+Create custom styled sections:
+
+```markdown
+::: {.custom-class}
+This content has custom styling applied.
+:::
+
+::: {.highlight-box style="background-color: #f0f0f0; padding: 10px;"}
+This box has inline styling.
+:::
+```
+
+### Spans
+
+Apply styling to inline text:
+
+```markdown
+This is [important text]{.highlight} in the paragraph.
+```
+
+## Layouts
+
+### Panel Layout
+
+Create multi-column layouts:
+
+```markdown
+::: {.panel-tabset}
+
+## Tab 1
+Content for the first tab.
+
+## Tab 2
+Content for the second tab.
+
+:::
+```
+
+### Column Layout
+
+```markdown
+::: {layout="[30,70]"}
+
+Column 1 content (30% width)
+
+Column 2 content (70% width)
+
+:::
+```
+
+## Advanced Features
+
+### Footnotes
+
+```markdown
+This statement needs a citation^[This is a footnote explanation].
+
+You can also use named footnotes[^note1].
+
+[^note1]: This is a named footnote.
+```
+
+### Definition Lists
+
+```markdown
+Term 1
+: Definition of term 1
+
+Term 2
+: Definition of term 2
+: Additional definition details
+```
+
+**Result:**
+
+Term 1
+: Definition of term 1
+
+Term 2
+: Definition of term 2
+: Additional definition details
+
+## Document Formats
+
+Quarto can render to multiple formats:
+
+```yaml
+format:
+  html:
+    toc: true
+    number-sections: true
+  pdf:
+    documentclass: article
+    geometry: margin=1in
+  docx:
+    reference-doc: template.docx
+```
+
+## Parameterized Reports
+
+Make documents reusable with parameters:
+
+```yaml
+---
+title: "Analysis Report"
+params:
+  dataset: "data.csv"
+  alpha: 0.05
+---
+```
+
+```python
+alpha_level = params['alpha']
+data = pd.read_csv(params['dataset'])
+```
+
+## Practice Exercise
+
+Create a research report that includes:
+
+1. Proper YAML front matter with title, author, and date
+2. At least three different types of callout blocks
+3. Cross-references to sections, figures, or tables
+4. Mathematical expressions (inline and display)
+5. A code block that generates a simple plot or analysis
+6. Proper headings with labels for cross-referencing
+
+::: {.callout-note}
+
+## Research Documentation Best Practices
+
+- Use descriptive labels for cross-references
+- Include figure captions and table titles
+- Document your code with comments
+- Use callouts to highlight key findings
+- Keep mathematical notation consistent
+:::
+
+## Integration with Research Workflow
+
+### Version Control with Git
+
+Quarto documents work excellently with Git:
+
+- `.qmd` files are plain text, perfect for version control
+- Track changes in analysis and narrative together
+- Collaborate on documents using Git workflows
+
+### Reproducible Research
+
+Quarto supports reproducible research by:
+
+- Embedding analysis code directly in documents
+- Automatically updating results when data changes
+- Creating self-contained, shareable reports
+
+### Publishing Options
+
+- GitHub Pages
+- Netlify
+- Quarto Pub
+- Custom web servers
+- PDF for traditional publishing
+
+## What's Next?
+
+You now have a solid foundation in all three levels of Markdown:
+
+1. **Basic Markdown** - Universal formatting that works everywhere
+2. **GitHub Flavored Markdown** - Enhanced collaboration features
+3. **Quarto Markdown** - Professional scientific publishing capabilities
+
+Practice using these tools in your research workflow, starting with simple documents and gradually incorporating more advanced features as needed.
+
+::: {.callout-tip}
+
+## Next Steps
+
+- Set up a Quarto project for your research
+- Create templates for common document types
+- Explore Quarto extensions for specialized needs
+- Practice with real research data and analyses
+:::
+
+## Resources for Further Learning
+
+- [Quarto Documentation](https://quarto.org/)
+- [Markdown Guide](https://www.markdownguide.org/)
+- [GitHub Flavored Markdown Specification](https://github.github.com/gfm/)
+- [LaTeX Math Reference](https://en.wikibooks.org/wiki/LaTeX/Mathematics)

@@ -1,0 +1,428 @@
+---
+title: "Data Exploration with Positron's Data Viewer"
+abstract: |
+  This tutorial introduces you to Positron's built-in data exploration tools. You will learn to import datasets, use the Data Viewer to examine data structure, create visualizations in the Plots panel, and leverage the Variables panel for interactive data analysis.
+date: last-modified
+
+format:
+  html: default
+
+authors-ipa:
+  - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Positron", "Data Exploration", "Data Viewer", "Visualization", "Tutorial", "Diátaxis Framework"]
+license: "CC BY-SA 4.0"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Import datasets into Positron using Python and R
+- Use the Data Viewer to explore dataset structure
+- Navigate and filter data interactively
+- Create basic visualizations using the Plots panel
+- Use the Variables panel to track and inspect objects
+- Export visualizations and data summaries
+
+## Prerequisites
+
+Before starting this tutorial, ensure you have:
+- ✅ Positron installed and running
+- ✅ Python and/or R interpreters configured
+- ✅ Basic packages installed (pandas, ggplot2, etc.)
+
+## Part 1: Importing Sample Data
+
+Let's start by loading some sample data to explore. We'll use both Python and R examples.
+
+### Option A: Using Python and Pandas
+
+1. **Create a new Python file**: `File > New File`, save as `data_exploration.py`
+
+2. **Import libraries and load data**:
+   ```python
+   import pandas as pd
+   import numpy as np
+   import matplotlib.pyplot as plt
+   import seaborn as sns
+
+   # Load a built-in dataset
+   from sklearn.datasets import load_iris
+
+   # Create pandas DataFrame
+   iris_data = load_iris()
+   iris_df = pd.DataFrame(
+       iris_data.data,
+       columns=iris_data.feature_names
+   )
+   iris_df['species'] = iris_data.target_names[iris_data.target]
+
+   print("Dataset loaded successfully!")
+   print(f"Shape: {iris_df.shape}")
+   ```
+
+3. **Run the code**: Select all code and press `F9`
+
+### Option B: Using R
+
+1. **Create a new R file**: `File > New File`, save as `data_exploration.R`
+
+2. **Load libraries and data**:
+   ```r
+   library(ggplot2)
+   library(dplyr)
+
+   # Use built-in iris dataset
+   iris_df <- iris
+
+   print("Dataset loaded successfully!")
+   print(paste("Shape:", nrow(iris_df), "rows,", ncol(iris_df), "columns"))
+   ```
+
+3. **Run the code**: Select all code and press `F9`
+
+::: {.callout-tip}
+Both examples use the famous iris dataset, which contains measurements of flower characteristics. It's perfect for learning data exploration techniques.
+:::
+
+## Part 2: Using the Variables Panel
+
+The Variables panel shows all objects in your current environment.
+
+### Explore the Variables Panel
+
+1. **Locate the Variables Panel**:
+   - Look at the bottom of Positron
+   - You should see a "Variables" tab
+   - If not visible: `View > Variables`
+
+2. **Examine Your Data Object**:
+   - You should see `iris_df` in the variables list
+   - Notice the type (DataFrame or data.frame)
+   - See the dimensions (rows × columns)
+   - Click the arrow to expand and see column details
+
+3. **View Data Structure**:
+   - **Python**: Run `iris_df.info()` in the console
+   - **R**: Run `str(iris_df)` in the console
+   - Compare this information with what you see in Variables panel
+
+## Part 3: Using the Data Viewer
+
+The Data Viewer provides an interactive spreadsheet-like view of your data.
+
+### Open the Data Viewer
+
+**Method 1: From Variables Panel**
+- In the Variables panel, find your `iris_df`
+- Click the small grid icon next to it
+- This opens the Data Viewer
+
+**Method 2: From Console**
+- **Python**: Run `iris_df` (just the variable name)
+- **R**: Run `View(iris_df)`
+
+### Explore Data Viewer Features
+
+Once the Data Viewer is open:
+
+1. **Browse the Data**:
+   - Scroll through rows and columns
+   - Notice column headers show data types
+   - Row numbers are displayed on the left
+
+2. **Sort Columns**:
+   - Click on column headers to sort
+   - Click again to reverse sort order
+   - Try sorting by "sepal_length" or "Sepal.Length"
+
+3. **Filter Data**:
+   - Look for filter icons in column headers
+   - Click to set filters (e.g., show only "setosa" species)
+   - Notice how row count changes with filters
+
+4. **Select and Copy**:
+   - Click and drag to select cells
+   - Use `Ctrl+C` to copy selected data
+   - Paste in another application if needed
+
+::: {.callout-note}
+The Data Viewer is read-only. You can explore and copy data, but changes must be made in your code, not in the viewer.
+:::
+
+## Part 4: Basic Data Analysis
+
+Let's perform some exploratory data analysis and see results in the Variables panel.
+
+### Python Example
+
+```python
+# Basic statistics
+summary_stats = iris_df.describe()
+print(summary_stats)
+
+# Group by species
+species_means = iris_df.groupby('species').mean()
+print("\nMean by species:")
+print(species_means)
+
+# Create correlation matrix
+correlation_matrix = iris_df.select_dtypes(include=[np.number]).corr()
+print("\nCorrelation matrix:")
+print(correlation_matrix)
+```
+
+### R Example
+
+```r
+# Basic statistics
+summary_stats <- summary(iris_df)
+print(summary_stats)
+
+# Group by species
+species_means <- iris_df %>%
+  group_by(Species) %>%
+  summarise(across(everything(), mean))
+print(species_means)
+
+# Create correlation matrix
+numeric_cols <- select_if(iris_df, is.numeric)
+correlation_matrix <- cor(numeric_cols)
+print(correlation_matrix)
+```
+
+**After running**: Check the Variables panel to see all these new objects!
+
+## Part 5: Creating Visualizations
+
+Now let's create some plots and view them in the Plots panel.
+
+### Ensure Plots Panel is Visible
+
+- Look for the "Plots" tab at the bottom of Positron
+- If not visible: `View > Plots`
+
+### Python Visualizations
+
+```python
+# Set up matplotlib for Positron
+plt.style.use('default')
+
+# 1. Histogram
+plt.figure(figsize=(8, 6))
+plt.hist(iris_df['sepal_length'], bins=20, alpha=0.7)
+plt.title('Distribution of Sepal Length')
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Frequency')
+plt.show()
+
+# 2. Scatter plot
+plt.figure(figsize=(8, 6))
+colors = {'setosa': 'red', 'versicolor': 'blue', 'virginica': 'green'}
+for species in iris_df['species'].unique():
+    data = iris_df[iris_df['species'] == species]
+    plt.scatter(data['sepal_length'], data['petal_length'],
+                c=colors[species], label=species, alpha=0.7)
+plt.title('Sepal Length vs Petal Length')
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Petal Length (cm)')
+plt.legend()
+plt.show()
+
+# 3. Box plot using seaborn
+plt.figure(figsize=(8, 6))
+sns.boxplot(data=iris_df, x='species', y='sepal_length')
+plt.title('Sepal Length by Species')
+plt.show()
+```
+
+### R Visualizations
+
+```r
+# 1. Histogram
+hist_plot <- ggplot(iris_df, aes(x = Sepal.Length)) +
+  geom_histogram(bins = 20, alpha = 0.7, fill = "blue") +
+  labs(title = "Distribution of Sepal Length",
+       x = "Sepal Length (cm)",
+       y = "Frequency")
+print(hist_plot)
+
+# 2. Scatter plot
+scatter_plot <- ggplot(iris_df, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point(alpha = 0.7) +
+  labs(title = "Sepal Length vs Petal Length",
+       x = "Sepal Length (cm)",
+       y = "Petal Length (cm)")
+print(scatter_plot)
+
+# 3. Box plot
+box_plot <- ggplot(iris_df, aes(x = Species, y = Sepal.Length)) +
+  geom_boxplot() +
+  labs(title = "Sepal Length by Species",
+       y = "Sepal Length (cm)")
+print(box_plot)
+```
+
+### Explore the Plots Panel
+
+After creating plots:
+
+1. **Navigate Between Plots**:
+   - Use arrow buttons in the Plots panel
+   - Each plot is saved in the plot history
+
+2. **Resize Plots**:
+   - Drag the panel borders to make plots larger
+   - Plots automatically adjust to panel size
+
+3. **Export Plots**:
+   - Right-click in the Plots panel
+   - Choose "Save Plot As..."
+   - Save in various formats (PNG, PDF, SVG)
+
+## Part 6: Advanced Data Viewer Features
+
+Let's explore more advanced features with a larger dataset.
+
+### Create a Larger Dataset
+
+**Python**:
+```python
+# Create a larger synthetic dataset
+np.random.seed(42)
+large_data = pd.DataFrame({
+    'id': range(1000),
+    'category': np.random.choice(['A', 'B', 'C', 'D'], 1000),
+    'value1': np.random.normal(50, 15, 1000),
+    'value2': np.random.normal(100, 25, 1000),
+    'date': pd.date_range('2023-01-01', periods=1000, freq='D')
+})
+```
+
+**R**:
+```r
+# Create a larger synthetic dataset
+set.seed(42)
+large_data <- data.frame(
+  id = 1:1000,
+  category = sample(c('A', 'B', 'C', 'D'), 1000, replace = TRUE),
+  value1 = rnorm(1000, mean = 50, sd = 15),
+  value2 = rnorm(1000, mean = 100, sd = 25),
+  date = seq(as.Date('2023-01-01'), by = 'day', length.out = 1000)
+)
+```
+
+### Advanced Data Viewer Usage
+
+1. **Open the larger dataset** in Data Viewer
+2. **Try Advanced Filtering**:
+   - Filter `category` to show only 'A' and 'B'
+   - Filter `value1` to show values > 60
+   - Combine multiple filters
+
+3. **Performance with Large Data**:
+   - Notice how the Data Viewer handles 1000 rows
+   - Scrolling should be smooth
+   - Filtering is responsive
+
+## Part 7: Working with Real Data
+
+Let's try with a real-world dataset.
+
+### Download Sample Data
+
+**Python**:
+```python
+# Load a real dataset
+import seaborn as sns
+tips_data = sns.load_dataset('tips')
+print(f"Tips dataset shape: {tips_data.shape}")
+print(tips_data.head())
+```
+
+**R**:
+```r
+# Load a built-in dataset
+data(mtcars)
+mtcars_df <- mtcars
+mtcars_df$car_name <- rownames(mtcars_df)
+print(paste("mtcars shape:", nrow(mtcars_df), "rows,", ncol(mtcars_df), "columns"))
+print(head(mtcars_df))
+```
+
+### Explore Real Data
+
+1. **Open in Data Viewer** and explore the structure
+2. **Look at data types** in Variables panel
+3. **Create a summary visualization**:
+
+**Python**:
+```python
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=tips_data, x='total_bill', y='tip', hue='day')
+plt.title('Tips vs Total Bill by Day')
+plt.show()
+```
+
+**R**:
+```r
+ggplot(mtcars_df, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point() +
+  labs(title = "MPG vs Weight by Cylinders",
+       x = "Weight (1000 lbs)",
+       y = "Miles per Gallon",
+       color = "Cylinders")
+```
+
+## Best Practices for Data Exploration in Positron
+
+1. **Start with the Variables Panel**: Always check what objects you have
+2. **Use Data Viewer for Overview**: Get familiar with your data structure
+3. **Create Summary Statistics**: Use `describe()` or `summary()` functions
+4. **Visualize Early and Often**: Use the Plots panel to understand patterns
+5. **Filter and Sort**: Use Data Viewer filters to examine subsets
+6. **Export Important Results**: Save plots and summaries for reporting
+
+## Troubleshooting
+
+**Data Viewer not opening**:
+- Check that your data object is a DataFrame/data.frame
+- Large datasets (>10,000 rows) might take time to load
+- Try viewing a subset first: `df.head(100)` or `head(df, 100)`
+
+**Plots not appearing**:
+- Ensure Plots panel is visible (`View > Plots`)
+- For Python: Make sure to call `plt.show()`
+- For R: Make sure to `print()` ggplot objects in scripts
+
+**Variables panel empty**:
+- Make sure you've run code that creates variables
+- Try refreshing by running a simple assignment: `x = 1`
+
+## What's Next?
+
+In the next tutorials, you will learn to:
+
+- Create complete Python data science workflows
+- Build R analysis projects
+- Use Jupyter notebooks in Positron
+- Integrate version control with your data projects
+
+## Summary
+
+You have learned to:
+
+✅ Import and load datasets in Python and R
+✅ Navigate the Variables panel to track objects
+✅ Use the Data Viewer for interactive data exploration
+✅ Create visualizations in the Plots panel
+✅ Filter and examine data interactively
+✅ Work with both synthetic and real datasets
+✅ Apply best practices for data exploration
+
+You now have the skills to effectively explore datasets using Positron's powerful data science tools!

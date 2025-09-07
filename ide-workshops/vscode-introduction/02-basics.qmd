@@ -1,0 +1,397 @@
+---
+title: "VS Code Basics and Video Walkthrough"
+abstract: |
+  Master the fundamental features of Visual Studio Code through hands-on exercises and video tutorials. Learn file management, navigation, the Command Palette, and essential shortcuts.
+date: last-modified
+
+format:
+  html: default
+
+# # Authors
+# authors:
+#   - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Visual Studio Code", "Basics", "Navigation", "Command Palette", "Video Tutorial", "Interface"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Navigate the VS Code interface efficiently
+- Use the Command Palette for quick actions
+- Manage files and folders in the Explorer
+- Work with multiple files and tabs
+- Master essential keyboard shortcuts
+- Understand the integrated terminal
+:::
+
+::: {.callout-tip}
+
+## Key Questions
+
+- How do I navigate between files and folders quickly?
+- What is the Command Palette and when should I use it?
+- How do I manage multiple open files effectively?
+- What are the most important keyboard shortcuts to learn?
+:::
+
+::: {.callout-note}
+
+## Attribution
+
+This content is adapted from the official [Visual Studio Code Documentation](https://code.visualstudio.com/docs) and [Introduction Videos](https://code.visualstudio.com/docs/introvideos/basics), which are licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/us/). © Microsoft Corporation.
+:::
+
+## Video Overview: Getting Started with VS Code
+
+Before diving into the hands-on exercises, watch this official introduction video from Microsoft:
+
+{{< video <https://youtu.be/B-s71n0dHUk> title="Visual Studio Code Intro" >}}
+
+This 7-minute video covers:
+
+- Opening folders and workspaces
+- File Explorer navigation
+- Command Palette usage
+- Basic editing features
+- Extension installation
+
+## The VS Code Interface Deep Dive
+
+Let's explore each part of the interface systematically.
+
+### Activity Bar Navigation
+
+The Activity Bar on the left provides access to different views:
+
+#### 1. Explorer (Ctrl+Shift+E)
+
+The file explorer helps you navigate your project:
+
+- **View files and folders** in your workspace
+- **Create new files**: Right-click → New File
+- **Create folders**: Right-click → New Folder
+- **Rename**: Right-click → Rename (or F2)
+- **Delete**: Right-click → Delete (or Delete key)
+
+::: {.callout-note}
+
+## Try This: File Management
+
+1. Open a folder in VS Code
+2. Create a new file called `notes.md`
+3. Create a folder called `examples`
+4. Move the file into the folder (drag and drop)
+5. Rename the file to `my-notes.md`
+:::
+
+#### 2. Search (Ctrl+Shift+F)
+
+Search across your entire workspace:
+
+- **Find text** across all files
+- **Replace text** project-wide
+- **Use regex** patterns for advanced searches
+- **Include/exclude** specific file types
+
+#### 3. Source Control (Ctrl+Shift+G)
+
+Git integration (we'll cover this in detail later):
+
+- See file changes
+- Stage and commit changes
+- View git history
+- Manage branches
+
+#### 4. Run and Debug (Ctrl+Shift+D)
+
+Debug your applications:
+
+- Set breakpoints
+- Step through code
+- Inspect variables
+- View call stack
+
+#### 5. Extensions (Ctrl+Shift+X)
+
+Extend VS Code functionality:
+
+- Browse extension marketplace
+- Install language support
+- Add themes and tools
+- Manage installed extensions
+
+## The Command Palette: Your Best Friend
+
+The Command Palette (Ctrl+Shift+P or F1) is the fastest way to access any VS Code feature.
+
+### Essential Command Palette Usage
+
+**Open Command Palette**: Ctrl+Shift+P (Windows/Linux) or Cmd+Shift+P (macOS)
+
+Try these essential commands:
+
+```
+> File: New File                    # Create new file
+> File: Open Folder                 # Open workspace
+> View: Toggle Terminal             # Show/hide terminal
+> Preferences: Open Settings        # Open settings
+> Extensions: Install Extensions    # Browse extensions
+> View: Command Palette             # Open command palette
+```
+
+::: {.callout-note}
+
+## Try This: Command Palette Practice
+
+1. Open Command Palette (Ctrl+Shift+P)
+2. Type "new file" and press Enter
+3. Type "terminal" and select "View: Toggle Terminal"
+4. Type "settings" and open Settings
+5. Type "theme" and try changing your color theme
+:::
+
+### Quick File Navigation
+
+**Quick Open**: Ctrl+P (Windows/Linux) or Cmd+P (macOS)
+
+- Type filename to quickly open files
+- Use `@` to navigate to symbols in current file
+- Use `:` followed by line number to jump to specific line
+- Use `#` to search workspace symbols
+
+Examples:
+
+```
+filename.js          # Open file
+@function           # Go to function in current file
+:42                 # Go to line 42
+#MyClass            # Find MyClass in workspace
+```
+
+## Editor Features and Navigation
+
+### Working with Multiple Files
+
+**Tabs and Splits**:
+
+- **New tab**: Files open in tabs across the top
+- **Split editor**: Drag tab to side or use Ctrl+\
+- **Close tab**: Click X or use Ctrl+W
+- **Navigate tabs**: Ctrl+PageUp/PageDown
+
+**Tab management**:
+
+- **Pin important files**: Right-click tab → Pin Tab
+- **Close others**: Right-click → Close Others
+- **Close all**: Ctrl+Shift+W
+
+### Essential Keyboard Shortcuts
+
+Learn these shortcuts to boost productivity:
+
+#### Navigation
+
+```
+Ctrl+P              # Quick Open (file search)
+Ctrl+Shift+P        # Command Palette
+Ctrl+G              # Go to line
+Ctrl+Shift+O        # Go to symbol
+F12                 # Go to definition
+Alt+F12             # Peek definition
+```
+
+#### Editing
+
+```
+Ctrl+D              # Select next occurrence
+Ctrl+Shift+L        # Select all occurrences
+Alt+Click           # Multiple cursors
+Ctrl+/              # Toggle line comment
+Shift+Alt+A         # Toggle block comment
+```
+
+#### File Operations
+
+```
+Ctrl+N              # New file
+Ctrl+O              # Open file
+Ctrl+S              # Save file
+Ctrl+Shift+S        # Save As
+Ctrl+W              # Close tab
+```
+
+::: {.callout-note}
+
+## Try This: Multi-cursor Editing
+
+1. Create a file with several repeated words
+2. Select one word
+3. Press Ctrl+D repeatedly to select additional occurrences
+4. Type to edit all selected words simultaneously
+5. Press Escape to return to single cursor
+:::
+
+## Integrated Terminal
+
+The integrated terminal is one of VS Code's most powerful features.
+
+### Opening the Terminal
+
+**Methods to open terminal**:
+
+- **View menu**: View → Terminal
+- **Command Palette**: View: Toggle Terminal
+- **Keyboard**: Ctrl+` (backtick)
+- **Right-click in Explorer**: Open in Integrated Terminal
+
+### Terminal Features
+
+**Multiple terminals**:
+
+- Click `+` to create new terminal
+- Use dropdown to switch between terminals
+- Split terminals with split button
+
+**Terminal types**:
+
+- Command Prompt (Windows)
+- PowerShell (Windows)
+- Bash (Linux/macOS/WSL)
+- Git Bash (Windows with Git)
+
+::: {.callout-note}
+
+## Try This: Terminal Practice
+
+1. Open integrated terminal (Ctrl+`)
+2. Navigate to your workspace folder: `cd /path/to/workspace`
+3. Create a new file: `touch hello.txt` (Linux/macOS) or `echo. > hello.txt` (Windows)
+4. List files: `ls` (Linux/macOS) or `dir` (Windows)
+5. Open the file in VS Code: `code hello.txt`
+:::
+
+## Customizing Your Workspace
+
+### Settings You Should Know
+
+Access settings via File → Preferences → Settings:
+
+**Essential settings**:
+
+```json
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.wordWrap": "on",
+    "terminal.integrated.fontSize": 14
+}
+```
+
+### Workspace-Specific Configuration
+
+Create `.vscode/settings.json` in your project root:
+
+```json
+{
+    "editor.fontSize": 16,
+    "python.defaultInterpreterPath": "./venv/bin/python"
+}
+```
+
+## Auto Save Configuration
+
+Configure auto save to never lose work:
+
+1. **Settings**: File → Preferences → Settings
+2. **Search**: "auto save"
+3. **Set Files: Auto Save** to one of:
+   - `off`: Manual save only
+   - `afterDelay`: Save after typing stops (recommended)
+   - `onFocusChange`: Save when switching files
+   - `onWindowChange`: Save when switching applications
+
+## Practical Exercise: Complete Workflow
+
+Let's put it all together with a practical exercise:
+
+::: {.callout-note}
+
+## Exercise: Project Setup Workflow
+
+1. **Create project structure**:
+   - Create folder `my-project`
+   - Open folder in VS Code
+   - Create `README.md`
+   - Create `src` folder
+   - Create `src/main.py`
+
+2. **Practice navigation**:
+   - Use Ctrl+P to quickly switch between files
+   - Use Command Palette to toggle terminal
+   - Split editor to view both files simultaneously
+
+3. **Configure workspace**:
+   - Enable auto save
+   - Change font size
+   - Choose a color theme
+
+4. **Use terminal**:
+   - Open integrated terminal
+   - Navigate to src folder
+   - Create additional file using command line
+:::
+
+## Common Beginner Issues and Solutions
+
+### File Not Found Errors
+
+- **Issue**: VS Code can't find files
+- **Solution**: Ensure you've opened the correct workspace folder
+
+### Terminal Won't Open
+
+- **Issue**: Terminal fails to launch
+- **Solution**: Check default terminal settings in preferences
+
+### Extensions Not Working
+
+- **Issue**: Installed extensions aren't active
+- **Solution**: Restart VS Code or reload window (Ctrl+Shift+P → "Developer: Reload Window")
+
+## Next Steps: Enhancing Your Setup
+
+You now have a solid foundation in VS Code basics! In the next tutorials, we'll explore:
+
+- **[Code Editing](03-code-editing.qmd)**: Advanced editing features and productivity tips
+- **[Customization](04-customization.qmd)**: Personalizing your development environment
+- **[Extensions](05-extensions.qmd)**: Essential extensions for different programming languages
+
+## Additional Resources
+
+- [VS Code Keyboard Shortcuts PDF](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf) (Windows)
+- [VS Code Keyboard Shortcuts PDF](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf) (macOS)
+- [VS Code Tips and Tricks](https://code.visualstudio.com/docs/getstarted/tips-and-tricks)
+
+::: {.callout-important}
+
+## Key Points
+
+- The Activity Bar provides access to Explorer, Search, Source Control, Debug, and Extensions
+- Command Palette (Ctrl+Shift+P) is the fastest way to access any VS Code feature
+- Quick Open (Ctrl+P) enables rapid file navigation
+- Integrated terminal eliminates need for separate terminal applications
+- Auto save prevents data loss and improves workflow
+- Keyboard shortcuts significantly boost productivity
+- Workspace settings override user settings for project-specific configuration
+:::
+
+[← Previous: Getting Started](01-getting-started.qmd) | [Next: Code Editing →](03-code-editing.qmd)

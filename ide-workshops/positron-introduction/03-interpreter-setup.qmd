@@ -1,0 +1,339 @@
+---
+title: "Setting Up Python and R Interpreters"
+abstract: |
+  This tutorial teaches you how to configure Python and R interpreters in Positron. You will learn to install interpreters, manage multiple versions, set up virtual environments, and configure your development environment for data science projects.
+date: last-modified
+
+format:
+  html: default
+
+authors:
+  - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Positron", "Python", "R", "Interpreters", "Environment", "Setup", "Tutorial", "Diátaxis Framework"]
+license: "CC BY-SA 4.0"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Install and configure Python and R interpreters
+- Switch between different interpreter versions
+- Create and manage Python virtual environments
+- Install packages for data science work
+- Verify your interpreter setup is working correctly
+
+## Understanding Interpreters in Positron
+
+An interpreter is the program that executes your code. Positron supports both Python and R interpreters, allowing you to work in either language (or both!) depending on your project needs.
+
+::: {.callout-note}
+You can have multiple interpreters installed and switch between them as needed. This is especially useful when working on different projects with different requirements.
+:::
+
+## Prerequisites
+
+Before setting up interpreters, ensure you have completed the previous tutorials:
+
+- Positron installation and setup
+- Basic interface navigation
+
+## Part 1: Python Interpreter Setup
+
+### Step 1: Check for Existing Python Installation
+
+First, let's see if Python is already available:
+
+1. **Open the Console** in Positron (`Ctrl+Shift+`` )
+2. **Check Python Availability**:
+   - Look at the console - it may already show a Python interpreter
+   - If you see `>>>` prompt, Python is ready
+   - If not, we'll set it up
+
+### Step 2: Install Python (if needed)
+
+If you don't have Python installed:
+
+**Option A: Using `uv` (Recommended)**
+
+1. Open a terminal
+2. Install `uv`:
+   ```bash
+   # On Windows (using winget)
+   winget install --id astral-sh.uv
+
+   # On macOS/Linux (using Homebrew)
+   brew install uv
+   ```
+3. Follow the prompts to complete the installation
+
+**Option B: Using Python.org**
+
+1. Go to [python.org](https://python.org)
+2. Download the latest Python 3.x version
+3. Run the installer
+4. **Important**: Check "Add Python to PATH" during installation
+
+
+### Step 3: Configure Python in Positron
+
+1. **Open Command Palette**: `Ctrl+Shift+P`
+2. **Type**: "Python: Select Interpreter"
+3. **Choose from the list**:
+   - Positron will show available Python installations
+   - Select the version you want to use
+   - Look for versions like "Python 3.11.x" or "Python 3.10.x"
+
+4. **Verify Setup**:
+   - Open the Console
+   - Type `python --version`
+   - You should see your Python version displayed
+
+::: {.callout-tip}
+If you don't see "Python: Select Interpreter" in the Command Palette, try typing "Positron: Select Python Interpreter" instead.
+:::
+
+### Step 4: Test Python Setup
+
+Let's verify Python is working correctly:
+
+1. **In the Console**, type:
+   ```python
+   print("Hello from Python!")
+   import sys
+   print(f"Python version: {sys.version}")
+   ```
+
+2. **Expected Output**:
+   ```
+   Hello from Python!
+   Python version: 3.11.x (main, ...)
+   ```
+
+## Part 2: R Interpreter Setup
+
+### Step 1: Install R
+
+If you don't have R installed:
+
+1. **Go to CRAN**: [r-project.org](https://r-project.org)
+2. **Choose your platform**: Windows, macOS, or Linux
+3. **Download and install** the latest R version
+4. **Follow the installation wizard** with default settings
+
+### Step 2: Configure R in Positron
+
+1. **Open Command Palette**: `Ctrl+Shift+P`
+2. **Type**: "R: Select Interpreter" or "Positron: Select R Interpreter"
+3. **Choose your R installation**:
+   - Positron will detect R installations
+   - Select the version you installed
+
+4. **Switch to R Console**:
+   - Look for console selection dropdown (usually near the console)
+   - Choose "R" instead of "Python"
+
+### Step 3: Test R Setup
+
+Let's verify R is working:
+
+1. **In the R Console**, type:
+   ```r
+   print("Hello from R!")
+   R.version.string
+   ```
+
+2. **Expected Output**:
+   ```
+   [1] "Hello from R!"
+   [1] "R version 4.3.x (2024-xx-xx)"
+   ```
+
+## Part 3: Managing Python Virtual Environments
+
+Virtual environments help keep your projects isolated and organized.
+
+### Create a Virtual Environment
+
+1. **Open Terminal** in Positron: `View > Terminal`
+
+2. **Create Environment**:
+   ```bash
+   # Using venv (built into Python)
+   python -m venv myproject_env
+
+   # Or using conda (if you have Anaconda)
+   conda create -n myproject_env python=3.11
+   ```
+
+3. **Activate Environment**:
+
+   **Windows**:
+   ```bash
+   myproject_env\Scripts\activate
+   ```
+
+   **macOS/Linux**:
+   ```bash
+   source myproject_env/bin/activate
+   ```
+
+   **Conda** (all platforms):
+   ```bash
+   conda activate myproject_env
+   ```
+
+### Select Virtual Environment in Positron
+
+1. **Open Command Palette**: `Ctrl+Shift+P`
+2. **Type**: "Python: Select Interpreter"
+3. **Choose your virtual environment** from the list
+4. **Verify**: Look at the status bar - it should show your environment name
+
+## Part 4: Installing Essential Packages
+
+Let's install common data science packages:
+
+### For Python
+
+With your virtual environment activated:
+
+```bash
+# Essential data science packages
+pip install pandas numpy matplotlib seaborn jupyter
+
+# Additional useful packages
+pip install scikit-learn plotly requests
+```
+
+### For R
+
+In the R Console:
+
+```r
+# Essential packages
+install.packages(c("tidyverse", "ggplot2", "dplyr"))
+
+# Additional useful packages
+install.packages(c("plotly", "DT", "knitr"))
+```
+
+::: {.callout-warning}
+Package installation may take several minutes, especially for data science packages with many dependencies.
+:::
+
+## Part 5: Switching Between Languages
+
+Positron makes it easy to switch between Python and R:
+
+### Method 1: Console Selector
+- Look for a dropdown near the Console
+- Click it to switch between "Python" and "R"
+
+### Method 2: Command Palette
+- Press `Ctrl+Shift+P`
+- Type "Console" and look for language-specific options
+- Select "Python Console" or "R Console"
+
+### Method 3: File Association
+- `.py` files automatically use Python
+- `.R` files automatically use R
+- Create files with appropriate extensions
+
+## Step 6: Verify Complete Setup
+
+Let's test both interpreters with a data science example:
+
+### Python Test
+
+Create a new file `test_python.py`:
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Create sample data
+data = pd.DataFrame({
+    'x': np.arange(10),
+    'y': np.random.rand(10)
+})
+
+print("Python setup working!")
+print(data.head())
+```
+
+Select the code and press `F9` to run.
+
+### R Test
+
+Create a new file `test_r.R`:
+
+```r
+library(ggplot2)
+library(dplyr)
+
+# Create sample data
+data <- data.frame(
+  x = 1:10,
+  y = runif(10)
+)
+
+print("R setup working!")
+print(head(data))
+```
+
+Select the code and press `F9` to run.
+
+## Troubleshooting Common Issues
+
+### Python Issues
+
+**"Python not found"**:
+- Ensure Python is installed and added to PATH
+- Restart Positron after installation
+- Use Command Palette to select interpreter
+
+**Package installation fails**:
+- Check internet connection
+- Try upgrading pip: `pip install --upgrade pip`
+- Use virtual environments to avoid conflicts
+
+### R Issues
+
+**"R not found"**:
+- Ensure R is properly installed
+- Check that R is in your system PATH
+- Restart Positron after R installation
+
+**Package installation fails**:
+- Check CRAN mirror in R: `chooseCRANmirror()`
+- Try installing one package at a time
+- Check for permission issues
+
+## What's Next?
+
+In the next tutorial, you will learn to:
+
+- Use Positron's Data Explorer
+- Import and examine datasets
+- Create your first data visualizations
+- Work with real data science workflows
+
+## Summary
+
+You have learned to:
+
+✅ Install and configure Python and R interpreters
+✅ Create and manage Python virtual environments
+✅ Install essential data science packages
+✅ Switch between Python and R in Positron
+✅ Verify your setup with test code
+✅ Troubleshoot common interpreter issues
+
+You now have a fully configured data science environment in Positron!

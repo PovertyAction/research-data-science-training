@@ -1,0 +1,614 @@
+---
+title: "Complete Python Data Science Workflow in Positron"
+abstract: |
+  This tutorial walks you through a complete Python data science project in Positron. You will learn to organize projects, import and clean data, perform exploratory analysis, create visualizations, and document your findings using Positron's integrated tools.
+date: last-modified
+
+format:
+  html: default
+
+authors:
+  - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Positron", "Python", "Data Science", "Workflow", "Project", "Tutorial", "Diátaxis Framework"]
+license: "CC BY-SA 4.0"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Set up a complete Python data science project in Positron
+- Import and clean real-world data
+- Perform exploratory data analysis using pandas
+- Create professional visualizations with matplotlib and seaborn
+- Document your analysis and results
+- Use Jupyter notebooks within Positron
+- Follow data science best practices
+
+## Prerequisites
+
+Before starting, ensure you have:
+- ✅ Positron installed and configured
+- ✅ Python interpreter set up with essential packages
+- ✅ Familiarity with Positron's interface and data exploration tools
+
+## Project Overview
+
+We'll work on a complete data science project analyzing a real dataset. Our goal is to:
+
+1. **Research Question**: Analyze factors that influence housing prices
+2. **Dataset**: Use the California housing dataset
+3. **Deliverable**: Create insights and visualizations about housing market trends
+
+## Part 1: Setting Up the Project
+
+### Step 1: Create Project Structure
+
+1. **Create a new folder** for your project:
+   - Use File Explorer/Finder to create: `housing_analysis_project`
+   - Or use Positron terminal: `mkdir housing_analysis_project`
+
+2. **Open the project in Positron**:
+   - `File > Open Folder`
+   - Select your `housing_analysis_project` folder
+
+3. **Create project structure**:
+   ```
+   housing_analysis_project/
+   ├── data/           # Raw and processed data
+   ├── notebooks/      # Jupyter notebooks
+   ├── scripts/        # Python scripts
+   ├── plots/          # Generated visualizations
+   └── README.md       # Project documentation
+   ```
+
+4. **Create folders using terminal**:
+   ```bash
+   mkdir data notebooks scripts plots
+   ```
+
+### Step 2: Set Up Virtual Environment
+
+1. **Create virtual environment**:
+   ```bash
+   python -m venv housing_env
+   ```
+
+2. **Activate environment**:
+   - **Windows**: `housing_env\Scripts\activate`
+   - **macOS/Linux**: `source housing_env/bin/activate`
+
+3. **Select interpreter in Positron**:
+   - `Ctrl+Shift+P` → "Python: Select Interpreter"
+   - Choose the environment you just created
+
+4. **Install required packages**:
+   ```bash
+   pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+   ```
+
+::: {.callout-tip}
+Always use virtual environments for projects to keep dependencies organized and avoid conflicts.
+:::
+
+## Part 2: Data Import and Initial Exploration
+
+### Step 1: Create the Main Analysis Script
+
+Create `scripts/housing_analysis.py`:
+
+```python
+"""
+Housing Price Analysis
+A complete data science workflow analyzing California housing data
+"""
+
+# Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Configure plotting
+plt.style.use('default')
+sns.set_palette("husl")
+
+print("Libraries imported successfully!")
+```
+
+### Step 2: Load and Explore the Data
+
+Add to your script:
+
+```python
+# Load the California housing dataset
+print("Loading California housing dataset...")
+housing_data = fetch_california_housing()
+
+# Create DataFrame
+housing_df = pd.DataFrame(
+    housing_data.data,
+    columns=housing_data.feature_names
+)
+housing_df['target'] = housing_data.target
+
+print(f"Dataset loaded: {housing_df.shape[0]} rows, {housing_df.shape[1]} columns")
+
+# Display basic information
+print("\n=== Dataset Overview ===")
+print(housing_df.head())
+
+print("\n=== Data Types ===")
+print(housing_df.dtypes)
+
+print("\n=== Missing Values ===")
+print(housing_df.isnull().sum())
+
+print("\n=== Basic Statistics ===")
+print(housing_df.describe())
+```
+
+**Run the code**: Select all and press `F9`
+
+### Step 3: Examine Data in Positron's Tools
+
+1. **Check Variables Panel**: You should see `housing_df`
+2. **Open Data Viewer**: Click the grid icon next to `housing_df`
+3. **Explore the data structure**: Notice the columns and data types
+
+## Part 3: Exploratory Data Analysis
+
+### Step 1: Create Summary Statistics
+
+Add to your script:
+
+```python
+# Create detailed summary statistics
+print("\n=== Detailed Analysis ===")
+
+# Target variable (house prices) analysis
+print(f"House Prices (target variable):")
+print(f"Mean: ${housing_df['target'].mean():.2f}")
+print(f"Median: ${housing_df['target'].median():.2f}")
+print(f"Min: ${housing_df['target'].min():.2f}")
+print(f"Max: ${housing_df['target'].max():.2f}")
+
+# Feature correlations with target
+correlations = housing_df.corr()['target'].sort_values(ascending=False)
+print(f"\n=== Correlations with House Prices ===")
+print(correlations)
+```
+
+### Step 2: Data Cleaning and Preprocessing
+
+```python
+# Check for outliers using IQR method
+def detect_outliers(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+    return len(outliers)
+
+print("\n=== Outlier Detection ===")
+for column in housing_df.columns:
+    if housing_df[column].dtype in ['float64', 'int64']:
+        outlier_count = detect_outliers(housing_df, column)
+        print(f"{column}: {outlier_count} outliers")
+
+# Create a clean dataset (removing extreme outliers for target)
+housing_clean = housing_df[housing_df['target'] <= housing_df['target'].quantile(0.99)].copy()
+print(f"\nCleaned dataset: {housing_clean.shape[0]} rows (removed {len(housing_df) - len(housing_clean)} extreme outliers)")
+```
+
+**Run the code sections** and examine results in the Console and Variables panel.
+
+## Part 4: Visualization and Analysis
+
+### Step 1: Distribution Analysis
+
+```python
+# Create visualizations
+print("\n=== Creating Visualizations ===")
+
+# 1. Distribution of house prices
+plt.figure(figsize=(12, 4))
+
+plt.subplot(1, 2, 1)
+plt.hist(housing_clean['target'], bins=50, alpha=0.7, edgecolor='black')
+plt.title('Distribution of House Prices')
+plt.xlabel('Price (in hundreds of thousands)')
+plt.ylabel('Frequency')
+
+plt.subplot(1, 2, 2)
+plt.boxplot(housing_clean['target'])
+plt.title('House Prices Box Plot')
+plt.ylabel('Price (in hundreds of thousands)')
+
+plt.tight_layout()
+plt.show()
+
+# 2. Correlation heatmap
+plt.figure(figsize=(10, 8))
+correlation_matrix = housing_clean.corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0)
+plt.title('Feature Correlation Matrix')
+plt.show()
+```
+
+### Step 2: Feature Relationship Analysis
+
+```python
+# 3. Key feature relationships
+fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+
+# Income vs Price
+axes[0, 0].scatter(housing_clean['MedInc'], housing_clean['target'], alpha=0.5)
+axes[0, 0].set_xlabel('Median Income')
+axes[0, 0].set_ylabel('House Price')
+axes[0, 0].set_title('Income vs House Price')
+
+# House Age vs Price
+axes[0, 1].scatter(housing_clean['HouseAge'], housing_clean['target'], alpha=0.5)
+axes[0, 1].set_xlabel('House Age')
+axes[0, 1].set_ylabel('House Price')
+axes[0, 1].set_title('House Age vs Price')
+
+# Rooms vs Price
+axes[1, 0].scatter(housing_clean['AveRooms'], housing_clean['target'], alpha=0.5)
+axes[1, 0].set_xlabel('Average Rooms')
+axes[1, 0].set_ylabel('House Price')
+axes[1, 0].set_title('Average Rooms vs Price')
+
+# Population vs Price
+axes[1, 1].scatter(housing_clean['Population'], housing_clean['target'], alpha=0.5)
+axes[1, 1].set_xlabel('Population')
+axes[1, 1].set_ylabel('House Price')
+axes[1, 1].set_title('Population vs Price')
+
+plt.tight_layout()
+plt.show()
+```
+
+**Check the Plots panel**: You should see all visualizations saved there.
+
+### Step 3: Geographic Analysis
+
+```python
+# 4. Geographic distribution (using latitude and longitude)
+plt.figure(figsize=(12, 8))
+
+# Create a scatter plot with prices as color
+scatter = plt.scatter(housing_clean['Longitude'], housing_clean['Latitude'],
+                     c=housing_clean['target'], cmap='viridis', alpha=0.6)
+plt.colorbar(scatter, label='House Price')
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('Geographic Distribution of House Prices in California')
+plt.show()
+
+# 5. Income distribution by geographic location
+plt.figure(figsize=(12, 8))
+scatter = plt.scatter(housing_clean['Longitude'], housing_clean['Latitude'],
+                     c=housing_clean['MedInc'], cmap='plasma', alpha=0.6)
+plt.colorbar(scatter, label='Median Income')
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('Geographic Distribution of Income in California')
+plt.show()
+```
+
+## Part 5: Statistical Analysis
+
+### Step 1: Simple Predictive Model
+
+```python
+# Simple linear regression model
+print("\n=== Building Predictive Model ===")
+
+# Prepare features and target
+X = housing_clean.drop('target', axis=1)
+y = housing_clean['target']
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Model Performance:")
+print(f"R² Score: {r2:.3f}")
+print(f"Root Mean Square Error: {np.sqrt(mse):.3f}")
+
+# Feature importance
+feature_importance = pd.DataFrame({
+    'feature': X.columns,
+    'coefficient': model.coef_
+}).sort_values('coefficient', key=abs, ascending=False)
+
+print(f"\nFeature Importance (coefficients):")
+print(feature_importance)
+```
+
+### Step 2: Model Evaluation Visualization
+
+```python
+# 6. Model performance visualization
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.scatter(y_test, y_pred, alpha=0.5)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices')
+plt.title(f'Actual vs Predicted Prices\nR² = {r2:.3f}')
+
+plt.subplot(1, 2, 2)
+residuals = y_test - y_pred
+plt.scatter(y_pred, residuals, alpha=0.5)
+plt.axhline(y=0, color='r', linestyle='--')
+plt.xlabel('Predicted Prices')
+plt.ylabel('Residuals')
+plt.title('Residual Plot')
+
+plt.tight_layout()
+plt.show()
+
+# 7. Feature importance plot
+plt.figure(figsize=(10, 6))
+feature_importance_abs = feature_importance.copy()
+feature_importance_abs['coefficient'] = feature_importance_abs['coefficient'].abs()
+feature_importance_abs = feature_importance_abs.sort_values('coefficient', ascending=True)
+
+plt.barh(feature_importance_abs['feature'], feature_importance_abs['coefficient'])
+plt.xlabel('Absolute Coefficient Value')
+plt.title('Feature Importance (Absolute Values)')
+plt.tight_layout()
+plt.show()
+```
+
+## Part 6: Working with Jupyter Notebooks
+
+### Step 1: Create a Jupyter Notebook
+
+1. **Create new notebook**: `File > New File > Jupyter Notebook`
+2. **Save as**: `notebooks/housing_analysis_notebook.ipynb`
+3. **Select Python kernel**: Choose your virtual environment
+
+### Step 2: Notebook Structure
+
+Create a well-structured notebook with these sections:
+
+**Cell 1: Markdown**
+```markdown
+# California Housing Price Analysis
+
+## Project Overview
+This notebook analyzes factors influencing housing prices in California using machine learning techniques.
+
+## Research Questions
+1. What factors most strongly influence house prices?
+2. How do geographic factors affect pricing?
+3. Can we build a predictive model for house prices?
+```
+
+**Cell 2: Code - Setup**
+```python
+# Import libraries and load data
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import fetch_california_housing
+
+# Load data
+housing_data = fetch_california_housing()
+housing_df = pd.DataFrame(housing_data.data, columns=housing_data.feature_names)
+housing_df['target'] = housing_data.target
+
+print(f"Dataset shape: {housing_df.shape}")
+housing_df.head()
+```
+
+**Cell 3: Markdown**
+```markdown
+## Data Summary
+
+The California housing dataset contains information about:
+- **MedInc**: Median income in block group
+- **HouseAge**: Median house age in block group
+- **AveRooms**: Average number of rooms per household
+- And other housing characteristics...
+```
+
+Continue building the notebook with alternating markdown and code cells.
+
+::: {.callout-tip}
+Jupyter notebooks in Positron support all the same features as traditional Jupyter, plus integration with Positron's data viewing tools.
+:::
+
+## Part 7: Saving and Exporting Results
+
+### Step 1: Save Key Results
+
+```python
+# Save processed data
+housing_clean.to_csv('data/housing_clean.csv', index=False)
+print("Clean dataset saved to data/housing_clean.csv")
+
+# Save model predictions
+results_df = pd.DataFrame({
+    'actual': y_test,
+    'predicted': y_pred
+})
+results_df.to_csv('data/model_predictions.csv', index=False)
+
+# Save feature importance
+feature_importance.to_csv('data/feature_importance.csv', index=False)
+print("Results saved successfully!")
+```
+
+### Step 2: Export Plots
+
+1. **From Plots Panel**: Right-click any plot → "Save Plot As..."
+2. **Programmatically**:
+
+```python
+# Save plots programmatically
+import os
+os.makedirs('plots', exist_ok=True)
+
+# Save correlation heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(housing_clean.corr(), annot=True, cmap='coolwarm')
+plt.title('Feature Correlation Matrix')
+plt.savefig('plots/correlation_heatmap.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+# Save geographic plot
+plt.figure(figsize=(12, 8))
+scatter = plt.scatter(housing_clean['Longitude'], housing_clean['Latitude'],
+                     c=housing_clean['target'], cmap='viridis', alpha=0.6)
+plt.colorbar(scatter, label='House Price')
+plt.title('Geographic Distribution of House Prices')
+plt.savefig('plots/geographic_prices.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+print("Plots saved to plots/ directory")
+```
+
+## Part 8: Documentation and Reporting
+
+### Step 1: Create Project README
+
+Create `README.md`:
+
+```markdown
+# California Housing Price Analysis
+
+## Overview
+This project analyzes factors influencing housing prices in California using Python and machine learning techniques.
+
+## Key Findings
+- Median income is the strongest predictor of house prices
+- Geographic location significantly affects pricing
+- Our linear regression model achieves an R² of 0.XXX
+
+## Files Structure
+- `scripts/housing_analysis.py`: Main analysis script
+- `notebooks/housing_analysis_notebook.ipynb`: Interactive analysis
+- `data/`: Processed datasets and results
+- `plots/`: Generated visualizations
+
+## How to Run
+1. Install dependencies: `pip install pandas numpy matplotlib seaborn scikit-learn`
+2. Run the main script: `python scripts/housing_analysis.py`
+3. Or open the Jupyter notebook for interactive exploration
+
+## Results
+- Model R² Score: 0.XXX
+- Key predictors: Median Income, Location, House Age
+- Visualizations saved in `plots/` directory
+```
+
+### Step 2: Create Summary Report
+
+```python
+# Generate summary report
+report = f"""
+=== CALIFORNIA HOUSING ANALYSIS REPORT ===
+
+Dataset Overview:
+- Total records: {len(housing_clean):,}
+- Features: {len(housing_clean.columns)-1}
+- Target: House prices (in hundreds of thousands)
+
+Key Statistics:
+- Average house price: ${housing_clean['target'].mean():.2f}00,000
+- Price range: ${housing_clean['target'].min():.1f}00,000 - ${housing_clean['target'].max():.1f}00,000
+- Most expensive areas: High income coastal regions
+
+Model Performance:
+- R² Score: {r2:.3f}
+- RMSE: ${np.sqrt(mse):.2f}00,000
+
+Top Predictive Features:
+{feature_importance.head().to_string(index=False)}
+
+Insights:
+1. Income is the primary driver of house prices
+2. Location (lat/lon) significantly impacts pricing
+3. Newer houses generally command higher prices
+4. Average rooms per household affects price positively
+
+Recommendations:
+- Focus on income and location for price predictions
+- Consider non-linear models for better accuracy
+- Include more geographic/demographic features
+"""
+
+print(report)
+
+# Save report
+with open('housing_analysis_report.txt', 'w') as f:
+    f.write(report)
+print("\nReport saved to housing_analysis_report.txt")
+```
+
+## Best Practices Demonstrated
+
+Throughout this workflow, we've followed data science best practices:
+
+1. **Project Organization**: Clear folder structure and file naming
+2. **Virtual Environments**: Isolated package management
+3. **Data Exploration**: Thorough EDA before modeling
+4. **Visualization**: Multiple plot types for different insights
+5. **Documentation**: Comments, markdown, and README files
+6. **Reproducibility**: Saved data, code, and results
+7. **Model Evaluation**: Proper train/test split and metrics
+
+## What's Next?
+
+To extend this project, you could:
+
+- Try advanced models (Random Forest, XGBoost)
+- Perform feature engineering
+- Add cross-validation
+- Create an interactive dashboard
+- Deploy the model as a web service
+
+## Summary
+
+You have completed a full Python data science workflow in Positron:
+
+✅ Set up a professional project structure
+✅ Imported and cleaned real-world data
+✅ Performed comprehensive exploratory data analysis
+✅ Created multiple types of visualizations
+✅ Built and evaluated a predictive model
+✅ Used both scripts and Jupyter notebooks
+✅ Documented and saved all results
+✅ Generated a professional project report
+
+You now have experience with end-to-end data science workflows in Positron!

@@ -1,0 +1,67 @@
+---
+title: "Introduction to Markdown"
+abstract: |
+  Learn the fundamentals of Markdown, a lightweight markup language that makes it easy to format text for the web. This tutorial series covers basic Markdown syntax, GitHub Flavored Markdown extensions, and Quarto-specific features for creating rich, interactive documents.
+date: last-modified
+
+format:
+  html: default
+
+authors:
+  - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# contributors:
+#   - "[IPA Technical Staff](https://poverty-action.org/)"
+
+keywords: ["tutorial", "markdown", "documentation", "writing", "formatting", "github", "quarto"]
+license: "CC BY 4.0"
+---
+
+## What is Markdown?
+
+Markdown is a lightweight markup language that allows you to write using an easy-to-read, easy-to-write plain text format. It was created by John Gruber in 2004 as a way to write content that could be easily converted to HTML while remaining readable in its raw form.
+
+## Why Learn Markdown?
+
+Markdown has become the standard for technical documentation, README files, and content creation because:
+
+- **Simple syntax**: Easy to learn and remember
+- **Platform independent**: Works everywhere, from GitHub to documentation sites
+- **Future-proof**: Plain text files that will always be readable
+- **Version control friendly**: Perfect for tracking changes in Git
+- **Widely supported**: Used by GitHub, GitLab, Stack Overflow, Reddit, and many more
+
+## What You'll Learn
+
+This tutorial series will take you through three levels of Markdown mastery:
+
+### 1. Basic Markdown
+
+Learn the core syntax that works everywhere Markdown is supported, including headings, emphasis, lists, links, and images.
+
+### 2. GitHub Flavored Markdown (GFM)
+
+Discover the extensions that GitHub adds to Markdown, including tables, task lists, code blocks with syntax highlighting, and more.
+
+### 3. Quarto Markdown
+
+Explore how Quarto extends Markdown for scientific and technical publishing, with features like cross-references, citations, callout blocks, and executable code.
+
+## Getting Started
+
+Each tutorial in this series is designed to be hands-on. You'll learn by doing, starting with simple examples and building up to more complex documents.
+
+::: {.callout-tip}
+
+## Practice Makes Perfect
+
+The best way to learn Markdown is to practice writing it. Try creating your own documents as you work through each tutorial.
+:::
+
+## Prerequisites
+
+- Basic computer literacy
+- A text editor (any plain text editor will work)
+- Optional: A Markdown preview tool or editor with live preview
+
+Ready to get started? Begin with the [Basic Markdown Tutorial](01-basic-markdown.qmd).

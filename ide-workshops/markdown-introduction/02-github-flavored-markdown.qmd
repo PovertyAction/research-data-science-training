@@ -1,0 +1,348 @@
+---
+title: "GitHub Flavored Markdown Tutorial"
+abstract: |
+  Discover the powerful extensions that GitHub adds to standard Markdown. Learn to create tables, task lists, syntax-highlighted code blocks, strikethrough text, and use GitHub-specific features like @mentions and issue references for enhanced collaboration and documentation.
+date: last-modified
+
+format:
+  html: default
+
+authors-ipa:
+  - "[IPA Research & Data Science Team](https://poverty-action.org/)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["tutorial", "GitHub Flavored Markdown", "GFM", "tables", "task lists", "syntax highlighting", "collaboration"]
+license: "CC BY 4.0"
+---
+
+## What is GitHub Flavored Markdown?
+
+GitHub Flavored Markdown (GFM) extends standard Markdown with additional features that make it perfect for software development and collaboration. These extensions are widely supported across GitHub, GitLab, and many other platforms.
+
+## Tables
+
+One of the most useful GFM features is the ability to create tables using pipes (`|`):
+
+```markdown
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Row 1    | Data A   | Data B   |
+| Row 2    | Data C   | Data D   |
+| Row 3    | Data E   | Data F   |
+```
+
+**Result:**
+
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Row 1    | Data A   | Data B   |
+| Row 2    | Data C   | Data D   |
+| Row 3    | Data E   | Data F   |
+
+### Table Alignment
+
+You can align columns using colons in the header separator:
+
+```markdown
+| Left Aligned | Center Aligned | Right Aligned |
+|:-------------|:--------------:|--------------:|
+| Left         | Center         | Right         |
+| Text         | Text           | Text          |
+```
+
+**Result:**
+
+| Left Aligned | Center Aligned | Right Aligned |
+|:-------------|:--------------:|--------------:|
+| Left         | Center         | Right         |
+| Text         | Text           | Text          |
+
+::: {.callout-tip}
+
+## Table Tips
+
+- You don't need to line up the pipes perfectly
+- Tables must have headers
+- Use online table generators for complex tables
+:::
+
+## Task Lists
+
+Create interactive checkboxes for todo items:
+
+```markdown
+- [x] Completed task
+- [ ] Incomplete task
+- [ ] Another incomplete task
+  - [x] Completed sub-task
+  - [ ] Incomplete sub-task
+```
+
+**Result:**
+
+- [x] Completed task
+- [ ] Incomplete task
+- [ ] Another incomplete task
+  - [x] Completed sub-task
+  - [ ] Incomplete sub-task
+
+## Syntax Highlighted Code Blocks
+
+Specify the programming language after the opening backticks for syntax highlighting:
+
+````markdown
+```python
+def calculate_mean(data):
+    """Calculate the mean of a list of numbers."""
+    if not data:
+        return 0
+    return sum(data) / len(data)
+
+# Example usage
+numbers = [1, 2, 3, 4, 5]
+result = calculate_mean(numbers)
+print(f"Mean: {result}")
+```
+````
+
+**Result:**
+
+```python
+def calculate_mean(data):
+    """Calculate the mean of a list of numbers."""
+    if not data:
+        return 0
+    return sum(data) / len(data)
+
+# Example usage
+numbers = [1, 2, 3, 4, 5]
+result = calculate_mean(numbers)
+print(f"Mean: {result}")
+```
+
+### Common Language Identifiers
+
+- `python` - Python code
+- `r` - R code
+- `javascript` or `js` - JavaScript
+- `bash` or `shell` - Shell commands
+- `sql` - SQL queries
+- `json` - JSON data
+- `yaml` - YAML configuration
+- `markdown` or `md` - Markdown syntax
+
+````markdown
+```r
+# R example
+library(dplyr)
+
+data <- mtcars %>%
+  filter(mpg > 20) %>%
+  select(mpg, hp, wt)
+
+summary(data)
+```
+````
+
+**Result:**
+
+```r
+# R example
+library(dplyr)
+
+data <- mtcars %>%
+  filter(mpg > 20) %>%
+  select(mpg, hp, wt)
+
+summary(data)
+```
+
+## Strikethrough
+
+Cross out text using double tildes:
+
+```markdown
+~~This text is crossed out~~
+
+This is ~~incorrect~~ the right way to do it.
+```
+
+**Result:**
+
+~~This text is crossed out~~
+
+This is ~~incorrect~~ the right way to do it.
+
+## Fenced Code Blocks
+
+Use three or more backticks for code blocks without specifying a language:
+
+````markdown
+```
+This is a fenced code block
+No syntax highlighting
+But preserves formatting
+```
+````
+
+## Automatic URL Linking
+
+URLs and email addresses are automatically converted to links:
+
+```markdown
+Visit https://github.com for more information.
+Contact us at support@example.com
+```
+
+**Result:**
+
+Visit <https://github.com> for more information.
+Contact us at <support@example.com>
+
+## Mention Users and Teams
+
+In GitHub repositories, you can mention users and teams:
+
+```markdown
+@username can you review this?
+@organization/team-name please take a look
+```
+
+::: {.callout-note}
+
+## GitHub-Specific Features
+
+Some features like @mentions and issue references only work within GitHub repositories and won't render in all Markdown processors.
+:::
+
+## Reference Issues and Pull Requests
+
+Link to GitHub issues and pull requests:
+
+```markdown
+This fixes #123
+See pull request #456
+Closes #789
+```
+
+## Emoji Support
+
+GitHub supports emoji using colons:
+
+```markdown
+:smile: :heart: :thumbsup: :rocket: :warning:
+```
+
+**Result:**
+
+😄 ❤️ 👍 🚀 ⚠️
+
+Common research and academic emoji:
+
+- `:books:` 📚
+- `:chart_with_upwards_trend:` 📈
+- `:microscope:` 🔬
+- `:memo:` 📝
+- `:bulb:` 💡
+
+## Details and Summary (Collapsible Content)
+
+Create collapsible sections:
+
+```html
+<details>
+<summary>Click to expand</summary>
+
+This content is hidden by default and can be expanded by clicking the summary.
+
+You can include any Markdown content here:
+- Lists
+- **Bold text**
+- Code blocks
+- Even more details sections!
+
+</details>
+```
+
+**Result:**
+
+<details>
+<summary>Click to expand</summary>
+
+This content is hidden by default and can be expanded by clicking the summary.
+
+You can include any Markdown content here:
+
+- Lists
+- **Bold text**
+- Code blocks
+- Even more details sections!
+
+</details>
+
+## Escaping Characters
+
+If you need to display special Markdown characters literally, escape them with backslashes:
+
+```markdown
+\*This text is not italicized\*
+\# This is not a heading
+\| This is not a table separator
+```
+
+**Result:**
+
+\*This text is not italicized\*
+\# This is not a heading
+\| This is not a table separator
+
+## Practice Exercise
+
+Create a GitHub README.md file that includes:
+
+1. A project title and description
+2. A table showing project status or features
+3. A task list of project milestones
+4. Code examples with syntax highlighting
+5. Installation or usage instructions
+6. A collapsible FAQ section using `<details>`
+
+::: {.callout-tip}
+
+## README Best Practices
+
+- Start with a clear project title and one-line description
+- Include installation and usage examples
+- Add badges for build status, version, license
+- Use task lists to show project progress
+- Include a contributing section
+:::
+
+## Advanced Table Examples
+
+### Research Data Summary Table
+
+```markdown
+| Study | Sample Size | Treatment | Control | Effect Size | P-value |
+|-------|------------|-----------|---------|-------------|---------|
+| Smith et al. (2023) | 1,250 | 45.2% | 38.7% | 0.13 | < 0.01 |
+| Johnson & Lee (2022) | 890 | 52.1% | 49.3% | 0.06 | 0.24 |
+| Brown Research (2024) | 2,100 | 41.8% | 35.2% | 0.18 | < 0.001 |
+```
+
+**Result:**
+
+| Study | Sample Size | Treatment | Control | Effect Size | P-value |
+|-------|------------|-----------|---------|-------------|---------|
+| Smith et al. (2023) | 1,250 | 45.2% | 38.7% | 0.13 | < 0.01 |
+| Johnson & Lee (2022) | 890 | 52.1% | 49.3% | 0.06 | 0.24 |
+| Brown Research (2024) | 2,100 | 41.8% | 35.2% | 0.18 | < 0.001 |
+
+## What's Next?
+
+You've learned the powerful extensions that GitHub Flavored Markdown provides. These features make your documentation more interactive, organized, and professional. In the next tutorial, we'll explore Quarto Markdown, which adds even more capabilities for scientific and academic publishing.
+
+Continue to: [Quarto Markdown](03-quarto-markdown.qmd)

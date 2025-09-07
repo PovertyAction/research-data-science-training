@@ -1,0 +1,247 @@
+---
+title: "Exploring the Positron Interface"
+abstract: |
+  This tutorial introduces you to the Positron interface and its key components. You will learn to navigate the different panels, understand the data science-specific features, and customize your workspace for efficient data analysis workflows.
+date: last-modified
+
+format:
+  html: default
+
+authors:
+  - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Positron", "Interface", "Workspace", "Data Science", "Tutorial", "Diátaxis Framework"]
+license: "CC BY-SA 4.0"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Identify the main areas of the Positron interface
+- Understand the purpose of each panel and view
+- Navigate between different workspaces and layouts
+- Customize the interface for your workflow
+- Use key keyboard shortcuts for efficient navigation
+
+## The Positron Interface Layout
+
+When you first open Positron, you'll see an interface that looks familiar if you've used VS Code, but with important additions for data science work.
+
+### Main Interface Areas
+
+The Positron interface consists of five main areas:
+
+1. **Menu Bar** (top): File, Edit, View, etc.
+2. **Activity Bar** (left side): Main navigation icons
+3. **Side Bar** (left panel): Context-sensitive content
+4. **Editor Group** (center): Where you write and view code
+5. **Panel** (bottom): Console, terminal, and other tools
+
+::: {.callout-note}
+Unlike VS Code, Positron includes specialized panels for data science work, including the Console, Variables, and Plots panels.
+:::
+
+## Step 1: Explore the Activity Bar
+
+The Activity Bar on the left contains icons for different views. Let's explore each one:
+
+1. **Explorer**: File and folder navigation
+   - Click the Explorer icon (top icon)
+   - This shows your workspace files and folders
+   - Similar to VS Code's Explorer
+
+2. **Search**: Search across files
+   - Click the Search icon
+   - Search for text across your entire workspace
+
+3. **Source Control**: Git integration
+   - Click the Source Control icon
+   - Manage version control (we'll cover this in later tutorials)
+
+4. **Run and Debug**: Execute and debug code
+   - Click the Run and Debug icon
+   - Set breakpoints and debug your code
+
+5. **Extensions**: Manage extensions
+   - Click the Extensions icon
+   - Install and manage Positron extensions
+
+## Step 2: Understanding the Console Panel
+
+The Console is one of Positron's most important features for data science work:
+
+1. **Open the Console**:
+   - Look at the bottom panel
+   - You should see a "Console" tab
+   - If not visible, go to `View > Console` or press `Ctrl+Shift+`` (backtick)
+
+2. **Console Features**:
+   - Interactive Python/R console
+   - Command history (use ↑ and ↓ arrows)
+   - Auto-completion support
+   - Direct execution of selected code
+
+3. **Try the Console**:
+   - Type `2 + 2` and press Enter
+   - You should see the result displayed
+
+::: {.callout-tip}
+The Console remembers your command history. Use the up arrow to access previous commands.
+:::
+
+## Step 3: Explore Data Science Panels
+
+Positron includes several panels specifically designed for data science:
+
+### Variables Panel
+
+1. **Access the Variables Panel**:
+   - Look for the Variables tab in the bottom panel
+   - If not visible: `View > Variables`
+
+2. **What it shows**:
+   - Current variables in your environment
+   - Variable types and values
+   - Memory usage information
+
+### Plots Panel
+
+1. **Access the Plots Panel**:
+   - Look for the Plots tab in the bottom panel
+   - If not visible: `View > Plots`
+
+2. **What it shows**:
+   - Visualizations you create
+   - Plot history and navigation
+   - Export options for plots
+
+### Help Panel
+
+1. **Access the Help Panel**:
+   - Look for the Help tab in the side panel
+   - Provides context-sensitive documentation
+
+## Step 4: Working with the Editor
+
+The Editor is where you'll spend most of your time writing code:
+
+1. **Create a New File**:
+   - Press `Ctrl+N` (Windows/Linux) or `Cmd+N` (macOS)
+   - Or use `File > New File`
+
+2. **File Types**:
+   - `.py` files for Python
+   - `.R` files for R
+   - `.ipynb` files for Jupyter notebooks
+   - `.qmd` files for Quarto documents
+
+3. **Editor Features**:
+   - Syntax highlighting
+   - Auto-completion (`Ctrl+Space`)
+   - Code formatting
+   - Integrated terminal
+
+## Step 5: Customize Your Workspace
+
+Let's personalize Positron for your workflow:
+
+### Themes and Appearance
+
+1. **Change Theme**:
+   - Go to `File > Preferences > Theme > Color Theme`
+   - Choose from Light, Dark, or High Contrast themes
+
+2. **Font Size**:
+   - Go to `File > Preferences > Settings`
+   - Search for "font size"
+   - Adjust to your preference
+
+### Panel Layout
+
+1. **Move Panels**:
+   - Right-click on any panel tab
+   - Choose "Move Panel Right/Left/Up/Down"
+
+2. **Hide/Show Panels**:
+   - Use the `View` menu to toggle panels
+   - Or use keyboard shortcuts (shown in menus)
+
+## Step 6: Essential Keyboard Shortcuts
+
+Learn these shortcuts to work more efficiently:
+
+| Action | Windows/Linux | macOS |
+|--------|---------------|-------|
+| Command Palette | `Ctrl+Shift+P` | `Cmd+Shift+P` |
+| Quick File Open | `Ctrl+P` | `Cmd+P` |
+| Toggle Console | `Ctrl+Shift+`` | `Cmd+Shift+`` |
+| New File | `Ctrl+N` | `Cmd+N` |
+| Save File | `Ctrl+S` | `Cmd+S` |
+| Find in File | `Ctrl+F` | `Cmd+F` |
+| Run Selection | `F9` | `F9` |
+
+::: {.callout-tip}
+Use `Ctrl+Shift+P` (or `Cmd+Shift+P`) to open the Command Palette and access any Positron feature by typing its name.
+:::
+
+## Step 7: Practice Navigation
+
+Let's practice using the interface:
+
+1. **Create a Practice File**:
+   - Press `Ctrl+N` to create a new file
+   - Save it as `practice.py` (`Ctrl+S`)
+
+2. **Write Some Code**:
+   ```python
+   # This is a practice file
+   x = [1, 2, 3, 4, 5]
+   print(f"My list has {len(x)} items")
+   ```
+
+3. **Run the Code**:
+   - Select the code lines
+   - Press `F9` to run in the Console
+
+4. **Check the Variables Panel**:
+   - Look at the Variables panel
+   - You should see the variable `x` listed
+
+## What's Different from VS Code?
+
+If you're familiar with VS Code, here are key differences in Positron:
+
+| Feature | VS Code | Positron |
+|---------|---------|----------|
+| Console | Terminal only | Interactive Python/R console |
+| Variables | Extensions needed | Built-in Variables panel |
+| Plots | Extensions needed | Built-in Plots panel |
+| Data Science | Requires setup | Optimized out-of-the-box |
+| Help | External docs | Integrated Help panel |
+
+## What's Next?
+
+In the next tutorial, you will learn to:
+
+- Set up Python and R interpreters
+- Configure your development environment
+- Install and manage packages
+- Create your first data science project
+
+## Summary
+
+You have learned to:
+
+- Navigate the main areas of the Positron interface
+- Use the Console for interactive computing
+- Access data science-specific panels
+- Customize your workspace
+- Use essential keyboard shortcuts
+- Understand how Positron differs from VS Code
+
+You're now ready to set up interpreters and start doing data science work in Positron!

@@ -1,0 +1,575 @@
+---
+title: "VS Code Extensions"
+abstract: |
+  Discover how to find, install, and manage VS Code extensions to enhance your development workflow. Learn about essential extensions for different programming languages and productivity tools.
+date: last-modified
+
+format:
+  html: default
+
+# # Authors
+# authors-ipa:
+#   - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["VS Code", "Extensions", "Marketplace", "Programming Languages", "Productivity", "Tools"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Browse and search the VS Code Extension Marketplace
+- Install, enable, disable, and uninstall extensions
+- Understand how extensions enhance VS Code functionality
+- Discover essential extensions for different programming languages
+- Configure extension settings and preferences
+- Manage extensions for optimal performance
+:::
+
+::: {.callout-tip}
+
+## Key Questions
+
+- What are VS Code extensions and why are they important?
+- How do I find extensions that meet my specific needs?
+- Which extensions are essential for my programming language?
+- How do I manage extensions to avoid performance issues?
+:::
+
+::: {.callout-note}
+
+## Attribution
+
+This content is adapted from the official [Visual Studio Code Extensions Guide](https://code.visualstudio.com/docs/editor/extension-marketplace), which is licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/us/). © Microsoft Corporation.
+:::
+
+## Video Overview: VS Code Extensions
+
+Watch this overview of the VS Code extension system:
+
+{{< video <https://youtu.be/SKcZ3cwX8lA> title="Extensions in Visual Studio Code" >}}
+
+This 4-minute video covers:
+
+- Browsing the Extension Marketplace
+- Installing popular extensions
+- Managing extension settings
+- Extension recommendations
+
+## Understanding VS Code Extensions
+
+Extensions are add-ons that extend VS Code's functionality beyond its core features.
+
+### What Extensions Can Do
+
+**Language Support**:
+
+- Syntax highlighting
+- IntelliSense and code completion
+- Debugging capabilities
+- Code formatting and linting
+
+**Productivity Tools**:
+
+- Code snippets and templates
+- Git integration enhancements
+- Task runners and build tools
+- Project management features
+
+**Themes and Appearance**:
+
+- Color themes
+- Icon themes
+- UI customizations
+
+**Integration Tools**:
+
+- Database connections
+- Cloud service integration
+- API testing tools
+- Documentation generators
+
+## Accessing the Extension Marketplace
+
+### Opening the Extensions View
+
+**Methods to access Extensions**:
+
+- **Activity Bar**: Click Extensions icon (Ctrl+Shift+X)
+- **Command Palette**: Extensions: Show Extensions
+- **Menu**: View → Extensions
+
+### Extension Marketplace Interface
+
+**Search bar**: Find extensions by name, keyword, or functionality
+
+**Categories**: Browse by type:
+
+- Programming Languages
+- Snippets
+- Linters
+- Themes
+- Other
+
+**Sorting options**:
+
+- Relevance
+- Most Downloaded
+- Highest Rated
+- Most Recent
+
+**Filter options**:
+
+- Category
+- Source (Marketplace, Built-in, Enabled, Disabled)
+
+## Installing and Managing Extensions
+
+### Installing Extensions
+
+**From Marketplace**:
+
+1. Open Extensions view (Ctrl+Shift+X)
+2. Search for extension
+3. Click "Install" button
+
+**From Command Line**:
+
+```bash
+code --install-extension publisher.extension-name
+```
+
+**From VSIX file**:
+
+- For private or pre-release extensions
+- Extensions view → "..." menu → Install from VSIX
+
+### Managing Installed Extensions
+
+**View installed extensions**: Extensions view → Show Installed Extensions
+
+**Extension actions**:
+
+- **Disable**: Temporarily turn off extension
+- **Uninstall**: Permanently remove extension
+- **Update**: Install newer version when available
+- **Configure**: Access extension settings
+
+::: {.callout-note}
+
+## Try This: Extension Installation Practice
+
+1. Open Extensions view (Ctrl+Shift+X)
+2. Search for "Bracket Pair Colorizer 2"
+3. Install the extension
+4. Create a JavaScript file with nested brackets to see the effect
+5. Practice disabling and re-enabling the extension
+:::
+
+## Essential Extensions by Category
+
+### General Productivity Extensions
+
+#### **Prettier - Code formatter**
+
+- **Purpose**: Automatic code formatting
+- **Languages**: JavaScript, TypeScript, HTML, CSS, JSON, and more
+- **Key features**: Format on save, consistent style
+
+#### **GitLens — Git supercharged**
+
+- **Purpose**: Enhanced Git integration
+- **Features**: Blame annotations, commit history, repository insights
+- **Benefits**: Better understanding of code history
+
+#### **Auto Rename Tag**
+
+- **Purpose**: Automatically rename paired HTML/XML tags
+- **Languages**: HTML, XML, JSX, TSX
+- **Benefit**: Saves time when editing markup
+
+#### **Bracket Pair Colorizer 2**
+
+- **Purpose**: Color-code matching brackets
+- **Languages**: All languages with brackets
+- **Benefit**: Easier navigation of nested code
+
+#### **indent-rainbow**
+
+- **Purpose**: Colorize indentation levels
+- **Benefit**: Visualize code structure, especially in Python
+
+::: {.callout-note}
+
+## Try This: Install Productivity Extensions
+
+Install these essential productivity extensions:
+
+1. Prettier - Code formatter
+2. GitLens
+3. Auto Rename Tag
+4. Bracket Pair Colorizer 2
+
+Test each extension with appropriate code files.
+:::
+
+### Python Development
+
+#### **Python** (by Microsoft)
+
+- **Essential features**:
+  - IntelliSense and code completion
+  - Debugging support
+  - Code formatting (autopep8, black, yapf)
+  - Linting (pylint, flake8, mypy)
+  - Jupyter notebook support
+
+#### **Python Docstring Generator**
+
+- **Purpose**: Auto-generate docstrings
+- **Benefit**: Consistent documentation format
+
+#### **Python Test Explorer for Visual Studio Code**
+
+- **Purpose**: Test discovery and execution
+- **Frameworks**: unittest, pytest, nose
+
+### JavaScript/TypeScript Development
+
+#### **ES7+ React/Redux/React-Native snippets**
+
+- **Purpose**: Code snippets for React development
+- **Features**: Extensive snippet library
+
+#### **TypeScript Hero**
+
+- **Purpose**: Enhanced TypeScript support
+- **Features**: Auto-import, code organization
+
+### Data Science Extensions
+
+#### **Jupyter**
+
+- **Purpose**: Jupyter notebook support in VS Code
+- **Features**:
+  - Run notebooks natively
+  - Interactive Python development
+  - Markdown and code cells
+
+#### **Python Docstring Generator**
+
+- **Purpose**: Generate NumPy/Sphinx style docstrings
+- **Benefit**: Professional documentation
+
+### Web Development
+
+#### **Live Server**
+
+- **Purpose**: Local development server with live reload
+- **Benefit**: See changes instantly in browser
+
+#### **HTML CSS Support**
+
+- **Purpose**: CSS class/ID IntelliSense in HTML
+- **Benefit**: Faster HTML/CSS development
+
+#### **REST Client**
+
+- **Purpose**: Test REST APIs directly in VS Code
+- **Benefit**: No need for separate API testing tools
+
+### Markdown and Documentation
+
+#### **Markdown All in One**
+
+- **Features**:
+  - Table of contents
+  - Math equation support
+  - Keyboard shortcuts
+  - Preview synchronization
+
+#### **markdownlint**
+
+- **Purpose**: Markdown linting and style checking
+- **Benefit**: Consistent markdown formatting
+
+## Language-Specific Extension Packs
+
+Extension packs bundle related extensions for specific workflows.
+
+### Popular Extension Packs
+
+#### **Python Extension Pack**
+
+- Python
+- MagicPython
+- Python Docstring Generator
+- Python Test Explorer
+- Jinja
+
+#### **Java Extension Pack**
+
+- Language Support for Java
+- Debugger for Java
+- Test Runner for Java
+- Maven for Java
+- Project Manager for Java
+- Visual Studio IntelliCode
+
+#### **C/C++ Extension Pack**
+
+- C/C++
+- C/C++ Themes
+- CMake
+- CMake Tools
+
+::: {.callout-note}
+
+## Try This: Install Language Pack
+
+Choose a language you work with and install its extension pack:
+
+1. Search for "[Language] Extension Pack"
+2. Install the pack
+3. Create a sample file in that language
+4. Explore the new features provided
+:::
+
+## Configuring Extensions
+
+### Extension Settings
+
+**Access extension settings**:
+
+- Extensions view → Click gear icon → Extension Settings
+- File → Preferences → Settings → Extensions → [Extension Name]
+
+### Common Configuration Examples
+
+#### **Prettier Configuration**
+
+```json
+{
+    "prettier.tabWidth": 2,
+    "prettier.semi": false,
+    "prettier.singleQuote": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
+```
+
+#### **Python Extension Configuration**
+
+```json
+{
+    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "black"
+}
+```
+
+#### **GitLens Configuration**
+
+```json
+{
+    "gitlens.blame.toggleMode": "window",
+    "gitlens.currentLine.enabled": true,
+    "gitlens.hovers.enabled": true
+}
+```
+
+## Extension Recommendations
+
+### Workspace Recommendations
+
+Share extension recommendations with your team:
+
+**.vscode/extensions.json**:
+
+```json
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.pylint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "ms-toolsai.jupyter"
+    ],
+    "unwantedRecommendations": [
+        "ms-vscode.vscode-typescript-next"
+    ]
+}
+```
+
+VS Code will suggest these extensions to anyone opening the workspace.
+
+### Personal Extension Management
+
+**Export extension list**:
+
+```bash
+code --list-extensions > my-extensions.txt
+```
+
+**Install extensions from list**:
+
+```bash
+cat my-extensions.txt | xargs -n 1 code --install-extension
+```
+
+::: {.callout-note}
+
+## Try This: Create Extension Recommendations
+
+1. Create `.vscode` folder in a project
+2. Add `extensions.json` with 3-5 recommended extensions
+3. Close and reopen the folder
+4. Notice VS Code suggests installing recommended extensions
+:::
+
+## Extension Performance and Management
+
+### Monitoring Extension Performance
+
+**Check extension performance**:
+
+- Command Palette → "Developer: Show Running Extensions"
+- View activation times and resource usage
+
+**Common performance issues**:
+
+- Too many extensions active simultaneously
+- Extensions with high CPU usage
+- Conflicting extensions
+
+### Best Practices for Extension Management
+
+#### **Install Only What You Need**
+
+- Avoid installing extensions "just in case"
+- Regularly review and uninstall unused extensions
+- Use workspace recommendations instead of global installations
+
+#### **Use Profiles for Different Work**
+
+- Create profiles for different projects or languages
+- Keep language-specific extensions in appropriate profiles
+
+#### **Disable Extensions Temporarily**
+
+- Disable heavy extensions when not needed
+- Use "Disable for Workspace" for project-specific disabling
+
+#### **Keep Extensions Updated**
+
+- Enable auto-updates for extensions
+- Review update notes for breaking changes
+
+## Troubleshooting Extensions
+
+### Common Extension Issues
+
+#### **Extension Not Working**
+
+- **Check compatibility**: Ensure extension supports your VS Code version
+- **Reload window**: Ctrl+Shift+P → "Developer: Reload Window"
+- **Check extension logs**: Output panel → Select extension
+
+#### **Conflicting Extensions**
+
+- **Disable extensions one by one** to identify conflicts
+- **Check extension descriptions** for known conflicts
+- **Use minimal setup** to test functionality
+
+#### **Performance Issues**
+
+- **Monitor extension performance**: Developer tools
+- **Disable non-essential extensions**
+- **Use lighter alternatives** if available
+
+### Extension Development Mode
+
+**Enable extension development features**:
+
+```json
+{
+    "extensions.autoCheckUpdates": false,
+    "extensions.autoUpdate": false
+}
+```
+
+## Building Custom Extensions
+
+### When to Consider Custom Extensions
+
+- **Specific workflow needs** not met by existing extensions
+- **Company-specific tools** or processes
+- **Integration with internal APIs** or services
+
+### Extension Development Resources
+
+- [VS Code Extension API](https://code.visualstudio.com/api)
+- [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+- [Publishing Extensions](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
+
+::: {.callout-note}
+
+## Exercise: Create Your Extension Toolkit
+
+1. **Identify your needs**: List the programming languages and tools you use
+2. **Research extensions**: Find 5-10 extensions that match your workflow
+3. **Install and test**: Try each extension with real code
+4. **Configure settings**: Customize extension behavior
+5. **Create recommendations**: Set up workspace recommendations for a project
+6. **Monitor performance**: Check that extensions don't slow down VS Code
+:::
+
+## Advanced Extension Features
+
+### Extension Views and Panels
+
+Many extensions add custom views:
+
+- **File Explorer**: Custom file type handling
+- **Source Control**: Enhanced Git interfaces
+- **Debug**: Custom debug configurations
+- **Terminal**: Specialized terminal interfaces
+
+### Extension Commands
+
+Extensions add commands accessible via Command Palette:
+
+- Search for extension name to see available commands
+- Many commands have keyboard shortcuts
+- Commands can be bound to custom shortcuts
+
+### Extension Contexts
+
+Extensions can provide context-specific functionality:
+
+- Right-click context menus
+- Editor title bar buttons
+- Status bar items
+- Activity bar badges
+
+::: {.callout-important}
+
+## Key Points
+
+- Extensions significantly expand VS Code's capabilities
+- The Extension Marketplace offers thousands of extensions for every use case
+- Language-specific extensions provide IntelliSense, debugging, and formatting
+- Extension packs bundle related extensions for specific workflows
+- Workspace recommendations help teams maintain consistent tooling
+- Monitor extension performance to maintain VS Code responsiveness
+- Configure extensions through settings for optimal workflow integration
+- Only install extensions you actively use to avoid bloat
+:::
+
+[← Previous: Customization](04-customization.qmd) | [Next: Debugging →](06-debugging.qmd)

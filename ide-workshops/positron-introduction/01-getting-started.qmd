@@ -1,0 +1,157 @@
+---
+title: "Setting Up Positron for Data Science"
+abstract: |
+  This tutorial guides you through downloading, installing, and setting up Positron, a next-generation data science IDE. You will learn how to install Positron on your system and prepare it for Python and R development work.
+date: last-modified
+
+format:
+  html: default
+
+authors-ipa:
+  - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Positron", "IDE", "Installation", "Setup", "Data Science", "Tutorial", "Diátaxis Framework"]
+license: "CC BY-SA 4.0"
+---
+
+## Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Download and install Positron on your operating system
+- Launch Positron for the first time
+- Understand the system requirements
+- Verify your installation is working correctly
+
+## What is Positron?
+
+Positron is a next-generation data science IDE built by Posit PBC. It's designed specifically for Python and R users who want:
+
+- Interactive data science tools
+- Enhanced notebook support
+- AI integrations for coding assistance
+- A familiar VS Code-based interface with data science enhancements
+
+::: {.callout-note}
+Positron is built on Code OSS (the open-source foundation of Visual Studio Code), so if you're familiar with VS Code, you'll feel at home in Positron.
+:::
+
+## System Requirements
+
+Before installing Positron, ensure your system meets these minimum requirements:
+
+- **Operating System**: Windows 10/11, macOS 10.15+, or Linux (Ubuntu 18.04+, CentOS 8+)
+- **RAM**: 4GB minimum, 8GB recommended
+- **Disk Space**: 500MB for installation
+- **Internet Connection**: Required for initial setup and extensions
+
+## Step 1: Download Positron
+
+1. Go to the [Positron download page](https://positron.posit.co/)
+2. Click the **Download** button for your operating system
+3. The download will begin automatically
+
+::: {.callout-tip}
+Positron is currently in beta, so expect regular updates. Check back periodically for new versions.
+:::
+
+## Step 2: Install Positron
+
+### Windows Installation
+
+1. Locate the downloaded `.exe` file (usually in your Downloads folder)
+2. Double-click the installer
+3. Follow the installation wizard:
+   - Accept the license agreement
+   - Choose installation directory (default is recommended)
+   - Select additional tasks (creating desktop shortcut is recommended)
+4. Click **Install**
+5. Launch Positron when installation completes
+
+### macOS Installation
+
+1. Locate the downloaded `.dmg` file
+2. Double-click to mount the disk image
+3. Drag the Positron application to your Applications folder
+4. Launch Positron from Applications or Launchpad
+
+::: {.callout-warning}
+On macOS, you may see a security warning about the app being from an unidentified developer. Right-click the app and select "Open" to bypass this warning.
+:::
+
+### Linux Installation
+
+For Ubuntu/Debian systems:
+
+1. Download the `.deb` package
+2. Install using: `sudo dpkg -i positron-*.deb`
+3. If dependencies are missing, run: `sudo apt-get install -f`
+
+For RPM-based systems (CentOS, Fedora):
+
+1. Download the `.rpm` package
+2. Install using: `sudo rpm -i positron-*.rpm`
+
+## Step 3: First Launch
+
+1. Launch Positron from your applications menu or desktop shortcut
+2. On first startup, Positron will:
+   - Check for system compatibility
+   - Set up the workspace
+   - Display the welcome screen
+
+::: {.callout-note}
+The first launch may take a few moments as Positron initializes its components.
+:::
+
+## Step 4: Verify Installation
+
+Let's verify that Positron is working correctly:
+
+1. **Check the Interface**: You should see the Positron interface with:
+   - Menu bar at the top
+   - Activity bar on the left side
+   - Editor area in the center
+   - Status bar at the bottom
+
+2. **Open the Command Palette**:
+   - Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS)
+   - Type "Positron" - you should see Positron-specific commands
+
+3. **Check the Console**:
+   - Look for the Console panel at the bottom
+   - This is where Python and R output will appear
+
+## What's Next?
+
+Congratulations! You have successfully installed Positron. In the next tutorial, you will:
+
+- Explore the Positron interface
+- Learn about the different panels and their purposes
+- Understand how Positron differs from VS Code
+
+## Troubleshooting
+
+If you encounter issues during installation:
+
+- **Insufficient permissions**: Run the installer as administrator (Windows) or use `sudo` (Linux)
+- **Antivirus interference**: Temporarily disable antivirus during installation
+- **Outdated system**: Ensure your operating system meets minimum requirements
+- **Network issues**: Check your internet connection for the initial setup
+
+For additional help, visit the [Positron GitHub Discussions](https://github.com/posit-dev/positron/discussions).
+
+## Summary
+
+You have learned how to:
+
+✅ Download Positron from the official website
+✅ Install Positron on your operating system
+✅ Launch Positron for the first time
+✅ Verify that the installation is working correctly
+
+You're now ready to explore the Positron interface and start using it for data science work!

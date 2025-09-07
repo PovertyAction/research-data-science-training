@@ -1,0 +1,543 @@
+---
+title: "Advanced Code Editing in VS Code"
+abstract: |
+  Master VS Code's powerful code editing features including IntelliSense, code formatting, refactoring, and productivity tips. Learn to write code more efficiently with smart suggestions and automated tools.
+date: last-modified
+
+format:
+  html: default
+
+# # Authors
+# authors-ipa:
+#   - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["VS Code", "Code Editing", "IntelliSense", "Refactoring", "Code Formatting", "Productivity"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Use IntelliSense for smart code completion
+- Apply code formatting and linting
+- Perform code refactoring operations
+- Navigate code efficiently with Go to Definition and Peek
+- Use multi-cursor editing for bulk operations
+- Leverage code snippets for faster coding
+:::
+
+::: {.callout-tip}
+
+## Key Questions
+
+- How does IntelliSense help write better code faster?
+- What refactoring tools are available in VS Code?
+- How can I format and organize code consistently?
+- What are the most efficient ways to navigate large codebases?
+:::
+
+::: {.callout-note}
+
+## Attribution
+
+This content is adapted from the official [Visual Studio Code Documentation](https://code.visualstudio.com/docs) and focuses on the code editing features described in their tutorials. Licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/us/). © Microsoft Corporation.
+:::
+
+## Video Overview: Code Editing Features
+
+Watch this overview of VS Code's code editing capabilities:
+
+{{< video <https://youtu.be/rsatrlBEFFA> title="Code Editing in Visual Studio Code" >}}
+
+This 3-minute video demonstrates:
+
+- IntelliSense code completion
+- Code formatting
+- Code navigation features
+- Multi-cursor editing
+
+## IntelliSense: Smart Code Completion
+
+IntelliSense is VS Code's intelligent code completion system that helps you write code faster and with fewer errors.
+
+### What IntelliSense Provides
+
+**Auto-completion**: As you type, VS Code suggests:
+
+- Variable names
+- Function names
+- Method calls
+- Class properties
+- Language keywords
+- File paths
+
+**Parameter hints**: See function signatures and parameter information
+
+**Quick info**: Hover over symbols to see type information and documentation
+
+**Error squiggles**: Real-time syntax and semantic error detection
+
+### Using IntelliSense
+
+IntelliSense automatically appears as you type, but you can also:
+
+- **Trigger manually**: Ctrl+Space
+- **Navigate suggestions**: Arrow keys
+- **Accept suggestion**: Enter or Tab
+- **See more info**: Ctrl+Space when suggestion is selected
+
+::: {.callout-note}
+
+## Try This: IntelliSense Practice
+
+Create a JavaScript file and try these examples:
+
+```javascript
+// 1. Start typing "cons" - IntelliSense suggests "console"
+console.log("Hello World");
+
+// 2. Type "console." - see available methods
+console.log("message");
+console.error("error message");
+
+// 3. Function with parameters
+function greetUser(name, age) {
+    return `Hello ${name}, you are ${age} years old`;
+}
+
+// 4. When calling the function, see parameter hints
+greetUser(/* IntelliSense shows parameter hints here */);
+```
+
+:::
+
+## Code Navigation
+
+Efficiently navigate through your codebase with these powerful features.
+
+### Go to Definition
+
+Navigate to where symbols are defined:
+
+- **Go to Definition**: F12 or Ctrl+Click
+- **Peek Definition**: Alt+F12 (view definition without leaving current file)
+- **Go to Type Definition**: Ctrl+Shift+F12
+
+### Go to Symbol
+
+Quickly jump to functions, classes, or variables:
+
+- **Go to Symbol in File**: Ctrl+Shift+O
+- **Go to Symbol in Workspace**: Ctrl+T
+
+### Breadcrumb Navigation
+
+The breadcrumb bar shows your current location in the file hierarchy:
+
+- Click breadcrumb elements to navigate
+- Use Ctrl+Shift+; to focus breadcrumbs
+
+::: {.callout-note}
+
+## Try This: Navigation Practice
+
+Using a Python file:
+
+```python
+class Calculator:
+    def __init__(self):
+        self.result = 0
+
+    def add(self, number):
+        self.result += number
+        return self.result
+
+    def multiply(self, number):
+        self.result *= number
+        return self.result
+
+# Create instance and use methods
+calc = Calculator()
+calc.add(5)
+calc.multiply(3)
+```
+
+Practice:
+
+1. Use Ctrl+Shift+O to see all symbols in the file
+2. Click on `Calculator` class name and press F12
+3. Use Alt+F12 to peek at the `add` method definition
+:::
+
+## Code Formatting
+
+Keep your code consistently formatted across your project.
+
+### Auto-formatting
+
+**Format entire document**: Shift+Alt+F
+
+**Format selection**: Ctrl+K, Ctrl+F
+
+**Format on save**: Enable in settings
+
+```json
+{
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true
+}
+```
+
+### Language-specific Formatters
+
+Different languages may require specific formatters:
+
+- **Python**: Install Python extension (includes autopep8, black)
+- **JavaScript/TypeScript**: Built-in formatter or Prettier extension
+- **HTML/CSS**: Built-in formatters
+- **JSON**: Built-in formatter
+
+::: {.callout-note}
+
+## Try This: Code Formatting
+
+Create a poorly formatted JavaScript file:
+
+```javascript
+function badlyFormatted(x,y){
+if(x>y){return x;}
+else{
+return y;}}
+
+// Select all (Ctrl+A) and format (Shift+Alt+F)
+```
+
+After formatting, it becomes:
+
+```javascript
+function badlyFormatted(x, y) {
+    if (x > y) {
+        return x;
+    }
+    else {
+        return y;
+    }
+}
+```
+
+:::
+
+## Multi-cursor Editing
+
+Edit multiple locations simultaneously for powerful bulk operations.
+
+### Creating Multiple Cursors
+
+**Add cursor at position**: Alt+Click
+
+**Select all occurrences**: Ctrl+Shift+L
+
+**Select next occurrence**: Ctrl+D
+
+**Skip occurrence**: Ctrl+K, Ctrl+D
+
+**Add cursor above/below**: Ctrl+Alt+Up/Down
+
+### Multi-cursor Use Cases
+
+**Rename variables across file**:
+
+1. Select variable name
+2. Press Ctrl+D to select next occurrence
+3. Continue pressing Ctrl+D for more occurrences
+4. Type new name
+
+**Add similar content to multiple lines**:
+
+1. Place cursors at end of multiple lines (Alt+Click)
+2. Type content that gets added to all lines
+
+::: {.callout-note}
+
+## Try This: Multi-cursor Practice
+
+Create a file with repeated content:
+
+```text
+apple
+banana
+cherry
+date
+elderberry
+```
+
+Practice:
+
+1. Select "apple" and use Ctrl+D to select other fruits
+2. Use Alt+Click to place cursors at the end of each line
+3. Type " - fruit" to add to all lines simultaneously
+:::
+
+## Code Snippets
+
+Snippets are templates that make it easier to enter repeating code patterns.
+
+### Using Built-in Snippets
+
+Type snippet prefix and press Tab:
+
+**JavaScript examples**:
+
+- `log` → `console.log()`
+- `func` → function template
+- `for` → for loop template
+- `if` → if statement template
+
+**Python examples**:
+
+- `class` → class template
+- `def` → function template
+- `if` → if statement template
+
+### Creating Custom Snippets
+
+1. **File** → **Preferences** → **Configure User Snippets**
+2. Choose language or create global snippets
+3. Define snippet in JSON format:
+
+```json
+{
+    "Print to console": {
+        "prefix": "log",
+        "body": [
+            "console.log('$1');",
+            "$2"
+        ],
+        "description": "Log output to console"
+    }
+}
+```
+
+::: {.callout-note}
+
+## Try This: Snippet Practice
+
+In a JavaScript file:
+
+1. Type `log` and press Tab
+2. Type `for` and press Tab
+3. Try creating a custom snippet for your most-used code pattern
+:::
+
+## Refactoring Tools
+
+VS Code provides powerful refactoring capabilities to help restructure code safely.
+
+### Common Refactoring Operations
+
+**Rename Symbol**: F2
+
+- Renames all references to a variable, function, or class
+- Updates all files in the workspace
+
+**Extract Method**:
+
+1. Select code block
+2. Right-click → Refactor → Extract to Method
+
+**Extract Variable**:
+
+1. Select expression
+2. Right-click → Refactor → Extract to Variable
+
+### Code Actions
+
+Code Actions provide quick fixes and refactoring options:
+
+**Trigger Code Actions**: Ctrl+. (period)
+
+Common actions:
+
+- Fix import statements
+- Add missing imports
+- Convert to arrow function (JavaScript)
+- Add type annotations (TypeScript)
+- Generate getters/setters
+
+::: {.callout-note}
+
+## Try This: Refactoring Practice
+
+Using Python code:
+
+```python
+def calculate_area():
+    width = 10
+    height = 20
+    area = width * height
+    print(f"Area is: {area}")
+    return area
+
+# Practice:
+# 1. Select "width * height" and extract to variable
+# 2. Rename the function using F2
+# 3. Use Ctrl+. to see available code actions
+```
+
+:::
+
+## Advanced Editing Features
+
+### Column (Box) Selection
+
+Select rectangular blocks of text:
+
+**Windows/Linux**: Shift+Alt+drag
+**macOS**: Shift+Option+drag
+
+Useful for:
+
+- Editing multiple lines at the same column
+- Selecting tabular data
+- Adding prefixes to multiple lines
+
+### Fold Code Sections
+
+Collapse code sections to focus on relevant parts:
+
+**Fold**: Ctrl+Shift+[
+**Unfold**: Ctrl+Shift+]
+**Fold All**: Ctrl+K, Ctrl+0
+**Unfold All**: Ctrl+K, Ctrl+J
+
+### Word Wrap
+
+Toggle word wrapping for long lines:
+
+**Toggle Word Wrap**: Alt+Z
+
+Or set in settings:
+
+```json
+{
+    "editor.wordWrap": "on"
+}
+```
+
+## Productivity Tips and Shortcuts
+
+### Essential Editing Shortcuts
+
+```
+Ctrl+X              # Cut line (if nothing selected)
+Ctrl+C              # Copy line (if nothing selected)
+Ctrl+V              # Paste
+Ctrl+Z              # Undo
+Ctrl+Y              # Redo
+Ctrl+Shift+K        # Delete line
+Alt+Up/Down         # Move line up/down
+Shift+Alt+Up/Down   # Copy line up/down
+Ctrl+Enter          # Insert line below
+Ctrl+Shift+Enter    # Insert line above
+```
+
+### Selection Shortcuts
+
+```
+Ctrl+A              # Select all
+Ctrl+L              # Select current line
+Ctrl+Shift+L        # Select all occurrences of selection
+Ctrl+F2             # Select all occurrences of word
+Home/End            # Beginning/end of line
+Ctrl+Home/End       # Beginning/end of file
+```
+
+### Advanced Text Manipulation
+
+```
+Ctrl+]              # Indent line
+Ctrl+[              # Outdent line
+Ctrl+/              # Toggle line comment
+Shift+Alt+A         # Toggle block comment
+Ctrl+Shift+\        # Jump to matching bracket
+```
+
+::: {.callout-note}
+
+## Exercise: Productivity Challenge
+
+Create a sample file and practice these productivity techniques:
+
+1. **Multi-cursor editing**: Select multiple identical words and rename them
+2. **Line manipulation**: Move lines around using Alt+Up/Down
+3. **Code folding**: Fold functions and classes to overview structure
+4. **Quick formatting**: Mess up indentation, then format the document
+5. **Snippet usage**: Create a function using snippets instead of typing manually
+:::
+
+## Language-Specific Features
+
+Different programming languages have specific editing enhancements:
+
+### Python
+
+- Auto-import suggestions
+- Type hints support
+- PEP 8 formatting
+- Docstring generation
+
+### JavaScript/TypeScript
+
+- Automatic import organization
+- ES6+ snippet support
+- JSDoc comment generation
+- React component snippets
+
+### HTML/CSS
+
+- Emmet abbreviations
+- Color picker in CSS
+- Auto-close tags
+- CSS class/ID IntelliSense
+
+## Troubleshooting Common Issues
+
+### IntelliSense Not Working
+
+- **Check language extension**: Install appropriate language extension
+- **Restart VS Code**: Reload window (Ctrl+Shift+P → "Developer: Reload Window")
+- **Check file association**: Ensure file has correct extension
+
+### Formatting Not Applied
+
+- **Install formatter**: Language may need specific formatter extension
+- **Check format on save**: Verify setting is enabled
+- **Manual format**: Try Shift+Alt+F to format manually
+
+### Slow Performance
+
+- **Disable unnecessary extensions**: Keep only needed extensions active
+- **Exclude large directories**: Add node_modules, .git to search exclusions
+- **Reduce file watcher scope**: Limit watched files in settings
+
+::: {.callout-important}
+
+## Key Points
+
+- IntelliSense provides intelligent code completion and error detection
+- Use F12 for Go to Definition and Alt+F12 for Peek Definition
+- Multi-cursor editing enables powerful bulk operations
+- Code formatting maintains consistent style across projects
+- Snippets accelerate common coding patterns
+- Refactoring tools help safely restructure code
+- Keyboard shortcuts significantly boost editing productivity
+- Language-specific extensions enhance editing capabilities
+:::
+
+[← Previous: Basics](02-basics.qmd) | [Next: Customization →](04-customization.qmd)

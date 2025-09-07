@@ -1,0 +1,538 @@
+---
+title: "Personalizing VS Code"
+abstract: |
+  Learn to customize Visual Studio Code to match your preferences and workflow. Configure themes, layouts, keybindings, and settings to create your ideal development environment.
+date: last-modified
+
+format:
+  html: default
+
+# # Authors
+# authors-ipa:
+#   - "[Author Name](https://poverty-action.org/people/author_name)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["VS Code", "Customization", "Themes", "Settings", "Keybindings", "Layout", "Personalization"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Choose and customize color themes and icon themes
+- Configure editor settings for your workflow
+- Create custom keyboard shortcuts
+- Organize and customize the interface layout
+- Set up user and workspace-specific configurations
+- Use settings sync to share configurations across devices
+:::
+
+::: {.callout-tip}
+
+## Key Questions
+
+- How can I make VS Code look and feel the way I want?
+- What settings should I configure for my specific workflow?
+- How do I create custom keyboard shortcuts?
+- How can I sync my settings across multiple devices?
+:::
+
+::: {.callout-note}
+
+## Attribution
+
+This content is adapted from the official [Visual Studio Code Documentation](https://code.visualstudio.com/docs), particularly the personalization and configuration guides. Licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/us/). © Microsoft Corporation.
+:::
+
+## Video Overview: Personalizing VS Code
+
+Watch this overview of VS Code customization options:
+
+{{< video <https://youtu.be/4wVF4w32WQE> title="Personalize Visual Studio Code" >}}
+
+This 2-minute video covers:
+
+- Changing color themes
+- Customizing the interface
+- Modifying settings
+- Installing icon packs
+
+## Color Themes and Appearance
+
+Visual appearance significantly impacts your coding experience. VS Code offers extensive theming options.
+
+### Choosing Color Themes
+
+**Access themes**: File → Preferences → Color Theme (or Ctrl+K, Ctrl+T)
+
+**Popular built-in themes**:
+
+- **Dark+ (default dark)**: High contrast, easy on eyes
+- **Light+ (default light)**: Clean, professional appearance
+- **Dark (Visual Studio)**: Classic Visual Studio dark theme
+- **Monokai**: Popular theme with vibrant colors
+- **Solarized Dark/Light**: Well-designed, scientifically-based colors
+
+**Preview themes**: Use arrow keys to preview themes before selecting
+
+### Installing Additional Themes
+
+1. **Open Extensions**: Ctrl+Shift+X
+2. **Search**: "theme" in the marketplace
+3. **Popular theme extensions**:
+   - One Dark Pro
+   - Material Theme
+   - Dracula Official
+   - Night Owl
+   - Palenight Theme
+
+::: {.callout-note}
+
+## Try This: Theme Exploration
+
+1. Open Color Theme selector (Ctrl+K, Ctrl+T)
+2. Try 3-4 different themes using arrow keys
+3. Install a theme extension from the marketplace
+4. Switch between light and dark variants
+:::
+
+### File Icon Themes
+
+Customize file and folder icons for better visual organization:
+
+**Access icon themes**: File → Preferences → File Icon Theme
+
+**Popular icon themes**:
+
+- **VS Code Icons**: Comprehensive icon set
+- **Material Icon Theme**: Material Design icons
+- **Simple icons**: Minimalist approach
+- **Monokai Pro Icons**: Icons matching Monokai theme
+
+## Editor Customization
+
+Configure the editor to match your coding style and preferences.
+
+### Essential Editor Settings
+
+Access via File → Preferences → Settings:
+
+```json
+{
+    // Appearance
+    "editor.fontSize": 14,
+    "editor.fontFamily": "'Consolas', 'Monaco', 'Courier New', monospace",
+    "editor.lineHeight": 1.5,
+    "editor.letterSpacing": 0.5,
+
+    // Behavior
+    "editor.wordWrap": "on",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+
+    // Visual aids
+    "editor.renderWhitespace": "boundary",
+    "editor.renderIndentGuides": true,
+    "editor.showFoldingControls": "mouseover",
+    "editor.glyphMargin": true,
+
+    // Cursor and selection
+    "editor.cursorStyle": "line",
+    "editor.cursorBlinking": "blink",
+    "editor.selectionHighlight": true
+}
+```
+
+### Font Customization
+
+**Recommended programming fonts**:
+
+- **Fira Code**: Includes programming ligatures
+- **JetBrains Mono**: Designed for developers
+- **Source Code Pro**: Clean, readable
+- **Consolas**: Windows default monospace
+- **Monaco**: macOS default monospace
+
+**Enable font ligatures** (if font supports them):
+
+```json
+{
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "'Fira Code', 'JetBrains Mono', monospace"
+}
+```
+
+::: {.callout-note}
+
+## Try This: Font Experimentation
+
+1. Download Fira Code or JetBrains Mono font
+2. Install the font on your system
+3. Update VS Code font settings
+4. Enable font ligatures if supported
+5. Compare readability with different font sizes
+:::
+
+## Keyboard Shortcuts Customization
+
+Create keyboard shortcuts that match your workflow and muscle memory.
+
+### Accessing Keyboard Shortcuts
+
+**Open Keyboard Shortcuts**: File → Preferences → Keyboard Shortcuts (Ctrl+K, Ctrl+S)
+
+**Search shortcuts**: Type command name or key combination
+
+### Modifying Existing Shortcuts
+
+1. Find the command you want to modify
+2. Click the pencil icon or double-click the keybinding
+3. Press your desired key combination
+4. Press Enter to confirm
+
+### Creating Custom Shortcuts
+
+**Add new shortcut**:
+
+1. Click "Add Keybinding" button (+ icon)
+2. Search for command
+3. Set key combination
+4. Add conditions (when clause) if needed
+
+**Example custom shortcuts**:
+
+```json
+[
+    {
+        "key": "ctrl+shift+d",
+        "command": "editor.action.duplicateLinesDown"
+    },
+    {
+        "key": "ctrl+alt+l",
+        "command": "editor.action.transformToLowercase"
+    },
+    {
+        "key": "ctrl+alt+u",
+        "command": "editor.action.transformToUppercase"
+    }
+]
+```
+
+### Shortcuts for Specific Contexts
+
+Add conditions to make shortcuts context-specific:
+
+```json
+[
+    {
+        "key": "f5",
+        "command": "python.execInTerminal",
+        "when": "editorTextFocus && editorLangId == python"
+    }
+]
+```
+
+::: {.callout-note}
+
+## Try This: Custom Shortcut Creation
+
+1. Open Keyboard Shortcuts (Ctrl+K, Ctrl+S)
+2. Search for "duplicate line"
+3. Add a custom shortcut (e.g., Ctrl+Shift+D)
+4. Test the shortcut in a code file
+5. Create a shortcut for "Transform to Uppercase"
+:::
+
+## Interface Layout Customization
+
+Arrange VS Code's interface to optimize your workspace.
+
+### Panel and Sidebar Management
+
+**Hide/show elements**:
+
+- **Activity Bar**: View → Appearance → Show Activity Bar
+- **Side Bar**: View → Appearance → Show Side Bar (Ctrl+B)
+- **Panel**: View → Appearance → Show Panel (Ctrl+J)
+- **Status Bar**: View → Appearance → Show Status Bar
+
+**Move panels**:
+
+- **Panel position**: Right-click panel → Move Panel Right/Bottom
+- **Side bar position**: View → Appearance → Move Side Bar Right
+
+### Zen Mode and Focus
+
+**Zen Mode**: View → Appearance → Zen Mode (Ctrl+K, Z)
+
+- Hides all UI except editor
+- Perfect for distraction-free coding
+
+**Centered Layout**: View → Appearance → Centered Layout
+
+- Centers editor content
+- Reduces eye movement
+
+### Tab and Editor Management
+
+**Tab settings**:
+
+```json
+{
+    "workbench.editor.showTabs": true,
+    "workbench.editor.tabCloseButton": "right",
+    "workbench.editor.tabSizing": "shrink",
+    "workbench.editor.limit.enabled": true,
+    "workbench.editor.limit.value": 10
+}
+```
+
+## Settings Organization
+
+Understand different types of settings and when to use each.
+
+### User vs Workspace Settings
+
+**User Settings**:
+
+- Apply globally to all VS Code instances
+- Stored in user profile
+- Access: File → Preferences → Settings
+
+**Workspace Settings**:
+
+- Apply only to current workspace
+- Stored in `.vscode/settings.json`
+- Override user settings
+- Share with team via version control
+
+### Settings JSON vs UI
+
+**Settings UI**: Graphical interface for common settings
+
+**Settings JSON**: Direct JSON editing for advanced configuration
+
+- Access via Command Palette: "Preferences: Open Settings (JSON)"
+
+**Example workspace settings**:
+
+```json
+{
+    "editor.fontSize": 16,
+    "python.defaultInterpreterPath": "./venv/bin/python",
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.pytest_cache": true
+    }
+}
+```
+
+### Language-Specific Settings
+
+Configure settings for specific file types:
+
+```json
+{
+    "[python]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true
+    },
+    "[javascript]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+        "editor.wordWrap": "on",
+        "editor.quickSuggestions": false
+    }
+}
+```
+
+::: {.callout-note}
+
+## Try This: Settings Configuration
+
+1. Create a new workspace folder
+2. Open Settings and modify font size
+3. Notice settings are saved to user settings
+4. Create `.vscode/settings.json` with different font size
+5. Observe how workspace settings override user settings
+:::
+
+## Settings Sync
+
+Share your VS Code configuration across multiple devices and installations.
+
+### Enabling Settings Sync
+
+1. **Sign in**: Click account icon in Activity Bar
+2. **Choose Microsoft or GitHub account**
+3. **Select sync options**:
+   - Settings
+   - Keyboard shortcuts
+   - Extensions
+   - User snippets
+   - UI state
+
+### What Gets Synced
+
+**Settings**: All user preferences and configurations
+
+**Extensions**: List of installed extensions (not extension data)
+
+**Keybindings**: Custom keyboard shortcuts
+
+**Snippets**: User-created code snippets
+
+**UI State**: Theme selection, layout preferences
+
+### Managing Sync
+
+**Turn on/off sync**:
+
+- Command Palette → "Settings Sync: Turn On/Off"
+- Account menu → Settings Sync
+
+**Sync conflicts**: VS Code will prompt when conflicts occur
+
+- Choose local or remote version
+- Merge manually if needed
+
+::: {.callout-note}
+
+## Try This: Settings Sync Setup
+
+1. Sign in to VS Code with your account
+2. Enable Settings Sync
+3. Modify a setting (like theme or font size)
+4. If you have VS Code on another device, verify sync works
+:::
+
+## Advanced Customization
+
+Take customization further with advanced techniques.
+
+### Custom CSS and Styling
+
+**Extension**: "Custom CSS and JS Loader"
+
+**Warning**: This modifies VS Code core files
+
+- Use at your own risk
+- Updates may reset customizations
+
+### Workspace Recommendations
+
+Create recommendations for team members:
+
+**.vscode/extensions.json**:
+
+```json
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.pylint",
+        "ms-toolsai.jupyter"
+    ]
+}
+```
+
+### Task and Launch Configurations
+
+**.vscode/tasks.json**: Define custom build tasks
+**.vscode/launch.json**: Configure debugging
+
+## Common Customization Scenarios
+
+### For Python Development
+
+```json
+{
+    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.tabSize": 4
+    }
+}
+```
+
+### For Web Development
+
+```json
+{
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.tabSize": 2
+    }
+}
+```
+
+### For Data Science
+
+```json
+{
+    "jupyter.askForKernelRestart": false,
+    "jupyter.sendSelectionToInteractiveWindow": true,
+    "python.dataScience.sendSelectionToInteractiveWindow": true
+}
+```
+
+::: {.callout-note}
+
+## Exercise: Create Your Perfect Setup
+
+1. **Choose your theme**: Select a color theme and icon theme you love
+2. **Configure editor**: Set font, size, and visual preferences
+3. **Create shortcuts**: Add 2-3 custom keyboard shortcuts
+4. **Organize interface**: Customize panel positions and visibility
+5. **Language settings**: Configure settings for your primary programming language
+6. **Enable sync**: Set up Settings Sync to preserve your configuration
+:::
+
+## Troubleshooting Customization Issues
+
+### Settings Not Applied
+
+- **Check precedence**: Workspace settings override user settings
+- **Restart VS Code**: Some settings require restart
+- **Check JSON syntax**: Invalid JSON prevents settings from loading
+
+### Keyboard Shortcut Conflicts
+
+- **Check existing shortcuts**: Use keyboard shortcuts editor
+- **Use "when" clauses**: Make shortcuts context-specific
+- **Reset to default**: Clear custom binding to restore default
+
+### Sync Issues
+
+- **Check internet connection**: Sync requires connectivity
+- **Re-authenticate**: Sign out and sign back in
+- **Manual sync**: Use Command Palette → "Settings Sync: Sync Now"
+
+::: {.callout-important}
+
+## Key Points
+
+- Color and icon themes dramatically improve visual experience
+- Font choice and size significantly impact coding comfort
+- Custom keyboard shortcuts boost productivity
+- User settings apply globally, workspace settings are project-specific
+- Language-specific settings provide fine-grained control
+- Settings Sync keeps configurations consistent across devices
+- Interface layout customization reduces distractions
+- JSON configuration provides advanced customization options
+:::
+
+[← Previous: Code Editing](03-code-editing.qmd) | [Next: Extensions →](05-extensions.qmd)

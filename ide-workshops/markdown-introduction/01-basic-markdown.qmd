@@ -1,0 +1,279 @@
+---
+title: "Basic Markdown Tutorial"
+abstract: |
+  Master the essential Markdown syntax that works across all platforms and applications. Learn to format text, create headings, add emphasis, build lists, insert links and images, and structure your documents with the core Markdown elements.
+date: last-modified
+
+format:
+  html: default
+
+authors:
+  - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["tutorial", "markdown", "basic syntax", "formatting", "text editing", "documentation"]
+license: "CC BY 4.0"
+---
+
+## Getting Started with Markdown
+
+Markdown uses simple symbols to format text. Let's start with the most common elements you'll use in every document.
+
+## Headings
+
+Create headings using hash symbols (`#`). The number of hashes determines the heading level:
+
+```markdown
+## Heading 2 (second largest)
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6 (smallest)
+```
+
+**Result:**
+
+## Heading 2 (second largest)
+
+### Heading 3
+
+#### Heading 4
+
+##### Heading 5
+
+###### Heading 6 (smallest)
+
+::: {.callout-tip}
+
+## Heading Best Practices
+
+- Use only one H1 heading per document (usually the title)
+- Don't skip heading levels (don't jump from H2 to H4)
+- Keep headings descriptive and concise
+:::
+
+## Text Emphasis
+
+Make text bold or italic using asterisks or underscores:
+
+```markdown
+*italic text* or _italic text_
+**bold text** or __bold text__
+***bold and italic*** or ___bold and italic___
+```
+
+**Result:**
+
+*italic text* or *italic text*
+
+**bold text** or **bold text**
+
+***bold and italic*** or ***bold and italic***
+
+## Paragraphs and Line Breaks
+
+- Separate paragraphs with a blank line
+- For a line break within a paragraph, end the line with two spaces
+
+```markdown
+This is the first paragraph.
+
+This is the second paragraph.
+
+This line ends with two spaces
+So this appears on a new line but in the same paragraph.
+```
+
+**Result:**
+
+This is the first paragraph.
+
+This is the second paragraph.
+
+This line ends with two spaces
+So this appears on a new line but in the same paragraph.
+
+## Lists
+
+### Unordered Lists
+
+Create bullet lists using `-`, `*`, or `+`:
+
+```markdown
+- Item 1
+- Item 2
+- Item 3
+  - Sub-item A
+  - Sub-item B
+```
+
+**Result:**
+
+- Item 1
+- Item 2
+- Item 3
+  - Sub-item A
+  - Sub-item B
+
+### Ordered Lists
+
+Create numbered lists using numbers followed by periods:
+
+```markdown
+1. First item
+2. Second item
+3. Third item
+   1. Sub-item A
+   2. Sub-item B
+```
+
+**Result:**
+
+1. First item
+2. Second item
+3. Third item
+   1. Sub-item A
+   2. Sub-item B
+
+## Links
+
+Create links using square brackets for the text and parentheses for the URL:
+
+```markdown
+[Link text](https://example.com)
+[Link with title](https://example.com "This appears on hover")
+```
+
+**Result:**
+
+[Link text](https://example.com)
+
+[Link with title](https://example.com "This appears on hover")
+
+### Reference Links
+
+For cleaner documents, use reference-style links:
+
+```markdown
+Check out [Google][google-link] and [GitHub][github-link].
+
+[google-link]: https://google.com
+[github-link]: https://github.com
+```
+
+**Result:**
+
+Check out [Google][google-link] and [GitHub][github-link].
+
+[google-link]: https://google.com
+[github-link]: https://github.com
+
+## Images
+
+Images use similar syntax to links, but with an exclamation mark at the beginning:
+
+```markdown
+![Alt text](image-url.jpg)
+![Alt text with title](image-url.jpg "Image title")
+```
+
+For local images:
+
+```markdown
+![Research diagram](../images/research-flow.png)
+```
+
+## Code
+
+### Inline Code
+
+Wrap text in backticks for inline code:
+
+```markdown
+Use the `print()` function to display output.
+```
+
+**Result:**
+
+Use the `print()` function to display output.
+
+### Code Blocks
+
+Use three backticks for code blocks:
+
+````markdown
+```
+This is a code block
+Multiple lines are preserved
+Indentation is maintained
+```
+````
+
+**Result:**
+
+```text
+This is a code block
+Multiple lines are preserved
+Indentation is maintained
+```
+
+## Blockquotes
+
+Create blockquotes using the `>` symbol:
+
+```markdown
+> This is a blockquote.
+> It can span multiple lines.
+>
+> And multiple paragraphs.
+```
+
+**Result:**
+
+> This is a blockquote.
+> It can span multiple lines.
+>
+> And multiple paragraphs.
+
+## Horizontal Rules
+
+Create horizontal lines using three or more hyphens, asterisks, or underscores:
+
+```markdown
+---
+***
+___
+```
+
+**Result:**
+
+---
+
+## Practice Exercise
+
+Now it's your turn! Try creating a document that includes:
+
+1. A main heading
+2. At least two subheadings
+3. Some **bold** and *italic* text
+4. A bulleted list with at least 3 items
+5. A numbered list
+6. At least one link
+7. A blockquote
+8. Some `inline code`
+
+::: {.callout-note}
+
+## Your First Markdown Document
+
+Start with a simple document about yourself or your research interests. Practice using different elements as you write naturally.
+:::
+
+## What's Next?
+
+You've learned the core Markdown syntax that works everywhere. In the next tutorial, we'll explore GitHub Flavored Markdown, which adds useful extensions like tables, task lists, and syntax-highlighted code blocks.
+
+Continue to: [GitHub Flavored Markdown](02-github-flavored-markdown.qmd)

@@ -1,0 +1,300 @@
+---
+title: "Getting Started with VS Code"
+abstract: |
+  Learn how to download, install, and set up Visual Studio Code. This tutorial covers initial installation, opening your first workspace, and understanding the basic interface.
+date: last-modified
+
+format:
+  html: default
+
+# # Authors
+# authors:
+#   - "[Niall Keleher](https://poverty-action.org/people/niall-keleher)"
+
+# # Contributors
+# contributors:
+#   - "[Contributor Name](https://poverty-action.org/people/contributor_name)"
+
+keywords: ["Visual Studio Code", "Installation", "Setup", "Workspace", "Tutorial", "Getting Started"]
+license: "CC BY 4.0"
+---
+
+::: {.callout-note}
+
+## Learning Objectives
+
+- Download and install Visual Studio Code on your system
+- Open and set up your first workspace
+- Understand workspace trust and security
+- Navigate the basic VS Code interface
+- Configure essential settings for your workflow
+:::
+
+::: {.callout-tip}
+
+## Key Questions
+
+- How do I install VS Code on my operating system?
+- What is a workspace and how do I create one?
+- How do I trust workspaces and manage security?
+- Where are the main interface elements located?
+:::
+
+::: {.callout-note}
+
+## Attribution
+
+This content is adapted from the official [Visual Studio Code Getting Started Guide](https://code.visualstudio.com/docs/getstarted/getting-started), which is licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/us/). © Microsoft Corporation.
+:::
+
+## Prerequisites and Setup
+
+Before we begin, ensure your system meets the basic requirements for running VS Code.
+
+### System Requirements
+
+Visual Studio Code is lightweight and runs on most modern systems:
+
+- **Windows**: Windows 10 or 11
+- **macOS**: macOS 10.14 or later
+- **Linux**: Most distributions (Ubuntu, Debian, Red Hat, etc.)
+
+## Step 1: Download and Install VS Code
+
+### Download VS Code
+
+1. Visit the [Visual Studio Code website](https://code.visualstudio.com)
+2. Click the download button for your operating system
+3. The website will automatically detect your OS and suggest the appropriate version
+
+### Installation Instructions
+
+#### Windows
+
+1. Run the downloaded `.exe` installer
+2. Follow the setup wizard
+3. Accept the license agreement
+4. Choose installation location (default is recommended)
+5. Select additional tasks:
+   - ✅ Add "Open with Code" action to Windows Explorer file context menu
+   - ✅ Add "Open with Code" action to Windows Explorer directory context menu
+   - ✅ Register Code as an editor for supported file types
+   - ✅ Add to PATH (this allows you to type `code` in the command line)
+
+#### macOS
+
+1. Open the downloaded `.zip` file
+2. Drag the Visual Studio Code app to the Applications folder
+3. Launch VS Code from the Applications folder or Spotlight
+
+#### Linux
+
+For Ubuntu/Debian:
+
+```bash
+# Download the .deb package and install
+sudo dpkg -i code_*.deb
+sudo apt-get install -f  # Install dependencies if needed
+```
+
+## Step 2: Launch VS Code
+
+After installation, launch VS Code:
+
+- **Windows**: Start menu → Visual Studio Code
+- **macOS**: Applications → Visual Studio Code
+- **Linux**: Applications menu → Visual Studio Code
+- **Any OS**: Type `code` in terminal (if added to PATH)
+
+## Step 3: Understanding the Interface
+
+When you first open VS Code, you'll see the Welcome tab and basic interface elements:
+
+### Main Interface Components
+
+1. **Activity Bar** (far left): Access different views
+   - Explorer: File and folder navigation
+   - Search: Find and replace across files
+   - Source Control: Git integration
+   - Run and Debug: Debug your code
+   - Extensions: Install and manage extensions
+
+2. **Side Bar**: Shows different views based on Activity Bar selection
+
+3. **Editor**: Main area where you write and edit code
+
+4. **Panel** (bottom): Integrated terminal, output, problems, and debug console
+
+5. **Status Bar** (bottom): Information about current file and project
+
+## Step 4: Open Your First Workspace
+
+A workspace in VS Code is simply a folder containing your project files.
+
+### Method 1: Open Folder
+
+1. Click **File** → **Open Folder** (Windows/Linux) or **Open...** (macOS)
+2. Navigate to a folder you want to work with
+3. Click **Select Folder** (Windows/Linux) or **Open** (macOS)
+
+### Method 2: Create New Folder
+
+1. Create a new folder on your system (e.g., `my-first-project`)
+2. Open this folder in VS Code using Method 1
+
+### Method 3: Command Line
+
+If you added VS Code to PATH during installation:
+
+```bash
+# Navigate to your project folder
+cd /path/to/your/project
+
+# Open current directory in VS Code
+code .
+
+# Or open a specific folder
+code /path/to/folder
+```
+
+## Step 5: Workspace Trust
+
+VS Code includes security features to protect you from potentially malicious code.
+
+### Understanding Workspace Trust
+
+When you open a folder, VS Code may show a "Do you trust the authors of the files in this folder?" dialog.
+
+- **Trust**: Enables all VS Code features, extensions, and tasks
+- **Don't Trust**: Opens in Restricted Mode with limited functionality
+
+### Making Trust Decisions
+
+::: {.callout-warning}
+
+## Security Consideration
+
+Only trust workspaces from sources you trust. When in doubt, choose "Don't Trust" and enable trust later if needed.
+:::
+
+**Trust when:**
+
+- You created the files yourself
+- Files are from a trusted colleague or organization
+- You understand the code and its purpose
+
+**Don't trust when:**
+
+- Files are from unknown sources
+- Downloaded from the internet without verification
+- Contains code you don't understand
+
+### Managing Trust Later
+
+You can change trust settings later:
+
+- Click the workspace trust icon in the Status Bar
+- Or use Command Palette: **Workspaces: Manage Workspace Trust**
+
+## Step 6: Create Your First File
+
+Let's create a simple file to explore VS Code's features:
+
+1. In the Explorer (Activity Bar → Explorer), right-click in the empty space
+2. Select **New File**
+3. Name it `hello.txt`
+4. Type some text: "Hello, VS Code!"
+5. Save with **Ctrl+S** (Windows/Linux) or **Cmd+S** (macOS)
+
+## Step 7: Basic Configuration
+
+Let's configure a few essential settings:
+
+### Enable Auto Save
+
+1. Go to **File** → **Preferences** → **Settings** (Windows/Linux)
+   Or **Code** → **Preferences** → **Settings** (macOS)
+2. Search for "auto save"
+3. Set **Files: Auto Save** to "afterDelay"
+4. Set **Files: Auto Save Delay** to 1000 (milliseconds)
+
+### Adjust Font Size
+
+1. In Settings, search for "font size"
+2. Adjust **Editor: Font Size** to your preference (default is 14)
+
+### Choose a Theme
+
+1. **File** → **Preferences** → **Color Theme**
+2. Use arrow keys to preview different themes
+3. Press Enter to select
+
+## Understanding Settings
+
+VS Code has two types of settings:
+
+### User Settings
+
+- Apply globally to all VS Code instances
+- Stored in your user profile
+
+### Workspace Settings
+
+- Apply only to the current workspace
+- Stored in `.vscode/settings.json` in the workspace folder
+- Override user settings
+
+::: {.callout-note}
+
+## Exercise: Explore the Interface
+
+Take a few minutes to:
+
+1. Click on each Activity Bar icon to see different views
+2. Open the integrated terminal (**View** → **Terminal**)
+3. Try the Command Palette (**Ctrl+Shift+P** / **Cmd+Shift+P**)
+4. Create a new file and notice the unsaved changes indicator
+:::
+
+## Next Steps
+
+Now that you have VS Code installed and configured, you're ready to explore its features! In the next tutorial, we'll dive into the [Basic Features](02-basics.qmd) with video walkthroughs of core functionality.
+
+## Troubleshooting
+
+### Common Installation Issues
+
+#### Windows: "Windows protected your PC" warning
+
+- Click "More info" then "Run anyway"
+- This is normal for new software
+
+#### macOS: "Cannot verify developer" error
+
+- Right-click the app and select "Open"
+- Click "Open" in the dialog
+
+#### Linux: Permission denied
+
+- Make sure you have admin privileges
+- Use `sudo` with installation commands
+
+### Getting Help
+
+- [VS Code Setup Documentation](https://code.visualstudio.com/docs/setup/setup-overview)
+- [VS Code FAQ](https://code.visualstudio.com/docs/supporting/faq)
+- [GitHub Issues](https://github.com/microsoft/vscode/issues)
+
+::: {.callout-important}
+
+## Key Points
+
+- VS Code is free, cross-platform, and easy to install
+- Workspaces are folders containing your project files
+- Workspace trust is important for security
+- The interface consists of Activity Bar, Side Bar, Editor, Panel, and Status Bar
+- Settings can be configured globally (user) or per workspace
+- Auto save and other preferences improve your workflow
+:::
+
+[Next: Basic Features →](02-basics.qmd)
